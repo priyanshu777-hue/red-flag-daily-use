@@ -381,6 +381,12 @@
   .qf-back { min-height: 44px; padding: 8px 4px; background: none; border: 0; color: var(--mute-on-ink); font: 500 .95rem/1 var(--font-body); cursor: pointer; }
   .qf-back:hover { color: var(--cream); }
   .qf-nav .btn { flex: 0 1 auto; }
+  .qf-done { justify-items: center; text-align: center; padding-block: 12px; }
+  .qf-done h3 { font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.1rem); }
+  .qf-spin { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--ink-3); border-top-color: var(--gold); animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .qf-fallback { font-size: .95rem; color: var(--cream); }
+  .qf-fallback a { color: var(--gold); font-weight: 700; }
   .qf-safe { font-size: .78rem; color: var(--mute-on-ink); text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .qf-safe svg { width: 14px; height: 14px; color: var(--gold); }
   @media (max-width: 560px) {
@@ -754,7 +760,6 @@
     <div class="qf-nav">
       <button type="button" class="qf-back" id="qf-back">← Back</button>
       <button type="submit" class="btn btn--red" id="qf-next">Next</button>
-      <a class="btn btn--red" id="qf-pay" href="#pricing" target="_blank" rel="noopener" hidden>Continue to payment</a>
     </div>
     <p class="qf-safe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Takes 30 seconds · Your details are only used to set up Bella</p>
   </form>
@@ -921,11 +926,11 @@
     if (!dlg || typeof dlg.showModal !== 'function') return; // Old browsers go straight to payment.
     var form = document.getElementById('qf-form'), body = document.getElementById('qf-body');
     var bar = document.getElementById('qf-bar'), count = document.getElementById('qf-count'), planEl = document.getElementById('qf-plan');
-    var nextBtn = document.getElementById('qf-next'), payBtn = document.getElementById('qf-pay'), backBtn = document.getElementById('qf-back');
+    var nextBtn = document.getElementById('qf-next'), backBtn = document.getElementById('qf-back');
     var india = isIndia();
     var CAP = { solo: 1, growth: 3, pro: 5 };
     var MAX = { '1': 1, '2–3': 3, '4–5': 5, '6+': 99 };
-    var data = {}, idx = 0, plan = 'growth', shown = -1;
+    var data = {}, idx = 0, plan = 'growth', shown = -1, redirecting = false, redirectTimer = null;
 
     function first(n) { return (n || '').trim().split(/\s+/)[0] || 'there'; }
     var STEPS = [
@@ -967,6 +972,7 @@
     }
 
     function render() {
+      if (redirecting) return renderRedirect();
       var st = STEPS[idx];
       header();
       bar.style.width = ((idx + 1) / STEPS.length * 100) + '%';
@@ -981,7 +987,10 @@
         var opts = el('div', { 'class': 'qf-opts' });
         st.options.forEach(function (o) {
           var b = el('button', { type: 'button', 'class': 'qf-opt', 'aria-pressed': String(data.listings === o) }, o);
-          b.addEventListener('click', function () { data.listings = o; render(); });
+          b.addEventListener('click', function () {
+            data.listings = o;
+            if (o !== '6+' && MAX[o] <= CAP[plan]) goPay(); else render();
+          });
           opts.appendChild(b);
         });
         fs.appendChild(opts);
@@ -989,15 +998,12 @@
         var tip = tipFor();
         if (tip) wrap.appendChild(tip);
         nextBtn.hidden = true;
-        var canPay = data.listings && data.listings !== '6+';
-        payBtn.hidden = !canPay;
-        if (canPay) { payBtn.href = payLink(); payBtn.textContent = 'Continue to payment · ' + priceText(); }
         body.appendChild(wrap);
         var pressed = opts.querySelector('[aria-pressed="true"]') || opts.firstChild;
         if (pressed && !data.listings) pressed.focus();
         return;
       }
-      nextBtn.hidden = false; payBtn.hidden = true;
+      nextBtn.hidden = false;
       nextBtn.textContent = 'Next';
       var id = 'qf-' + st.key;
       wrap.appendChild(el('label', { 'for': id }, st.label()));
@@ -1031,8 +1037,14 @@
         var better = MAX[data.listings] <= 3 ? 'growth' : 'pro';
         tip.appendChild(el('span', null, 'Bella ' + PLAN_NAMES[plan] + ' covers ' + (CAP[plan] === 1 ? '1 listing' : 'up to ' + CAP[plan] + ' listings') + '. ' + PLAN_NAMES[better] + ' covers all of yours.'));
         var sw = el('button', { type: 'button', 'class': 'btn btn--ghost' }, 'Switch to ' + PLAN_NAMES[better]);
-        sw.addEventListener('click', function () { plan = better; render(); });
-        tip.appendChild(sw);
+        var current = plan;
+        sw.className = 'btn btn--red';
+        sw.addEventListener('click', function () { plan = better; goPay(); });
+        var keep = el('button', { type: 'button', 'class': 'btn btn--ghost' }, 'Keep ' + PLAN_NAMES[current]);
+        keep.addEventListener('click', function () { goPay(); });
+        var acts = el('div', { 'class': 'lang-row', style: 'justify-content:flex-start' });
+        acts.appendChild(sw); acts.appendChild(keep);
+        tip.appendChild(acts);
         return tip;
       }
       return null;
@@ -1061,14 +1073,42 @@
       data[st.key] = v.trim();
       idx++; render();
     });
+    // After the last answer: save it, then go straight to the payment page.
+    function framed() { try { return window.self !== window.top; } catch (e) { return true; } }
+    function goPay() {
+      redirecting = true;
+      sendLead(lead('checkout'));
+      render();
+      clearTimeout(redirectTimer);
+      redirectTimer = setTimeout(function () {
+        var link = payLink();
+        if (!framed()) { window.location.assign(link); return; }
+        try { window.open(link, '_blank', 'noopener'); } catch (e) {}
+      }, 1200);
+    }
+    function renderRedirect() {
+      header();
+      bar.style.width = '100%';
+      count.textContent = 'All done';
+      backBtn.style.visibility = 'visible';
+      nextBtn.hidden = true;
+      body.innerHTML = '';
+      var wrap = el('div', { 'class': 'qf-step enter qf-done', role: 'status' });
+      wrap.appendChild(el('span', { 'class': 'qf-spin', 'aria-hidden': 'true' }));
+      wrap.appendChild(el('h3', null, 'Thanks, ' + first(data.name) + '! Taking you to secure payment\u2026'));
+      wrap.appendChild(el('p', { 'class': 'qf-help' }, 'Bella ' + PLAN_NAMES[plan] + ' \u00b7 ' + (state.period === 'monthly' ? 'Monthly' : 'Yearly') + ' \u00b7 ' + priceText() + '. Your setup guide will be emailed to ' + (data.email || 'you') + ' after payment.'));
+      var p = el('p', { 'class': 'qf-fallback' }, 'Not redirected automatically? ');
+      var a = el('a', { href: payLink(), target: framed() ? '_blank' : '_self', rel: 'noopener' }, 'Tap here to pay');
+      p.appendChild(a);
+      wrap.appendChild(p);
+      body.appendChild(wrap);
+    }
     backBtn.addEventListener('click', function () {
+      if (redirecting) { redirecting = false; clearTimeout(redirectTimer); render(); return; }
       var input = body.querySelector('input'); if (input) data[STEPS[idx].key] = input.value;
       if (idx > 0) { idx--; render(); }
     });
-    payBtn.addEventListener('click', function () {
-      sendLead(lead('checkout'));
-      setTimeout(function () { dlg.close(); }, 400);
-    });
+    dlg.addEventListener('close', function () { clearTimeout(redirectTimer); redirecting = false; });
     document.getElementById('qf-close').addEventListener('click', function () { dlg.close(); });
     dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
 
@@ -1076,7 +1116,7 @@
       a.addEventListener('click', function (e) {
         e.preventDefault();
         plan = a.closest('.plan').dataset.plan;
-        idx = 0; shown = -1;
+        idx = 0; shown = -1; redirecting = false;
         render();
         dlg.showModal();
       });
