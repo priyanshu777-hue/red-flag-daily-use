@@ -314,10 +314,46 @@
   @media (max-width: 820px) { .problem-grid { grid-template-columns: minmax(0, 1fr); } }
 
   .problem-grid { align-items: center; }
-  .pains--row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 24px; margin-top: clamp(32px, 4vw, 48px); }
-  .pains--row li { font-size: 1rem; border-bottom: 1px solid rgba(11,10,12,.12); }
-  @media (max-width: 900px) { .pains--row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 560px) { .pains--row { grid-template-columns: minmax(0, 1fr); } }
+  .route { position: relative; margin-top: clamp(36px, 5vw, 56px); height: clamp(520px, 64vw, 640px); border-radius: 32px; overflow: hidden; isolation: isolate; color: #1C1A24;
+    background: linear-gradient(180deg, #CFCDD8 0%, #E4E1E6 38%, #E9E5E3 52%, #C9C6CF 53%, #DCD8DB 100%); box-shadow: 0 40px 80px -50px rgba(40,30,60,.7); }
+  .rt-sky { position: absolute; inset: 0; z-index: -1; }
+  .rt-mist { position: absolute; left: -10%; right: -10%; top: 38%; height: 22%; background: radial-gradient(60% 50% at 50% 50%, rgba(255,255,255,.9), transparent 70%); filter: blur(10px); animation: mist 12s ease-in-out infinite alternate; }
+  @keyframes mist { to { transform: translateX(6%); } }
+  .rt-water { position: absolute; left: 0; right: 0; top: 53%; bottom: 0; background: repeating-linear-gradient(180deg, rgba(255,255,255,.18) 0 2px, transparent 2px 9px); opacity: .6; }
+  .rt-title { position: absolute; left: 0; right: 0; top: 7%; text-align: center; font: 300 clamp(2.6rem, 1.5rem + 5vw, 5.6rem)/1 var(--font-display); letter-spacing: -.04em; color: rgba(28,26,36,.45); z-index: 1; }
+  .rt-title b { font-weight: 600; color: #fff; text-shadow: 0 2px 30px rgba(60,40,120,.35); }
+  .rt-a, .rt-b { display: inline-block; transition: transform .55s cubic-bezier(.34,1.3,.5,1), opacity .35s, filter .35s; }
+  .route.swap .rt-a { transform: translateX(-40px); opacity: 0; filter: blur(8px); }
+  .route.swap .rt-b { transform: translateX(40px); opacity: 0; filter: blur(8px); }
+  .rt-objs { position: absolute; left: 50%; top: 22%; width: clamp(150px, 22vw, 230px); aspect-ratio: 1; transform: translateX(-50%); z-index: 2; }
+  .rt-obj { position: absolute; inset: 0; opacity: 0; transform: translateY(30px) scale(.7) rotate(-8deg); transition: opacity .45s var(--ease), transform .7s cubic-bezier(.34,1.5,.5,1); filter: drop-shadow(0 30px 25px rgba(40,30,60,.35)); }
+  .rt-obj.on { opacity: 1; transform: none; animation: hover 4s ease-in-out .7s infinite; }
+  .rt-obj svg { width: 100%; height: 100%; }
+  @keyframes hover { 50% { translate: 0 -10px; } }
+  .rt-host { position: absolute; right: 4%; bottom: 14%; height: 46%; width: auto; z-index: 2; filter: saturate(.7) brightness(.92) drop-shadow(0 20px 14px rgba(0,0,0,.25)); transform-origin: bottom; transform: scaleX(-1); }
+  .rt-line { position: absolute; left: 4%; bottom: 17%; width: 72%; height: 22%; z-index: 3; overflow: visible; }
+  .rt-pin { position: absolute; z-index: 4; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: #6B4BD8; border: 4px solid #fff; box-shadow: 0 0 18px rgba(107,75,216,.9); pointer-events: none; }
+  .rt-stops { position: absolute; left: 4%; bottom: 17%; width: 72%; height: 22%; z-index: 4; }
+  .rt-stop { position: absolute; transform: translate(-50%, -50%); width: 44px; height: 44px; border: 0; padding: 0; background: transparent; cursor: pointer; }
+  .rt-stop::before { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: #6B4BD8; box-shadow: 0 0 0 4px rgba(255,255,255,.8); }
+  .rt-stop span { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); white-space: nowrap; font: 600 .78rem/1 var(--font-display); color: #3B3456; }
+  .rt-stop[aria-pressed="true"] span { color: #6B4BD8; }
+  .rt-card { position: absolute; left: 4%; bottom: 3%; right: 4%; z-index: 4; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; font-size: .92rem; }
+  .rt-pain { color: #3B3456; }
+  .rt-pain::before { content: "Without Bella: "; font-weight: 700; color: #C8102E; }
+  .rt-fix { color: #1C1A24; }
+  .rt-fix::before { content: "With Bella: "; font-weight: 700; color: #1F7A45; }
+  .rt-pain, .rt-fix { transition: opacity .35s; } .route.swap .rt-pain, .route.swap .rt-fix { opacity: 0; }
+  @media (max-width: 700px) {
+    .route { height: 620px; border-radius: 24px; }
+    .rt-title { top: 5%; font-size: 2.6rem; }
+    .rt-objs { top: 17%; width: 150px; }
+    .rt-line, .rt-stops { bottom: 27%; height: 16%; left: 6%; width: 88%; }
+    .rt-host { bottom: 44%; height: 24%; }
+    .rt-stop span { font-size: .7rem; }
+    .rt-card { grid-template-columns: 1fr; font-size: .88rem; bottom: 3%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rt-mist, .rt-obj.on { animation: none; } }
   .night { background: #0F0C14; color: var(--cream); border-radius: 28px; padding: 18px; display: grid; gap: 14px; box-shadow: 0 40px 80px -40px rgba(30,10,40,.8), inset 0 0 0 1px rgba(255,255,255,.06); background-image: radial-gradient(120% 60% at 50% 0%, rgba(140,80,200,.28), transparent 60%); min-width: 0; }
   .night-top { display: flex; justify-content: space-between; align-items: baseline; font-size: .85rem; color: #B9B2C8; padding-inline: 4px; }
   .night-clock { font-family: var(--font-display); font-size: 2rem; color: var(--cream); font-variant-numeric: lining-nums tabular-nums; }
@@ -982,12 +1018,16 @@
       </div>
     </div>
     <div class="wrap">
-      <ul class="pains pains--row">
-        <li><span class="dot" aria-hidden="true"></span><span><strong>Prices that are too low</strong> lose you money. Too high, and your nights stay empty.</span></li>
-        <li><span class="dot" aria-hidden="true"></span><span><strong>Check-in details go out late.</strong> Calendars get double booked.</span></li>
-        <li><span class="dot" aria-hidden="true"></span><span><strong>A property manager takes 15 to 25%</strong> of every booking.</span></li>
-        <li><span class="dot" aria-hidden="true"></span><span><strong>Miss an emergency or cancellation</strong> and the bnb platform can penalise your listing.</span></li>
-      </ul>
+      <div class="route" id="route" aria-roledescription="carousel" aria-label="What goes wrong without a co-host">
+        <div class="rt-sky" aria-hidden="true"><span class="rt-mist"></span><span class="rt-water"></span></div>
+        <h3 class="rt-title" aria-live="polite"><span class="rt-a" id="rt-a">Wrong</span> <b class="rt-b" id="rt-b">Prices</b></h3>
+        <div class="rt-objs"><div class="rt-obj" data-i="0" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><linearGradient id="ob1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4E2"/><stop offset=".55" stop-color="#E9B97A"/><stop offset="1" stop-color="#B9773A"/></linearGradient></defs><path d="M38 96 L104 30 L170 30 L170 96 L104 162 Z" fill="url(#ob1)" stroke="#8C5A2B" stroke-width="2"/><path d="M48 98 L106 40 L160 40" fill="none" stroke="#fff" stroke-width="5" opacity=".55" stroke-linecap="round"/><circle cx="146" cy="54" r="10" fill="#5A3A22"/><text x="100" y="118" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="700" font-size="34" fill="#5A3A22" transform="rotate(-45 100 104)">₹?</text></svg></div><div class="rt-obj" data-i="1" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><linearGradient id="ob2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9CCE0"/></linearGradient></defs><rect x="36" y="44" width="128" height="120" rx="22" fill="url(#ob2)" stroke="#8F94B8" stroke-width="2"/><rect x="36" y="44" width="128" height="34" rx="22" fill="#C8102E"/><rect x="36" y="64" width="128" height="14" fill="#C8102E"/><rect x="66" y="30" width="10" height="30" rx="5" fill="#5A5F80"/><rect x="124" y="30" width="10" height="30" rx="5" fill="#5A5F80"/><g fill="#B7BBD6"><rect x="54" y="92" width="20" height="18" rx="5"/><rect x="90" y="92" width="20" height="18" rx="5"/><rect x="126" y="92" width="20" height="18" rx="5"/><rect x="54" y="124" width="20" height="18" rx="5"/><rect x="126" y="124" width="20" height="18" rx="5"/></g><rect x="90" y="124" width="20" height="18" rx="5" fill="#C8102E"/><rect x="90" y="92" width="20" height="18" rx="5" fill="#C8102E"/></svg></div><div class="rt-obj" data-i="2" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><radialGradient id="ob3" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF6D0"/><stop offset=".6" stop-color="#E7B33F"/><stop offset="1" stop-color="#A9741A"/></radialGradient></defs><ellipse cx="100" cy="150" rx="70" ry="16" fill="#8A5E14" opacity=".5"/><circle cx="100" cy="100" r="64" fill="url(#ob3)" stroke="#9A6A18" stroke-width="3"/><path d="M100 100 L100 36 A64 64 0 0 1 160 80 Z" fill="#C8102E" opacity=".9"/><circle cx="100" cy="100" r="46" fill="none" stroke="#fff" stroke-width="3" opacity=".4"/><text x="88" y="122" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="700" font-size="40" fill="#6B4510">20%</text></svg></div><div class="rt-obj" data-i="3" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><linearGradient id="ob4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD7DC"/><stop offset=".5" stop-color="#E5485F"/><stop offset="1" stop-color="#8E0F24"/></linearGradient></defs><path d="M100 30 C66 30 54 58 54 86 L54 118 L38 140 L162 140 L146 118 L146 86 C146 58 134 30 100 30 Z" fill="url(#ob4)" stroke="#7A0C1E" stroke-width="2"/><path d="M70 60 C76 48 88 42 100 42" stroke="#fff" stroke-width="6" fill="none" opacity=".55" stroke-linecap="round"/><circle cx="100" cy="158" r="14" fill="#7A0C1E"/><circle cx="150" cy="48" r="20" fill="#fff"/><text x="150" y="56" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="700" font-size="22" fill="#C8102E">!</text></svg></div></div>
+        <img class="rt-host" src="bella-assets/host-man-key.webp" width="554" height="1097" alt="" aria-hidden="true">
+        <svg class="rt-line" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><path id="rt-path" d="M40 60 C200 60 220 170 380 170 C540 170 560 70 700 70 C820 70 860 150 960 150" fill="none" stroke="#6B4BD8" stroke-width="3"/></svg>
+        <span class="rt-pin" id="rt-dot" aria-hidden="true"></span><div class="rt-stops" role="group" aria-label="Choose a problem"><button type="button" class="rt-stop" data-i="0" aria-label="Pricing: Wrong Prices" aria-pressed="true"><span>Pricing</span></button><button type="button" class="rt-stop" data-i="1" aria-label="Check-in: Late Check-ins" aria-pressed="false"><span>Check-in</span></button><button type="button" class="rt-stop" data-i="2" aria-label="Commission: Lost 20%" aria-pressed="false"><span>Commission</span></button><button type="button" class="rt-stop" data-i="3" aria-label="Emergencies: Missed Alerts" aria-pressed="false"><span>Emergencies</span></button></div>
+        <div class="rt-card"><p class="rt-pain" id="rt-pain"></p><p class="rt-fix" id="rt-fix"></p></div>
+        <ul hidden id="rt-data"><li data-a="Wrong" data-b="Prices" data-pain="Prices that are too low lose you money. Too high, and your nights stay empty." data-fix="Bella tunes your nightly rate for weekends, festivals and demand."></li><li data-a="Late" data-b="Check-ins" data-pain="Check-in details go out late. Calendars get double booked." data-fix="Bella sends every check-in on time and blocks dates for you."></li><li data-a="Lost" data-b="20%" data-pain="A property manager takes 15 to 25% of every booking." data-fix="Bella is one flat fee. You keep 100% of every booking."></li><li data-a="Missed" data-b="Alerts" data-pain="Miss an emergency or cancellation and the bnb platform can penalise your listing." data-fix="Bella replies on time and contacts bnb support for you."></li></ul>
+      </div>
     </div>
   </section>
 
@@ -2126,6 +2166,41 @@
     var on = false;
     function chk() { var y = window.pageYOffset > 40; if (y !== on) { on = y; document.body.classList.toggle('scrolled', y); } }
     window.addEventListener('scroll', chk, { passive: true }); chk();
+  })();
+
+  // ===== Problem route: stations along a curved line, title and object swap =====
+  (function initRoute() {
+    var r = document.getElementById('route'); if (!r) return;
+    var path = document.getElementById('rt-path'), dot = document.getElementById('rt-dot'), svg = r.querySelector('.rt-line');
+    var stops = r.querySelectorAll('.rt-stop'), objs = r.querySelectorAll('.rt-obj'), data = r.querySelectorAll('#rt-data li');
+    var A = document.getElementById('rt-a'), B = document.getElementById('rt-b'), pain = document.getElementById('rt-pain'), fix = document.getElementById('rt-fix');
+    var L = path.getTotalLength(), T = [0.04, 0.36, 0.66, 0.96], cur = 0, pos = T[0], anim = null, timer = null;
+    function place() {
+      stops.forEach(function (b, i) { var pt = path.getPointAtLength(L * T[i]); b.style.left = (pt.x / 10) + '%'; b.style.top = (pt.y / 2) + '%'; });
+    }
+    function moveDot(to) {
+      cancelAnimationFrame(anim); var from = pos, t0 = performance.now(), D = reduceMotion ? 1 : 900;
+      (function step(t) { var k = Math.min(1, (t - t0) / D), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; pos = from + (to - from) * e;
+        var pt = path.getPointAtLength(L * pos), st = r.querySelector('.rt-stops'); dot.style.left = (st.offsetLeft + pt.x / 1000 * st.offsetWidth) + 'px'; dot.style.top = (st.offsetTop + pt.y / 200 * st.offsetHeight) + 'px'; if (k < 1) anim = requestAnimationFrame(step); })(t0);
+    }
+    function go(i, user) {
+      cur = (i + 4) % 4; var d = data[cur].dataset;
+      stops.forEach(function (b, k) { b.setAttribute('aria-pressed', String(k === cur)); });
+      objs.forEach(function (o, k) { o.classList.toggle('on', k === cur); });
+      r.classList.add('swap');
+      setTimeout(function () { A.textContent = d.a; B.textContent = d.b; pain.textContent = d.pain; fix.textContent = d.fix; r.classList.remove('swap'); }, reduceMotion ? 0 : 320);
+      moveDot(T[cur]);
+      if (user) restart();
+    }
+    function restart() { clearInterval(timer); if (!reduceMotion) timer = setInterval(function () { if (!document.hidden && visible) go(cur + 1); }, 4200); }
+    var visible = false;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }, { threshold: .3 }).observe(r);
+    stops.forEach(function (b, i) { b.addEventListener('click', function () { go(i, true); }); });
+    var x0 = null;
+    r.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    r.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1), true); }, { passive: true });
+    place(); window.addEventListener('resize', function () { place(); moveDot(T[cur]); });
+    var d0 = data[0].dataset; pain.textContent = d0.pain; fix.textContent = d0.fix; objs[0].classList.add('on'); moveDot(T[0]); restart();
   })();
 
   // ===== Highlights dashboard widgets =====
