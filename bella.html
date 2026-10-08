@@ -153,8 +153,26 @@
   .rider-body { position: relative; }
   .rider img { display: block; width: 100%; height: auto; }
   .rider-tint { position: absolute; inset: 0; filter: hue-rotate(var(--hue, 0deg)) saturate(var(--sat, 1)); transition: filter 1s var(--ease); }
-  .rider.walking .rider-body { animation: walk .55s ease-in-out infinite alternate; }
-  @keyframes walk { from { transform: translateY(0) rotate(0); } to { transform: translateY(-7px) rotate(-.6deg); } }
+  /* The chameleon always walks; scrolling makes it walk faster. Bella rides the gait. */
+  .rider-body { animation: gait 1.25s ease-in-out infinite; }
+  .rider.walking .rider-body { animation-duration: .6s; }
+  @keyframes gait { 0%, 100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-6px) rotate(-.5deg); } 50% { transform: translateY(0) rotate(0); } 75% { transform: translateY(-5px) rotate(.5deg); } }
+  .bl-torso, .bl-head { position: absolute; inset: 0; pointer-events: none; }
+  .bl-torso > img, .bl-head > img { position: absolute; inset: 0; width: 100%; height: auto; display: block; }
+  .bl-torso { transform-origin: 43.17% 39.24%; animation: ride 1.25s ease-in-out -.3s infinite; }
+  .rider.walking .bl-torso { animation-duration: .6s; }
+  @keyframes ride { 0%, 100% { rotate: -1.6deg; } 50% { rotate: 1.6deg; } }
+  .bl-head { transform-origin: 42.2% 20.5%; rotate: calc(var(--hr, 0) * 1deg); translate: calc(var(--hx, 0) * 1px) 0; transition: rotate .5s cubic-bezier(.3,1.4,.5,1), translate .5s var(--ease); }
+  .rider.nod .bl-head { animation: nod .6s ease-in-out; }
+  @keyframes nod { 40% { transform: translateY(1.5%) rotate(2deg); } }
+  .bl-eye { position: absolute; overflow: hidden; border-radius: 50%; background: radial-gradient(ellipse at 50% 70%, #F4EDE4, #D9CBBE); box-shadow: inset 0 2px 2px rgba(60,30,20,.45); }
+  .bl-l { left: 40.29%; top: 9.52%; width: 1.8%; height: 1.61%; }
+  .bl-r { left: 44.6%; top: 9.08%; width: 2.04%; height: 1.61%; }
+  .bl-iris { position: absolute; max-width: none; transform: translate(calc(var(--gx, 0) * 16%), calc(var(--gy, 0) * 9%)); transition: transform .25s var(--ease); }
+  .bl-l .bl-iris { left: 13.3%; top: -9.1%; width: 93.3%; height: 127.3%; }
+  .bl-r .bl-iris { left: 0; top: -27.3%; width: 88.2%; height: 136.4%; }
+  .bl-lid { position: absolute; inset: -10% -5%; background: linear-gradient(180deg, #D9A88E, #E6B79D 80%); border-bottom: 1.5px solid #3A2416; transform: translateY(-110%); transition: transform .07s ease-in; }
+  .rider.blink .bl-lid { transform: translateY(0); }
   .rider-shadow { position: absolute; left: 12%; right: 10%; bottom: -1%; height: 7%; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,40,20,.22), transparent); z-index: -1; }
   .scene-card {
     position: absolute; z-index: 4; left: var(--gutter); bottom: 6vh; width: min(380px, calc(100% - 2 * var(--gutter)));
@@ -204,7 +222,7 @@
   .rider-body { cursor: pointer; }
   .rider-hit { position: absolute; left: 0; right: 0; top: 38%; bottom: 0; border: 0; background: transparent; cursor: pointer; border-radius: 40% 40% 20% 20%; }
   .rider-hit:focus-visible { outline: 2px dashed var(--ink); outline-offset: -6px; }
-  .rider-hand { position: absolute; inset: 0; transform-origin: 55.88% 22.69%; pointer-events: none; }
+  .rider-hand { position: absolute; inset: 0; width: 100%; height: auto; transform-origin: 55.88% 22.69%; pointer-events: none; }
   .rider.waving .rider-hand { animation: wave 1.5s ease-in-out; }
   @keyframes wave { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(-14deg); } 32% { transform: rotate(10deg); } 50% { transform: rotate(-12deg); } 68% { transform: rotate(9deg); } 84% { transform: rotate(-5deg); } }
   .bella-hit { position: absolute; left: 43%; top: 4%; width: 24%; height: 56%; border: 0; background: transparent; cursor: pointer; border-radius: 40%; z-index: 2; }
@@ -301,7 +319,8 @@
     .w-stats { border-radius: 90px 90px 30px 30px; }
     .dock-btn { padding: 10px 16px; font-size: .88rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .lamp, .portrait { animation: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rider-body, .bl-torso { animation: none; } .lamp, .portrait { animation: none; } }
 
   /* Problem */
   .problem-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
@@ -985,7 +1004,15 @@
           <span class="rider-shadow" aria-hidden="true"></span>
           <img src="bella-assets/bella-chameleon.webp" width="834" height="683" alt="Bella waving from the back of a friendly chameleon">
           <img class="rider-tint" src="bella-assets/chameleon-tint.webp" width="834" height="683" alt="" aria-hidden="true">
-          <img class="rider-hand" src="bella-assets/bella-hand.webp" width="834" height="683" alt="" aria-hidden="true">
+          <div class="bl-torso" aria-hidden="true">
+            <img src="bella-assets/bella-torso.webp" width="834" height="683" alt="">
+            <div class="bl-head">
+              <img src="bella-assets/bella-head.webp" width="834" height="683" alt="">
+              <span class="bl-eye bl-l"><img class="bl-iris" src="bella-assets/iris-l.webp" alt=""><i class="bl-lid"></i></span>
+              <span class="bl-eye bl-r"><img class="bl-iris" src="bella-assets/iris-r.webp" alt=""><i class="bl-lid"></i></span>
+            </div>
+            <img class="rider-hand" src="bella-assets/bella-hand.webp" width="834" height="683" alt="">
+          </div>
           <span class="eye" aria-hidden="true"><i></i></span>
           <span class="bella-say" id="bella-say" aria-live="polite"></span>
           <button type="button" class="bella-hit" id="bella-hit" aria-label="Say hi to Bella"></button>
@@ -2461,25 +2488,44 @@
   // ===== Bella waves and says hi in the current guest's language =====
   (function initWave() {
     var rider = document.getElementById('rider'), hit = document.getElementById('bella-hit'), say = document.getElementById('bella-say');
-    var story = document.getElementById('story'); if (!rider || !hit) return;
-    var HI = { hinglish: 'Namaste! Main Bella hoon.', en: 'Hi! I’m Bella.', hi: 'नमस्ते! मैं बेला हूँ।', fr: 'Bonjour ! Je suis Bella.', de: 'Hallo! Ich bin Bella.', es: '¡Hola! Soy Bella.', pt: 'Olá! Eu sou a Bella.', ru: 'Привет! Я Белла.', ar: 'مرحبًا! أنا بيلا.', ja: 'こんにちは！ベラです。', ko: '안녕하세요! 벨라예요.', zh: '你好！我是 Bella。', th: 'สวัสดีค่ะ! ฉันคือเบลล่า' };
-    var hideT = null, busy = false;
-    function wave(talk) {
-      if (busy && !talk) return; busy = true;
-      rider.classList.remove('waving'); void rider.offsetWidth; rider.classList.add('waving');
-      setTimeout(function () { busy = false; }, 1500);
-      if (talk && say) {
-        var lang = (story && story.dataset.lang) || 'en';
-        say.textContent = HI[lang] || HI.en; say.dir = lang === 'ar' ? 'rtl' : 'auto';
-        say.classList.add('on'); clearTimeout(hideT); hideT = setTimeout(function () { say.classList.remove('on'); }, 2600);
-      }
+    var head = rider && rider.querySelector('.bl-head'); if (!rider || !hit) return;
+    var GREET = [
+      ['hinglish', 'Namaste! Main Bella hoon.'], ['en', 'Hello! I’m Bella.'], ['es', '¡Hola! Soy Bella.'], ['fr', 'Bonjour ! Je suis Bella.'],
+      ['ja', 'こんにちは！ベラです。'], ['ar', 'مرحبًا! أنا بيلا.'],
+      ['it', 'Ciao! Sono Bella.'], ['de', 'Hallo! Ich bin Bella.'], ['hi', 'नमस्ते! मैं बेला हूँ।'], ['ko', '안녕하세요! 벨라예요.']
+    ];
+    var start = isIndia() ? 0 : Math.max(0, GREET.findIndex(function (g) { return g[0] === guessLang(); })); if (!isIndia() && start === 0) start = 1;
+    var gi = start - 1, hideT = null, count = 0;
+    function cls(c, ms) { rider.classList.remove(c); void rider.offsetWidth; rider.classList.add(c); setTimeout(function () { rider.classList.remove(c); }, ms); }
+    function greet() {
+      gi = (gi + 1) % GREET.length; count++;
+      say.textContent = GREET[gi][1]; say.dir = GREET[gi][0] === 'ar' ? 'rtl' : 'auto'; say.lang = GREET[gi][0] === 'hinglish' ? 'hi-Latn' : GREET[gi][0];
+      say.classList.add('on'); clearTimeout(hideT); hideT = setTimeout(function () { say.classList.remove('on'); }, 2800);
+      cls('nod', 650);
+      if (count % 2 === 1) cls('waving', 1500);
     }
-    hit.addEventListener('click', function () { wave(true); });
-    hit.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') wave(true); });
+    // eyes and head follow the pointer; with no pointer she glances around on her own
+    var lastMove = 0;
+    function look(nx, ny) {
+      nx = Math.max(-1, Math.min(1, nx)); ny = Math.max(-1, Math.min(1, ny));
+      rider.style.setProperty('--gx', nx.toFixed(2)); rider.style.setProperty('--gy', ny.toFixed(2));
+      head.style.setProperty('--hr', (nx * 4).toFixed(2)); head.style.setProperty('--hx', (nx * 2).toFixed(1));
+    }
+    window.addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      lastMove = Date.now();
+      var r = rider.getBoundingClientRect(), ex = r.left + r.width * 0.43, ey = r.top + r.height * 0.1;
+      look((e.clientX - ex) / (window.innerWidth * 0.35), (e.clientY - ey) / (window.innerHeight * 0.4));
+    }, { passive: true });
     if (!reduceMotion) {
-      setTimeout(function () { wave(true); }, 900);
-      setInterval(function () { if (!document.hidden) wave(false); }, 7000);
+      var G = [[0, 0], [-0.9, 0.2], [0, 0], [0.9, -0.2], [0.4, 0.8], [0, 0]], gk = 0;
+      setInterval(function () { if (Date.now() - lastMove > 3000) { gk = (gk + 1) % G.length; look(G[gk][0], G[gk][1]); } }, 1700);
+      (function blink() { setTimeout(function () { cls('blink', 130); if (Math.random() < .25) setTimeout(function () { cls('blink', 120); }, 260); blink(); }, 2200 + Math.random() * 2800); })();
+      setTimeout(greet, 900);
+      setInterval(function () { if (!document.hidden) greet(); }, 3800);
     }
+    hit.addEventListener('click', greet);
+    hit.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') greet(); });
   })();
 
   // ===== FAQ: the floating scene follows the pointer; searching filters questions =====
