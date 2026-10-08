@@ -283,41 +283,71 @@
   @media (max-width: 560px) { .features { grid-template-columns: minmax(0, 1fr); } }
 
   /* A day with Bella */
-  .day { list-style: none; margin: 0; padding: 0; position: relative; display: grid; max-width: 920px; }
-  .day::before { content: ""; position: absolute; left: calc(8.5rem + 11px); top: 14px; bottom: 14px; width: 1px; background: linear-gradient(var(--gold), rgba(201,166,107,.15)); }
-  .day li { display: grid; grid-template-columns: 8.5rem 22px minmax(0, 1fr); column-gap: 22px; align-items: baseline; padding-block: 18px; }
-  .day li::after { content: ""; grid-column: 2; grid-row: 1; justify-self: center; align-self: start; margin-top: 12px; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); border: 2px solid var(--gold); }
-  .day time { grid-column: 1; grid-row: 1; font-family: var(--font-display); font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem); font-weight: 600; color: var(--gold); font-variant-numeric: lining-nums tabular-nums; text-align: right; white-space: nowrap; line-height: 1.1; }
-  .day li > div { grid-column: 3; grid-row: 1; min-width: 0; }
-  .day h3 { font-size: 1.55rem; }
-  .day p { color: var(--mute-on-ink); margin-top: 4px; max-width: 58ch; }
-  .day li:nth-child(2n) time { color: var(--cream); }
-  @media (max-width: 600px) {
-    .day::before { left: 5px; }
-    .day li { grid-template-columns: 11px minmax(0, 1fr); column-gap: 18px; row-gap: 2px; }
-    .day li::after { grid-column: 1; margin-top: 8px; }
-    .day time { grid-column: 2; text-align: left; font-size: 1.4rem; }
-    .day li > div { grid-column: 2; grid-row: 2; }
-  }
-
   .band--paper { background: var(--paper); color: var(--ink); }
   .band--sand { background: var(--sand); color: var(--ink); }
   .band--paper .section-head p, .band--sand .section-head p { color: var(--mute-on-cream); }
   .band--sand .section-head p { color: #4B4239; }
-  .day-wrap { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
-  .day-figure { position: sticky; top: 90px; height: min(72vh, 640px); }
-  .day-figure img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: 100%; object-fit: contain; transform: translate(-50%, 16px); opacity: 0; transition: opacity .45s var(--ease), transform .45s var(--ease); }
-  .day-figure img.on { opacity: 1; transform: translate(-50%, 0); }
-  .day-figure::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: -10px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,40,20,.18), transparent); }
-  .band--paper .day::before { background: linear-gradient(#8A6A35, rgba(138,106,53,.12)); }
-  .band--paper .day time { color: #8A6A35; }
-  .band--paper .day li:nth-child(2n) time { color: var(--ink); }
-  .band--paper .day li::after { background: var(--paper); border-color: #8A6A35; }
-  .band--paper .day p { color: var(--mute-on-cream); }
-  .day li { transition: opacity .35s var(--ease); }
-  .day-wrap.live .day li:not(.active) { opacity: .45; }
-  .day-face { float: right; width: 56px; height: 52px; object-fit: cover; border-radius: 50%; margin: 0 0 6px 12px; background: #F3EFE6; box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px rgba(138,106,53,.35); }
-  @media (max-width: 860px) { .day-wrap { grid-template-columns: minmax(0, 1fr); } .day-figure { display: none; } .day-wrap.live .day li:not(.active) { opacity: 1; } }
+  /* A day with Bella: pinned scroll story, sky follows the time of day */
+  .dayshow { position: relative; height: calc(100vh + 7 * 62vh); height: calc(100svh + 7 * 62svh); background: var(--paper); color: var(--ink); }
+  .day-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; overflow: clip; display: grid; grid-template-rows: auto 1fr; padding-top: 84px; }
+  .day-head { display: grid; gap: 8px; margin-bottom: clamp(12px, 2vh, 24px); }
+  .day-head h2 { font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem); }
+  .day-head p { color: var(--mute-on-cream); max-width: 52ch; }
+  .day-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); align-items: center; min-height: 0; padding-bottom: 4vh; }
+  .day-stage { position: relative; height: min(62svh, 560px); border-radius: 32px; overflow: hidden; isolation: isolate;
+    background: linear-gradient(180deg, var(--sky1, #1B1F3B), var(--sky2, #2E2A55)); transition: background .2s linear; box-shadow: 0 30px 70px -40px rgba(30,20,10,.6); }
+  .day-stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, transparent, rgba(0,0,0,.12)); z-index: -1; }
+  .celestial { position: absolute; left: var(--cx, 20%); top: var(--cy, 30%); width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; z-index: -1; transition: background .6s, box-shadow .6s; }
+  .celestial.sun { background: radial-gradient(circle at 40% 35%, #FFF6D5, #FFD36B 55%, #F7A93B); box-shadow: 0 0 40px 14px rgba(255,200,90,.55); }
+  .celestial.moon { background: radial-gradient(circle at 40% 35%, #FFFFFF, #E2E4F2 60%, #B9BDD6); box-shadow: 0 0 34px 8px rgba(220,225,255,.35), inset -12px -6px 0 rgba(150,155,190,.45); }
+  .stars { position: absolute; inset: 0; z-index: -2; opacity: var(--night, 1); transition: opacity .3s linear;
+    background-image: radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 30% 8%, #fff, transparent), radial-gradient(1.5px 1.5px at 62% 22%, #fff, transparent), radial-gradient(1px 1px at 80% 12%, #fff, transparent), radial-gradient(1.5px 1.5px at 90% 35%, #fff, transparent), radial-gradient(1px 1px at 45% 30%, #fff, transparent), radial-gradient(1px 1px at 20% 40%, #fff, transparent); }
+  .day-figure { position: absolute; inset: 0; }
+  .day-figure img { position: absolute; left: 50%; bottom: 0; height: 92%; width: auto; max-width: none; transform: translate(-50%, 24px) scale(.96); opacity: 0;
+    transition: opacity .45s var(--ease), transform .55s cubic-bezier(.34,1.4,.5,1); filter: drop-shadow(0 18px 18px rgba(0,0,0,.25)); }
+  .day-figure img.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .day-stage.hop .day-figure img.on { animation: dayhop .55s cubic-bezier(.34,1.6,.5,1); }
+  @keyframes dayhop { 0% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -26px) rotate(-3deg); } 100% { transform: translate(-50%, 0); } }
+  .day-say { position: absolute; left: 50%; top: 9%; z-index: 2; transform: translateX(-10%) scale(.9); opacity: 0; max-width: min(260px, 70%);
+    padding: 10px 14px; border-radius: 18px 18px 18px 4px; background: #fff; color: var(--ink); font: 500 .95rem/1.3 var(--font-display); box-shadow: 0 16px 30px -14px rgba(0,0,0,.5);
+    transition: opacity .3s var(--ease), transform .45s cubic-bezier(.34,1.5,.5,1); pointer-events: none; }
+  .day-say.on { opacity: 1; transform: translateX(-10%); }
+  .day-hit { position: absolute; left: 25%; right: 25%; top: 6%; bottom: 0; border: 0; background: transparent; cursor: pointer; border-radius: 40% 40% 0 0; }
+  .day-hit:focus-visible { outline: 2px dashed #fff; outline-offset: -6px; }
+  .day-side { display: grid; gap: 18px; min-width: 0; }
+  .day-track { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .day-track button { min-height: 44px; padding: 6px 2px; border-radius: 12px; border: 1px solid rgba(11,10,12,.1); background: rgba(255,255,255,.7); cursor: pointer;
+    font: 600 .72rem/1.1 var(--font-display); color: #4B4239; font-variant-numeric: tabular-nums; transition: background-color .25s var(--ease), color .25s var(--ease); }
+  .day-track button[aria-selected="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .day-cards { list-style: none; margin: 0; padding: 0; position: relative; min-height: 210px; }
+  .day-cards li { position: absolute; inset: 0 0 auto 0; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 6px 16px; align-items: start; padding: 22px; border-radius: 24px;
+    background: #fff; box-shadow: 0 24px 50px -34px rgba(40,30,20,.55); border: 1px solid rgba(11,10,12,.05);
+    opacity: 0; transform: translateY(26px); transition: opacity .4s var(--ease), transform .5s cubic-bezier(.34,1.3,.5,1); pointer-events: none; }
+  .day-cards li.active { opacity: 1; transform: none; pointer-events: auto; }
+  .day-cards li.past { transform: translateY(-22px); }
+  .day-cards .day-face { grid-row: span 3; width: 64px; height: 60px; object-fit: cover; border-radius: 50%; background: #F3EFE6; box-shadow: 0 0 0 3px #fff, 0 0 0 4px rgba(138,106,53,.35); }
+  .day-cards time { font: 600 clamp(1.8rem, 1.3rem + 1.6vw, 2.6rem)/1 var(--font-display); color: #8A6A35; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+  .day-cards h3 { font-size: 1.45rem; }
+  .day-cards p { color: var(--mute-on-cream); }
+  .day-progress { height: 6px; border-radius: 6px; background: rgba(11,10,12,.08); overflow: hidden; }
+  .day-progress i { display: block; height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, #8A6A35, var(--red)); }
+  .day-hint { font-size: .85rem; color: var(--mute-on-cream); }
+  @media (max-width: 860px) {
+    .day-pin { padding-top: 76px; }
+    .day-head { margin-bottom: 10px; }
+    .day-head h2 { font-size: 1.7rem; }
+    .day-head p { display: none; }
+    .day-grid { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 12px; }
+    .day-stage { height: 36svh; border-radius: 24px; }
+    .day-side { gap: 10px; }
+    .day-track { grid-template-columns: repeat(7, minmax(52px, 1fr)); overflow-x: auto; scrollbar-width: none; }
+    .day-cards { min-height: 172px; }
+    .day-cards li { padding: 16px; grid-template-columns: 48px minmax(0, 1fr); }
+    .day-cards .day-face { width: 48px; height: 46px; }
+    .day-cards p { font-size: .92rem; }
+    .day-hint { display: none; }
+  }
+  @media (max-height: 700px) and (max-width: 860px) { .day-stage { height: 30svh; } }
 
   .host-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 28px); align-items: end; max-width: 980px; margin-inline: auto; position: relative; }
   .host-stage::after { content: ""; position: absolute; left: 4%; right: 4%; bottom: 34px; height: 2px; background: rgba(11,10,12,.12); z-index: 0; }
@@ -758,29 +788,40 @@
     </div>
   </section>
 
-  <!-- Features: a day with Bella -->
-  <section class="band band--paper" id="features" aria-labelledby="features-title">
-    <div class="wrap">
-      <div class="section-head">
+  <!-- Features: a day with Bella (pinned scroll story) -->
+  <section class="dayshow" id="features" aria-labelledby="features-title">
+    <div class="day-pin">
+      <div class="wrap day-head">
         <h2 id="features-title">Everything your listing needs, handled.</h2>
-        <p>Here is one ordinary day for a host with Bella. You keep 100% of every booking.</p>
+        <p>Scroll through one ordinary day with Bella. You keep 100% of every booking.</p>
       </div>
-      <div class="day-wrap">
-        <div class="day-figure" aria-hidden="true">
-          <img data-pose="typing" class="on" src="bella-assets/pose-typing.webp" width="230" height="610" alt="" loading="lazy">
-          <img data-pose="phone" src="bella-assets/bella-phone.webp" width="286" height="688" alt="" loading="lazy">
-          <img data-pose="key" src="bella-assets/pose-key.webp" width="252" height="612" alt="" loading="lazy">
-          <img data-pose="calendar" src="bella-assets/pose-calendar.webp" width="318" height="608" alt="" loading="lazy">
+      <div class="wrap day-grid">
+        <div class="day-stage" id="day-stage">
+          <span class="stars" aria-hidden="true"></span>
+          <span class="celestial moon" id="celestial" aria-hidden="true"></span>
+          <div class="day-figure" aria-hidden="true">
+            <img data-pose="typing" class="on" src="bella-assets/pose-typing.webp" width="230" height="610" alt="">
+            <img data-pose="phone" src="bella-assets/bella-phone.webp" width="286" height="688" alt="" loading="lazy">
+            <img data-pose="key" src="bella-assets/pose-key.webp" width="252" height="612" alt="" loading="lazy">
+            <img data-pose="calendar" src="bella-assets/pose-calendar.webp" width="318" height="608" alt="" loading="lazy">
+          </div>
+          <span class="day-say" id="day-say" aria-live="polite"></span>
+          <button type="button" class="day-hit" id="day-hit" aria-label="Ask Bella what she just did"></button>
         </div>
-        <ol class="day">
-        <li data-pose="typing"><time>2:04 AM</time><div><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><h3>Guest replies</h3><p>A guest asks for directions in the middle of the night. Bella answers in 3 seconds, in the guest's own language.</p></div></li>
-        <li data-pose="phone"><time>6:30 AM</time><div><img class="day-face" src="bella-assets/face-thinking.webp" width="300" height="276" alt="" loading="lazy"><h3>Smart pricing</h3><p>Demand jumps for a festival weekend. Bella raises your nightly rate before the rush.</p></div></li>
-        <li data-pose="key"><time>11:00 AM</time><div><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><h3>Automatic check-in</h3><p>Today's guests get their check-in details, Wi-Fi and directions on time.</p></div></li>
-        <li data-pose="calendar"><time>2:15 PM</time><div><img class="day-face" src="bella-assets/face-wink.webp" width="300" height="276" alt="" loading="lazy"><h3>Calendar blocking</h3><p>You need the flat next week. Bella blocks the dates so nobody books them.</p></div></li>
-        <li data-pose="typing"><time>5:40 PM</time><div><img class="day-face" src="bella-assets/face-surprised.webp" width="300" height="276" alt="" loading="lazy"><h3>Listing audit</h3><p>Bella spots a dark cover photo and a missing amenity, and fixes the gaps.</p></div></li>
-        <li data-pose="phone"><time>9:20 PM</time><div><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><h3>Co-Host chat</h3><p>You type "Raise weekend prices by 10%". It’s done before you put your phone down.</p></div></li>
-        <li data-pose="typing"><time>11:50 PM</time><div><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><h3>Airbnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts Airbnb support for you.</p></div></li>
-        </ol>
+        <div class="day-side">
+          <div class="day-track" role="tablist" aria-label="Times of day"><button type="button" role="tab" id="day-tab-0" aria-controls="day-0" aria-selected="true">2:04 AM</button><button type="button" role="tab" id="day-tab-1" aria-controls="day-1" aria-selected="false">6:30 AM</button><button type="button" role="tab" id="day-tab-2" aria-controls="day-2" aria-selected="false">11:00 AM</button><button type="button" role="tab" id="day-tab-3" aria-controls="day-3" aria-selected="false">2:15 PM</button><button type="button" role="tab" id="day-tab-4" aria-controls="day-4" aria-selected="false">5:40 PM</button><button type="button" role="tab" id="day-tab-5" aria-controls="day-5" aria-selected="false">9:20 PM</button><button type="button" role="tab" id="day-tab-6" aria-controls="day-6" aria-selected="false">11:50 PM</button></div>
+          <ol class="day-cards">
+          <li id="day-0" role="tabpanel" aria-labelledby="day-tab-0" data-pose="typing" data-hour="2.07" data-say="Replied in 3 seconds. Go back to sleep!" data-sky1="#141A38" data-sky2="#2E2A55"><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><time>2:04 AM</time><h3>Guest replies</h3><p>A guest asks for directions in the middle of the night. Bella answers in 3 seconds, in the guest's own language.</p></li>
+          <li id="day-1" role="tabpanel" aria-labelledby="day-tab-1" data-pose="phone" data-hour="6.5" data-say="Festival weekend! Raising your rate." data-sky1="#F4B9A0" data-sky2="#F6E2CB"><img class="day-face" src="bella-assets/face-thinking.webp" width="300" height="276" alt="" loading="lazy"><time>6:30 AM</time><h3>Smart pricing</h3><p>Demand jumps for a festival weekend. Bella raises your nightly rate before the rush.</p></li>
+          <li id="day-2" role="tabpanel" aria-labelledby="day-tab-2" data-pose="key" data-hour="11.0" data-say="Check-in details sent to every guest." data-sky1="#8FCBEA" data-sky2="#E6F3F9"><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><time>11:00 AM</time><h3>Automatic check-in</h3><p>Today's guests get their check-in details, Wi-Fi and directions on time.</p></li>
+          <li id="day-3" role="tabpanel" aria-labelledby="day-tab-3" data-pose="calendar" data-hour="14.25" data-say="Dates blocked. Enjoy your flat!" data-sky1="#7EC3EC" data-sky2="#DDF0FA"><img class="day-face" src="bella-assets/face-wink.webp" width="300" height="276" alt="" loading="lazy"><time>2:15 PM</time><h3>Calendar blocking</h3><p>You need the flat next week. Bella blocks the dates so nobody books them.</p></li>
+          <li id="day-4" role="tabpanel" aria-labelledby="day-tab-4" data-pose="typing" data-hour="17.67" data-say="Found a dark cover photo. Fixed it!" data-sky1="#F29E5C" data-sky2="#F6D6A8"><img class="day-face" src="bella-assets/face-surprised.webp" width="300" height="276" alt="" loading="lazy"><time>5:40 PM</time><h3>Listing audit</h3><p>Bella spots a dark cover photo and a missing amenity, and fixes the gaps.</p></li>
+          <li id="day-5" role="tabpanel" aria-labelledby="day-tab-5" data-pose="phone" data-hour="21.33" data-say="Weekend prices up 10%. Done!" data-sky1="#3A2C5C" data-sky2="#6B4F8A"><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><time>9:20 PM</time><h3>Co-Host chat</h3><p>You type "Raise weekend prices by 10%". It’s done before you put your phone down.</p></li>
+          <li id="day-6" role="tabpanel" aria-labelledby="day-tab-6" data-pose="typing" data-hour="23.83" data-say="Cancellation handled with Airbnb support." data-sky1="#10132A" data-sky2="#262A48"><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><time>11:50 PM</time><h3>Airbnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts Airbnb support for you.</p></li>
+          </ol>
+          <div class="day-progress" aria-hidden="true"><i id="day-bar"></i></div>
+          <p class="day-hint">Keep scrolling, or tap a time. Tap Bella to hear what she did.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1877,19 +1918,64 @@
     art.addEventListener('pointerleave', function () { art.style.setProperty('--tx', '0deg'); art.style.setProperty('--ty', '0deg'); });
   })();
 
-  // ===== A day with Bella: the sticky figure switches pose with the time of day you are reading =====
-  (function initDay() {
-    var wrap = document.querySelector('.day-wrap'); if (!wrap || !('IntersectionObserver' in window)) return;
-    var items = wrap.querySelectorAll('.day li'), figs = wrap.querySelectorAll('.day-figure img');
-    function activate(li) {
-      items.forEach(function (x) { x.classList.toggle('active', x === li); });
-      figs.forEach(function (f) { f.classList.toggle('on', f.dataset.pose === li.dataset.pose); });
+  // ===== A day with Bella: scroll drives the clock, sky, sun/moon, Bella's pose and the card =====
+  (function initDayShow() {
+    var sec = document.getElementById('features'); if (!sec || !sec.classList.contains('dayshow')) return;
+    var stage = document.getElementById('day-stage'), cel = document.getElementById('celestial'), say = document.getElementById('day-say');
+    var bar = document.getElementById('day-bar'), hit = document.getElementById('day-hit');
+    var items = Array.prototype.slice.call(sec.querySelectorAll('.day-cards li')), tabs = sec.querySelectorAll('.day-track button');
+    var figs = sec.querySelectorAll('.day-figure img'), N = items.length, cur = -1, sayT = null;
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function hexMix(a, b, t) {
+      var pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16), out = 0;
+      for (var k = 16; k >= 0; k -= 8) { var ca = (pa >> k) & 255, cb = (pb >> k) & 255; out |= Math.round(ca + (cb - ca) * t) << k; }
+      return '#' + ('000000' + out.toString(16)).slice(-6);
     }
-    wrap.classList.add('live'); activate(items[0]);
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) activate(en.target); });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    items.forEach(function (li) { io.observe(li); });
+    function talk(text) {
+      say.textContent = text; say.classList.add('on');
+      clearTimeout(sayT); sayT = setTimeout(function () { say.classList.remove('on'); }, 2400);
+    }
+    function activate(i) {
+      if (i === cur) return; var prev = cur; cur = i;
+      items.forEach(function (li, k) { li.classList.toggle('active', k === i); li.classList.toggle('past', k < i); });
+      tabs.forEach(function (t, k) { t.setAttribute('aria-selected', String(k === i)); });
+      figs.forEach(function (f) { f.classList.toggle('on', f.dataset.pose === items[i].dataset.pose); });
+      if (prev !== -1) talk(items[i].dataset.say);
+      var tab = tabs[i]; if (tab && tab.parentNode.scrollWidth > tab.parentNode.clientWidth) tab.parentNode.scrollLeft = tab.offsetLeft - 40;
+    }
+    function range() { return Math.max(1, sec.offsetHeight - window.innerHeight); }
+    function update() {
+      var p = Math.min(1, Math.max(0, -sec.getBoundingClientRect().top / range()));
+      var f = p * N, i = Math.min(N - 1, Math.floor(f)), frac = Math.min(1, f - i);
+      var e = Math.max(0, Math.min(1, (frac - 0.55) / 0.45)); frac = e * e * (3 - 2 * e); // hold each moment, then blend into the next
+      activate(i);
+      var a = items[i], b = items[Math.min(N - 1, i + 1)];
+      // blend the sky, and move the sun or moon along its arc, between this moment and the next
+      var h = +a.dataset.hour + (+b.dataset.hour - +a.dataset.hour) * frac;
+      stage.style.setProperty('--sky1', hexMix(a.dataset.sky1, b.dataset.sky1, frac));
+      stage.style.setProperty('--sky2', hexMix(a.dataset.sky2, b.dataset.sky2, frac));
+      var day = h >= 6 && h < 19, t = day ? (h - 6) / 13 : ((h >= 19 ? h - 19 : h + 5) / 11);
+      cel.className = 'celestial ' + (day ? 'sun' : 'moon');
+      cel.style.setProperty('--cx', (8 + t * 84).toFixed(1) + '%');
+      cel.style.setProperty('--cy', (62 - Math.sin(t * Math.PI) * 48).toFixed(1) + '%');
+      stage.style.setProperty('--night', day ? Math.max(0, 1 - Math.min(h - 6, 19 - h) / 1.5).toFixed(2) : 1);
+      bar.style.width = (p * 100).toFixed(1) + '%';
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; update(); }); } }, { passive: true });
+    window.addEventListener('resize', update);
+    tabs.forEach(function (t, k) {
+      t.addEventListener('click', function () {
+        var y = sec.getBoundingClientRect().top + window.pageYOffset + range() * (k + 0.5) / N;
+        window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+      });
+    });
+    hit.addEventListener('click', function () {
+      if (cur < 0) return;
+      stage.classList.remove('hop'); void stage.offsetWidth; stage.classList.add('hop');
+      talk(items[cur].dataset.say);
+    });
+    update();
   })();
 
   // ===== Hosts: tap a host to see what Bella does for them =====
