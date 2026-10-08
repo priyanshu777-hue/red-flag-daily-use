@@ -171,8 +171,52 @@
   .bl-iris { position: absolute; max-width: none; transform: translate(calc(var(--gx, 0) * 16%), calc(var(--gy, 0) * 9%)); transition: transform .25s var(--ease); }
   .bl-l .bl-iris { left: 13.3%; top: -9.1%; width: 93.3%; height: 127.3%; }
   .bl-r .bl-iris { left: 0; top: -27.3%; width: 88.2%; height: 136.4%; }
-  .bl-lid { position: absolute; inset: -10% -5%; background: linear-gradient(180deg, #D9A88E, #E6B79D 80%); border-bottom: 1.5px solid #3A2416; transform: translateY(-110%); transition: transform .07s ease-in; }
-  .rider.blink .bl-lid { transform: translateY(0); }
+  /* Closed eye: a skin-coloured lid a little larger than the painted eye, with a curved lash line; it drops from the top */
+  .bl-shut { position: absolute; border-radius: 50%; background: radial-gradient(ellipse at 50% 30%, #DDAA8E, #E6B89E 70%); box-shadow: 0 0 3px 1.5px #E3B398; transform: scaleY(0); transform-origin: 50% 0; transition: transform .08s ease-in; }
+  .bl-shut::after { content: ""; position: absolute; left: 6%; right: 6%; top: 34%; height: 34%; border-bottom: 2px solid #3A2416; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
+  .bl-sl { left: 39.93%; top: 8.93%; width: 2.52%; height: 2.64%; }
+  .bl-sr { left: 44.12%; top: 8.49%; width: 3%; height: 2.64%; }
+  .rider.blink .bl-shut { transform: scaleY(1); }
+  /* Gestures: each one is a class on .rider for a moment. .bl-g moves her upper body (around the hips), .bl-head her head (around the neck), .rider-hand her raised hand (around the wrist). */
+  .bl-g { position: absolute; inset: 0; transform-origin: 43.17% 39.24%; }
+  .rider.g-lean .bl-g { animation: g-lean 1.8s ease-in-out; }
+  @keyframes g-lean { 25%, 70% { transform: rotate(-6deg); } }
+  .rider.g-lean .bl-head { animation: g-tilt 1.8s ease-in-out; }
+  .rider.g-hop .rider-body { animation: gait 1.25s ease-in-out infinite, g-hop 1.1s cubic-bezier(.3,1.6,.5,1); }
+  .rider.walking.g-hop .rider-body { animation-duration: .6s, 1.1s; }
+  @keyframes g-hop { 20% { translate: 0 -28px; } 40% { translate: 0 0; } 60% { translate: 0 -18px; } 80% { translate: 0 0; } }
+  .rider.g-hop .bl-g { animation: g-sway 1.1s ease-in-out; }
+  @keyframes g-sway { 25% { transform: rotate(3deg); } 60% { transform: rotate(-3deg); } }
+  .rider.g-laugh .bl-g { animation: g-laugh 1.2s ease-in-out; }
+  @keyframes g-laugh { 10%, 30%, 50%, 70% { transform: rotate(2.2deg); } 20%, 40%, 60%, 80% { transform: rotate(-1.2deg); } }
+  .rider.g-laugh .bl-head { animation: g-back 1.2s ease-in-out; }
+  @keyframes g-back { 15%, 75% { transform: rotate(-5deg) translateY(-.4%); } }
+  .rider.g-laugh .bl-shut, .rider.g-hop .bl-shut { transform: scaleY(1); transition-duration: .12s; }
+  .rider.g-think .bl-head { animation: g-think 2.2s ease-in-out; }
+  @keyframes g-think { 20%, 80% { transform: rotate(7deg) translateY(.3%); } }
+  @keyframes g-tilt { 25%, 70% { transform: rotate(-6deg); } }
+  .rider.g-wink .bl-head { animation: g-wink-h 1.4s ease-in-out; }
+  @keyframes g-wink-h { 20%, 70% { transform: rotate(5deg); } }
+  .rider.g-wink .bl-sr { animation: g-wink 1.4s ease-in-out; }
+  @keyframes g-wink { 0%, 12%, 78%, 100% { transform: scaleY(0); } 22%, 68% { transform: scaleY(1); } }
+  .rider.g-no .bl-head { animation: g-no 1.1s ease-in-out; }
+  @keyframes g-no { 15% { transform: rotate(-6deg); } 35% { transform: rotate(6deg); } 55% { transform: rotate(-5deg); } 75% { transform: rotate(4deg); } }
+  .rider.g-five .rider-hand { animation: g-five 1.3s cubic-bezier(.3,1.5,.5,1); }
+  @keyframes g-five { 20%, 30% { transform: translateY(-4%) rotate(-8deg) scale(1.12); } 45% { transform: translateY(-1%) rotate(2deg) scale(1.02); } 60%, 70% { transform: translateY(-4%) rotate(-8deg) scale(1.12); } }
+  .rider.g-five .bl-g { animation: g-back-body 1.3s ease-in-out; }
+  @keyframes g-back-body { 25%, 70% { transform: rotate(2deg); } }
+  .rider.g-point .rider-hand { animation: g-point 1.8s ease-in-out; }
+  @keyframes g-point { 20%, 75% { transform: rotate(22deg) translateX(1%); } }
+  .rider.g-point .bl-head { animation: g-tilt 1.8s ease-in-out; }
+  /* little effects that pop out next to her: hearts, sparkles, thinking dots, a check mark */
+  .bl-fx { position: absolute; left: 38%; top: 2%; width: 26%; height: 30%; pointer-events: none; z-index: 3; }
+  .bl-fx i { position: absolute; left: var(--x); top: var(--y); width: var(--s, 26px); height: var(--s, 26px); opacity: 0; animation: fx-up 1.6s var(--d, 0s) ease-out forwards; }
+  .bl-fx i svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 4px 6px rgba(60,30,20,.25)); }
+  @keyframes fx-up { 0% { opacity: 0; transform: translateY(10px) scale(.4) rotate(var(--r, 0deg)); } 20% { opacity: 1; transform: translateY(0) scale(1.1) rotate(var(--r, 0deg)); } 100% { opacity: 0; transform: translateY(-60px) scale(.9) rotate(var(--r, 0deg)); } }
+  .bl-fx .dots3 { display: flex; gap: 5px; padding: 8px 11px; border-radius: 14px; background: #fff; box-shadow: 0 10px 20px -10px rgba(60,40,20,.5); width: auto; height: auto; animation: fx-pop 2s ease-out forwards; }
+  .bl-fx .dots3 b { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: blink 1s infinite; }
+  .bl-fx .dots3 b:nth-child(2) { animation-delay: .15s; } .bl-fx .dots3 b:nth-child(3) { animation-delay: .3s; }
+  @keyframes fx-pop { 0% { opacity: 0; transform: scale(.5); } 15%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
   .rider-shadow { position: absolute; left: 12%; right: 10%; bottom: -1%; height: 7%; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,40,20,.22), transparent); z-index: -1; }
   .scene-card {
     position: absolute; z-index: 4; left: var(--gutter); bottom: 6vh; width: min(380px, calc(100% - 2 * var(--gutter)));
@@ -229,7 +273,7 @@
   .bella-hit:focus-visible { outline: 2px dashed var(--ink); outline-offset: -4px; }
   .bella-say { position: absolute; left: 61%; top: -4%; z-index: 3; max-width: 230px; padding: 10px 14px; border-radius: 18px 18px 18px 4px; background: #fff; color: var(--ink);
     font: 500 .95rem/1.3 var(--font-display); box-shadow: 0 16px 34px -16px rgba(60,40,20,.55); opacity: 0; transform: translateY(8px) scale(.9); transform-origin: 0 100%; pointer-events: none;
-    transition: opacity .3s var(--ease), transform .4s cubic-bezier(.34,1.5,.5,1); white-space: nowrap; }
+    transition: opacity .3s var(--ease), transform .4s cubic-bezier(.34,1.5,.5,1); width: max-content; max-width: 250px; }
   .bella-say.on { opacity: 1; transform: none; }
   @media (max-width: 860px) { .bella-say { left: auto; right: 50%; top: -9%; border-radius: 18px 18px 4px 18px; transform-origin: 100% 100%; white-space: normal; max-width: 46vw; font-size: .85rem; } }
   .rider.boop .rider-body { animation: boop .5s var(--ease); }
@@ -320,7 +364,7 @@
     .dock-btn { padding: 10px 16px; font-size: .88rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .rider-body, .bl-torso { animation: none; } .lamp, .portrait { animation: none; } }
+    .rider-body, .bl-torso, .bl-g, .rider .bl-head, .rider .rider-hand, .rider .bl-shut { animation: none !important; } .bl-fx { display: none; } .lamp, .portrait { animation: none; } }
 
   /* Problem */
   .problem-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
@@ -879,6 +923,29 @@
     background: linear-gradient(180deg, rgba(244,239,232,.95), rgba(244,239,232,.08) 85%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .foot-word i { display: inline-block; width: .15em; height: .15em; margin-left: .02em; border-radius: 50%; background: var(--red); box-shadow: 0 0 30px rgba(200,16,46,.6); }
   .foot-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 18px 28px; font-size: .85rem; color: var(--mute-on-ink); border-top: 1px solid rgba(255,255,255,.08); }
+  .foot-note { flex-basis: 100%; font-size: .78rem; opacity: .8; }
+  .qf-legal { font-size: .75rem; color: var(--mute-on-ink); text-align: center; margin-top: -10px; }
+  .qf-legal a { color: var(--cream); }
+  /* Legal centre: one dialog with a tab per document; each document also has its own link, e.g. /bella#privacy */
+  .legal { border: 0; padding: 0; margin: auto; width: min(760px, calc(100% - 24px)); height: min(86vh, 900px); border-radius: 24px; background: var(--paper); color: var(--ink); box-shadow: 0 40px 100px -30px rgba(0,0,0,.7); overflow: hidden; }
+  .legal::backdrop { background: rgba(5,4,6,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .legal[open] { display: flex; animation: qf-in .35s var(--ease); }
+  .legal-inner { display: flex; flex-direction: column; width: 100%; min-height: 0; }
+  .legal-top { display: flex; align-items: center; justify-content: space-between; padding: 20px clamp(18px, 4vw, 32px) 10px; }
+  .legal-top h2 { font-size: 1.4rem; }
+  .legal .qf-close { color: var(--ink); border-color: rgba(11,10,12,.15); }
+  .legal-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px clamp(18px, 4vw, 32px) 14px; scrollbar-width: none; border-bottom: 1px solid rgba(11,10,12,.08); }
+  .legal-tabs::-webkit-scrollbar { display: none; }
+  .legal-tabs button { flex: none; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(11,10,12,.12); background: #fff; color: var(--ink); font: 500 .9rem/1 var(--font-display); cursor: pointer; }
+  .legal-tabs button[aria-selected="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .legal-body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px clamp(18px, 4vw, 32px) 32px; overscroll-behavior: contain; }
+  .legal-doc { max-width: 64ch; }
+  .legal-doc h3 { font-size: 1.6rem; letter-spacing: -.02em; }
+  .legal-doc h4 { font-family: var(--font-display); font-size: 1.05rem; margin: 22px 0 6px; }
+  .legal-doc p, .legal-doc li { font-size: .95rem; line-height: 1.6; color: #3C3832; }
+  .legal-doc ul { padding-left: 1.2em; display: grid; gap: 6px; }
+  .legal-doc a { color: var(--red); }
+  .legal-date { font-size: .82rem !important; color: #7A7268 !important; margin-top: 4px; }
   @media (max-width: 760px) { .foot-grid { grid-template-columns: minmax(0, 1fr); } .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
   .assure { list-style: none; margin: clamp(28px, 4vw, 40px) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -1004,15 +1071,17 @@
           <span class="rider-shadow" aria-hidden="true"></span>
           <img src="bella-assets/bella-chameleon.webp" width="834" height="683" alt="Bella waving from the back of a friendly chameleon">
           <img class="rider-tint" src="bella-assets/chameleon-tint.webp" width="834" height="683" alt="" aria-hidden="true">
-          <div class="bl-torso" aria-hidden="true">
+          <div class="bl-torso" aria-hidden="true"><div class="bl-g">
             <img src="bella-assets/bella-torso.webp" width="834" height="683" alt="">
             <div class="bl-head">
               <img src="bella-assets/bella-head.webp" width="834" height="683" alt="">
-              <span class="bl-eye bl-l"><img class="bl-iris" src="bella-assets/iris-l.webp" alt=""><i class="bl-lid"></i></span>
-              <span class="bl-eye bl-r"><img class="bl-iris" src="bella-assets/iris-r.webp" alt=""><i class="bl-lid"></i></span>
+              <span class="bl-eye bl-l"><img class="bl-iris" src="bella-assets/iris-l.webp" alt=""></span>
+              <span class="bl-eye bl-r"><img class="bl-iris" src="bella-assets/iris-r.webp" alt=""></span>
+              <i class="bl-shut bl-sl"></i><i class="bl-shut bl-sr"></i>
             </div>
             <img class="rider-hand" src="bella-assets/bella-hand.webp" width="834" height="683" alt="">
-          </div>
+          </div></div>
+          <span class="bl-fx" id="bella-fx" aria-hidden="true"></span>
           <span class="eye" aria-hidden="true"><i></i></span>
           <span class="bella-say" id="bella-say" aria-live="polite"></span>
           <button type="button" class="bella-hit" id="bella-hit" aria-label="Say hi to Bella"></button>
@@ -1566,11 +1635,11 @@
     <nav class="foot-cols" aria-label="Footer">
       <div><h3>Bella</h3><a href="#features">Features</a><a href="#hosts">Hosts</a><a href="#calc">See what you keep</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
       <div><h3>Contact</h3><a class="js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">WhatsApp</a><a class="js-mail" data-subject="Question about Bella" href="#contact">Email us</a><a href="https://redflaghomes.in" target="_blank" rel="noopener">Red Flag Homes</a></div>
-      <div><h3>Legal</h3><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund-policy">Refund and cancellation</a></div>
+      <div><h3>Legal</h3><a href="#terms">Terms of Service</a><a href="#privacy">Privacy Policy</a><a href="#refunds">Refund and cancellation</a><a href="#delivery">Shipping and delivery</a><a href="#cookies">Cookies</a><a href="#disclaimer">Disclaimer</a></div>
     </nav>
   </div>
   <div class="foot-word" aria-hidden="true">bella<i></i></div>
-  <div class="wrap foot-base"><span>© <span id="yr">2026</span> Bella by Red Flag Homes Network</span><span>No commission · Cancel anytime</span></div>
+  <div class="wrap foot-base"><span>© <span id="yr">2026</span> Bella by Red Flag Homes Network</span><span>No commission · Cancel anytime</span><span class="foot-note">Bella is an independent AI co-host and is not affiliated with any bnb platform. All trademarks belong to their owners.</span></div>
 </footer>
 
 <dialog class="qf" id="qf" aria-labelledby="qf-title">
@@ -1588,7 +1657,168 @@
       <button type="submit" class="btn btn--red" id="qf-next">Next</button>
     </div>
     <p class="qf-safe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Takes 30 seconds · Your details are only used to set up Bella</p>
+    <p class="qf-legal">By continuing you agree to our <a href="#terms">Terms</a>, <a href="#privacy">Privacy Policy</a> and <a href="#refunds">Refund Policy</a>.</p>
   </form>
+</dialog>
+
+<dialog class="legal" id="legal" aria-labelledby="legal-title">
+  <div class="legal-inner">
+    <div class="legal-top">
+      <h2 id="legal-title">Legal</h2>
+      <button type="button" class="qf-close" id="legal-close" aria-label="Close">×</button>
+    </div>
+    <div class="legal-tabs" role="tablist" aria-label="Legal documents">
+      <button type="button" role="tab" data-doc="terms">Terms</button>
+      <button type="button" role="tab" data-doc="privacy">Privacy</button>
+      <button type="button" role="tab" data-doc="refunds">Refunds</button>
+      <button type="button" role="tab" data-doc="delivery">Delivery</button>
+      <button type="button" role="tab" data-doc="cookies">Cookies</button>
+      <button type="button" role="tab" data-doc="disclaimer">Disclaimer</button>
+    </div>
+    <div class="legal-body" id="legal-body" tabindex="0">
+
+      <article class="legal-doc" id="doc-terms" role="tabpanel" hidden>
+        <h3>Terms of Service</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <p>These terms are an agreement between you and <b data-legal="entity"></b> ("we", "us"), which runs Bella by Red Flag Homes ("Bella"). By paying for or using Bella, you agree to them. If you don't agree, please don't use Bella.</p>
+        <h4>1. What Bella is</h4>
+        <p>Bella is an AI co-host for short-term rental hosts. After you add Bella to your bnb account, it can reply to guests, send check-in details, suggest or update prices, block your calendar, review your listing, contact bnb support for you and, on yearly plans, prepare and file damage claims for up to 5 listings.</p>
+        <h4>2. Who can use Bella</h4>
+        <p>You must be at least 18 years old and allowed to manage the listings you connect. If you sign up for a business, you confirm you can accept these terms for it.</p>
+        <h4>3. Your permission</h4>
+        <p>When you add Bella as a co-host, you allow us to access your bnb account and act on your behalf for the tasks above. You can remove this access at any time from your bnb account. Some tasks, like price changes, may happen automatically based on the settings you choose.</p>
+        <h4>4. Your responsibilities</h4>
+        <ul>
+          <li>Keep your listing details, house rules and prices correct. Bella works from what you give it.</li>
+          <li>Follow the rules of the platforms you use and the laws where your property is, including local registration and tax rules.</li>
+          <li>Check Bella's work from time to time. You remain the host and are responsible for your listings, bookings and guests.</li>
+          <li>Don't use Bella for anything unlawful, misleading or harmful, or try to break, copy or resell it.</li>
+        </ul>
+        <h4>5. AI limits</h4>
+        <p>Bella uses artificial intelligence. It is fast and usually right, but it can make mistakes, misread a message or give an incomplete answer. We do not guarantee bookings, income, ratings, reviews or the result of any claim or support request. Platforms decide claims and support cases on their own.</p>
+        <h4>6. Plans and payment</h4>
+        <p>Plans are sold monthly or yearly, in INR (paid through Razorpay) or USD (paid through Stripe). Your plan renews automatically at the end of each period until you cancel. Any applicable taxes are shown at checkout. We may change prices for future periods and will tell you by email at least 15 days before a change applies to you. Refunds are covered by our Refund and Cancellation Policy.</p>
+        <h4>7. Cancelling and ending service</h4>
+        <p>You can cancel anytime. Your access continues until the end of the period you paid for. We may pause or end your service if payment fails, if you break these terms, or if a platform blocks Bella's access. Where we can, we will warn you first.</p>
+        <h4>8. Third-party platforms</h4>
+        <p>Bella works with platforms that we don't own or control. They may change their features, rules or access at any time, which may limit what Bella can do. We are not responsible for their actions, outages or decisions.</p>
+        <h4>9. Our content</h4>
+        <p>Bella, its name, characters, artwork, software and this website belong to us or our licensors. Your data, listings and messages stay yours. You give us permission to use them only to run and improve Bella for you.</p>
+        <h4>10. Liability</h4>
+        <p>Bella is provided "as is". As far as the law allows, we are not liable for indirect or consequential losses, such as lost bookings, lost income or loss of reputation. Our total liability for any claim is limited to the amount you paid us in the 12 months before the claim. Nothing in these terms limits liability that cannot be limited by law.</p>
+        <h4>11. Indemnity</h4>
+        <p>You agree to cover us for claims made against us because of your listings, your guests, your breach of these terms or your breach of the law.</p>
+        <h4>12. Changes to these terms</h4>
+        <p>We may update these terms. If a change is important, we will email you before it applies. Using Bella after that means you accept the new terms.</p>
+        <h4>13. Law and disputes</h4>
+        <p>These terms are governed by the laws of <span data-legal="jurisdiction"></span>. Please contact us first so we can try to solve any problem. If we can't, disputes will be decided by the courts of <span data-legal="jurisdiction"></span>. If you are a consumer, you keep any rights the law of your country gives you.</p>
+        <h4>14. Contact</h4>
+        <p>Email <a data-legal-mail href="#">bella@redflaghomes.in</a>.<span data-legal="address-line"></span></p>
+      </article>
+
+      <article class="legal-doc" id="doc-privacy" role="tabpanel" hidden>
+        <h3>Privacy Policy</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <p>This policy explains what personal data <b data-legal="entity"></b> collects for Bella, why, and the choices you have. It applies to this website and to the Bella service.</p>
+        <h4>1. What we collect</h4>
+        <ul>
+          <li><b>Details you give us before checkout:</b> name, email address, city, phone number, number of listings, and the plan you pick.</li>
+          <li><b>Payment details:</b> handled by Razorpay (INR) or Stripe (USD). We do not see or store your full card or bank details. We receive a payment confirmation, the amount and the email used.</li>
+          <li><b>Account data, once you add Bella as a co-host:</b> your listing details, calendar, prices, reservations, and messages with guests and with platform support.</li>
+          <li><b>Guest data:</b> names, messages, booking dates and similar details of your guests, which Bella needs in order to reply to them.</li>
+          <li><b>Messages with us:</b> what you send us on WhatsApp or by email.</li>
+          <li><b>Basic technical data:</b> your browser type and approximate region from your time zone or language, used to show the right currency and language. This page saves your currency and billing choice on your own device only.</li>
+        </ul>
+        <h4>2. Why we use it</h4>
+        <ul>
+          <li>To set up Bella, send your setup guide and run the service you paid for.</li>
+          <li>To reply to guests, manage your calendar and prices, and contact platform support or file claims for you.</li>
+          <li>To take payments, send receipts and prevent fraud.</li>
+          <li>To answer your questions and send important updates about your plan. We only send marketing if you agree, and you can stop it anytime.</li>
+          <li>To keep Bella safe and working well, and to meet legal duties.</li>
+        </ul>
+        <p>We use your data based on your consent, to perform our contract with you, to meet legal duties, or for our legitimate interest in running a safe service.</p>
+        <h4>3. Guests' data</h4>
+        <p>When Bella handles your guests' data, we do so on your behalf and on your instructions. You are responsible for having a lawful reason to share it with us. We use it only to provide Bella to you.</p>
+        <h4>4. AI processing</h4>
+        <p>Bella uses AI service providers to understand and write messages. We share only the data needed for each task. We do not sell your data.</p>
+        <h4>5. Who we share it with</h4>
+        <p>Only with service providers who help us run Bella, such as payment processors (Razorpay, Stripe), AI and cloud hosting providers, email and WhatsApp providers, and the spreadsheet tool where we keep sign-up details. We also share data with the platforms you connect, when Bella acts for you, and with authorities when the law requires it. Some providers are outside your country. When data goes abroad, we use providers with suitable protections.</p>
+        <h4>6. How long we keep it</h4>
+        <p>We keep your data while your plan is active and for up to 12 months after it ends, unless the law needs us to keep it longer, for example tax records. Pre-checkout details from people who don't buy are deleted within 12 months. Then we delete or anonymise it.</p>
+        <h4>7. Security</h4>
+        <p>We use encryption in transit, limited access and trusted providers to protect your data. No system is perfectly secure, so we will tell you and the relevant authority quickly if a breach affects your data, as the law requires.</p>
+        <h4>8. Your rights</h4>
+        <p>You can ask to see, correct, update or delete your data, withdraw consent, or object to some uses. Depending on where you live (for example under India's Digital Personal Data Protection Act, 2023, the EU or UK GDPR, or Californian law), you may have further rights, including naming someone to act for you and complaining to a data protection authority. Email us and we will reply within 30 days.</p>
+        <h4>9. Children</h4>
+        <p>Bella is for adults. We don't knowingly collect data from anyone under 18.</p>
+        <h4>10. Grievance officer and contact</h4>
+        <p><span data-legal="grievance"></span> Email <a data-legal-mail href="#">bella@redflaghomes.in</a> with "Privacy" in the subject line. We acknowledge complaints within 24 hours and aim to resolve them within 15 days.<span data-legal="address-line"></span></p>
+        <h4>11. Changes</h4>
+        <p>We will update this page when our practices change and email you about important changes.</p>
+      </article>
+
+      <article class="legal-doc" id="doc-refunds" role="tabpanel" hidden>
+        <h3>Refund and Cancellation Policy</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <h4>Cancelling</h4>
+        <ul>
+          <li>You can cancel your monthly or yearly plan anytime by emailing <a data-legal-mail href="#">bella@redflaghomes.in</a> or messaging us on WhatsApp from the number you signed up with.</li>
+          <li>Cancelling stops the next renewal. Bella keeps working until the end of the period you already paid for.</li>
+          <li>To avoid the next charge, cancel at least 24 hours before your renewal date.</li>
+        </ul>
+        <h4>Refunds</h4>
+        <ul>
+          <li>Bella has no free trial. Payments for a period that has already started are not refunded, including unused days or months.</li>
+          <li><b>Setup problem:</b> if we can't get Bella working on your account within 7 days of payment for a reason on our side, we refund the full amount.</li>
+          <li><b>Wrong charges:</b> duplicate payments, charges after a confirmed cancellation, or charges for the wrong plan are refunded in full.</li>
+          <li><b>Changing plans:</b> if you move to a bigger plan, you pay the difference. If you move to a smaller plan, the change applies from your next renewal.</li>
+        </ul>
+        <h4>How refunds are paid</h4>
+        <p>Approved refunds go back to the original payment method within 5 to 7 business days. Your bank or card issuer may take a few more days to show it. Email us with your payment email and receipt to ask for a refund.</p>
+        <p>This policy does not affect any rights you have under consumer protection law.</p>
+      </article>
+
+      <article class="legal-doc" id="doc-delivery" role="tabpanel" hidden>
+        <h3>Shipping and Delivery Policy</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <p>Bella is a digital service. Nothing is shipped and there are no delivery charges.</p>
+        <ul>
+          <li>After your payment is confirmed, your setup guide is sent to the email address you gave us, usually within a few minutes and always within 24 hours.</li>
+          <li>Setup is a single step that takes about 60 seconds. There is no new app to install and no new account to create.</li>
+          <li>Bella starts working on your listings as soon as that step is done.</li>
+          <li>If the email hasn't arrived after 24 hours, check your spam folder, then contact us at <a data-legal-mail href="#">bella@redflaghomes.in</a> or on WhatsApp.</li>
+        </ul>
+        <p>Bella is available to hosts worldwide, wherever the connected platforms work.</p>
+      </article>
+
+      <article class="legal-doc" id="doc-cookies" role="tabpanel" hidden>
+        <h3>Cookie Policy</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <p>This page does not use advertising or tracking cookies.</p>
+        <ul>
+          <li><b>Saved on your device:</b> your currency (INR or USD) and billing choice (monthly or yearly), so the page remembers them. This stays in your browser and is never sent to us. You can clear it in your browser settings.</li>
+          <li><b>Fonts:</b> loaded from Google Fonts, which receives your IP address to deliver them.</li>
+          <li><b>Payment pages:</b> Razorpay and Stripe use their own cookies on their checkout pages for security and fraud prevention. Their cookie policies apply there.</li>
+          <li><b>Main website:</b> other pages of redflaghomes.in may use their own cookies, described on those pages.</li>
+        </ul>
+        <p>If we add analytics or marketing cookies in the future, we will ask for your consent first where the law requires it.</p>
+      </article>
+
+      <article class="legal-doc" id="doc-disclaimer" role="tabpanel" hidden>
+        <h3>Disclaimer</h3>
+        <p class="legal-date">Last updated: <span data-legal="updated"></span></p>
+        <ul>
+          <li><b>Independent service:</b> Bella is an independent product of <span data-legal="entity"></span>. It is not affiliated with, endorsed by, sponsored by or approved by any home-sharing, vacation-rental or short-term rental platform. On this page, "bnb" is a general word for short-term rentals and does not refer to any company. All trademarks belong to their owners.</li>
+          <li><b>AI co-host:</b> Bella is an AI system, not a human. Its replies and actions may contain mistakes. You remain responsible for your listings, bookings and guests.</li>
+          <li><b>Examples and estimates:</b> the guest chats, demo scenes, hosts and characters on this page are illustrations, not real people or real conversations. The savings calculator is an estimate based on the numbers you enter and an assumed 20% property-manager fee. Your results will vary.</li>
+          <li><b>Support and claims:</b> Bella can contact platform support and file claims for you, but the platform decides the outcome. We don't promise any refund, payout or decision.</li>
+          <li><b>Not professional advice:</b> nothing on this page is legal, tax or financial advice. Check local rules for short-term rentals where your property is.</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
 </dialog>
 
 <a class="wa-float js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
@@ -1601,6 +1831,15 @@
   var CONTACT = {
     whatsapp: '',                 // Your WhatsApp number with country code, digits only, e.g. '919876543210'
     email: 'bella@redflaghomes.in'
+  };
+
+  // Shown in the legal pages (footer → Legal). Fill in your registered details; empty fields are left out.
+  var LEGAL = {
+    entity: 'Red Flag Homes Network',  // Legal name of the business
+    address: '',                       // Registered address, e.g. '12 Example Road, New Delhi 110001, India'
+    grievanceOfficer: '',              // Name of your grievance / privacy officer (needed in India)
+    jurisdiction: 'India',             // Governing law and courts, e.g. 'New Delhi, India'
+    updated: '8 October 2026'
   };
 
   // Where the pre-checkout answers are sent (name, email, city, phone, listings, plan).
@@ -2485,7 +2724,7 @@
     });
   })();
 
-  // ===== Bella waves and says hi in the current guest's language =====
+  // ===== Bella says hi in many languages and acts out what she does: waves, winks, laughs, thinks, hops, points =====
   (function initWave() {
     var rider = document.getElementById('rider'), hit = document.getElementById('bella-hit'), say = document.getElementById('bella-say');
     var head = rider && rider.querySelector('.bl-head'); if (!rider || !hit) return;
@@ -2495,15 +2734,58 @@
       ['it', 'Ciao! Sono Bella.'], ['de', 'Hallo! Ich bin Bella.'], ['hi', 'नमस्ते! मैं बेला हूँ।'], ['ko', '안녕하세요! 벨라예요.']
     ];
     var start = isIndia() ? 0 : Math.max(0, GREET.findIndex(function (g) { return g[0] === guessLang(); })); if (!isIndia() && start === 0) start = 1;
-    var gi = start - 1, hideT = null, count = 0;
+    var india = isIndia();
+    // Between hellos she acts out a line: [gesture class, ms, effect, English line, Hinglish line]
+    var ACTS = [
+      ['g-wink', 1400, 'sparkle', 'Your guests are in safe hands.', 'Guests ki tension mat lo.'],
+      ['g-laugh', 1200, 'none', '2 AM guest messages? I love them!', 'Raat 2 baje ke messages? No problem!'],
+      ['g-think', 2200, 'dots', 'Festival weekend… raising your price.', 'Festival weekend hai… price badha deti hoon.'],
+      ['g-hop', 1100, 'hearts', 'Another 5-star review!', 'Ek aur 5-star review!'],
+      ['g-no', 1100, 'none', 'Commission? Never.', 'Commission? Bilkul nahi.'],
+      ['g-lean', 1800, 'none', 'Psst… I reply in 3 seconds.', 'Psst… main 3 second mein reply karti hoon.'],
+      ['g-point', 1800, 'check', 'Calendar blocked. Done!', 'Calendar block ho gaya. Done!']
+    ];
+    var HELLO_MOVES = [['waving', 1500], ['g-five', 1300]];
+    var gi = start - 1, ai = -1, step = 0, hideT = null, busy = null;
+    var fx = document.getElementById('bella-fx');
+    var SVG = {
+      heart: '<svg viewBox="0 0 24 24"><path fill="#E0475B" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.6 1.2 4.3 2.4.7-1.2 2.1-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21Z"/></svg>',
+      sparkle: '<svg viewBox="0 0 24 24"><path fill="#E8B64C" d="M12 1.5c.6 4.9 2.7 7.6 7.9 8.5v.1c-5.2.9-7.3 3.6-7.9 8.5h-.1c-.6-4.9-2.7-7.6-7.9-8.5V10c5.2-.9 7.3-3.6 7.9-8.5Z"/></svg>',
+      check: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3FA66B"/><path d="m7 12.5 3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    };
     function cls(c, ms) { rider.classList.remove(c); void rider.offsetWidth; rider.classList.add(c); setTimeout(function () { rider.classList.remove(c); }, ms); }
-    function greet() {
-      gi = (gi + 1) % GREET.length; count++;
-      say.textContent = GREET[gi][1]; say.dir = GREET[gi][0] === 'ar' ? 'rtl' : 'auto'; say.lang = GREET[gi][0] === 'hinglish' ? 'hi-Latn' : GREET[gi][0];
-      say.classList.add('on'); clearTimeout(hideT); hideT = setTimeout(function () { say.classList.remove('on'); }, 2800);
-      cls('nod', 650);
-      if (count % 2 === 1) cls('waving', 1500);
+    function pop(kind) {
+      if (!fx || kind === 'none' || reduceMotion) return;
+      fx.innerHTML = '';
+      if (kind === 'dots') { var d = document.createElement('i'); d.className = 'dots3'; d.style.cssText = '--x:78%;--y:6%'; d.innerHTML = '<b></b><b></b><b></b>'; fx.appendChild(d); return; }
+      var spots = kind === 'hearts' ? [[66, 14, -12, 0], [86, 34, 10, .15], [100, 4, -4, .3], [76, 52, 14, .45]] : kind === 'sparkle' ? [[72, 8, 0, 0], [88, 30, 20, .2], [62, 32, -10, .35]] : [[78, 20, 0, 0]];
+      spots.forEach(function (p) {
+        var i = document.createElement('i'); i.innerHTML = SVG[kind === 'hearts' ? 'heart' : kind];
+        i.style.cssText = '--x:' + p[0] + '%;--y:' + p[1] + '%;--r:' + p[2] + 'deg;--d:' + p[3] + 's;--s:' + (kind === 'check' ? 34 : 24) + 'px';
+        fx.appendChild(i);
+      });
     }
+    function bubble(text, lang) {
+      say.textContent = text; say.dir = lang === 'ar' ? 'rtl' : 'auto'; say.lang = lang === 'hinglish' ? 'hi-Latn' : lang;
+      say.classList.add('on'); clearTimeout(hideT); hideT = setTimeout(function () { say.classList.remove('on'); }, 2900);
+    }
+    function clearMoves() { ACTS.forEach(function (a) { rider.classList.remove(a[0]); }); rider.classList.remove('waving', 'g-five', 'nod'); clearTimeout(busy); look(0, 0); if (fx) fx.innerHTML = ''; }
+    function hello() {
+      gi = (gi + 1) % GREET.length;
+      bubble(GREET[gi][1], GREET[gi][0]);
+      var m = HELLO_MOVES[Math.floor(step / 2) % HELLO_MOVES.length];
+      cls('nod', 650); cls(m[0], m[1]);
+    }
+    function act() {
+      ai = (ai + 1) % ACTS.length; var a = ACTS[ai];
+      bubble(india ? a[4] : a[3], india ? 'hinglish' : 'en');
+      cls(a[0], a[1]); pop(a[2]);
+      if (a[0] === 'g-think' || a[0] === 'g-point') lastMove = Date.now() - 3000 + a[1];
+      if (a[0] === 'g-think') { look(0.5, -1); busy = setTimeout(function () { look(0, 0); }, a[1]); }
+      if (a[0] === 'g-point') { look(-0.6, 0.2); busy = setTimeout(function () { look(0, 0); }, a[1]); }
+    }
+    // hello, act, hello, act… so she greets in a new language every other turn and shows a new gesture in between
+    function greet() { clearMoves(); if (step % 2 === 0) hello(); else act(); step++; }
     // eyes and head follow the pointer; with no pointer she glances around on her own
     var lastMove = 0;
     function look(nx, ny) {
@@ -2526,6 +2808,39 @@
     }
     hit.addEventListener('click', greet);
     hit.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') greet(); });
+  })();
+
+  // ===== Legal centre: footer links and #terms, #privacy, #refunds, #delivery, #cookies, #disclaimer open the document =====
+  (function initLegal() {
+    var dlg = document.getElementById('legal'); if (!dlg || typeof dlg.showModal !== 'function') return;
+    var tabs = dlg.querySelectorAll('.legal-tabs button'), body = document.getElementById('legal-body');
+    var DOCS = ['terms', 'privacy', 'refunds', 'delivery', 'cookies', 'disclaimer'];
+    var VAL = {
+      entity: LEGAL.entity, updated: LEGAL.updated, jurisdiction: LEGAL.jurisdiction,
+      'address-line': LEGAL.address ? ' Address: ' + LEGAL.address + '.' : '',
+      grievance: 'Grievance officer: ' + (LEGAL.grievanceOfficer ? LEGAL.grievanceOfficer + ', ' : '') + LEGAL.entity + '.'
+    };
+    dlg.querySelectorAll('[data-legal]').forEach(function (n) { n.textContent = VAL[n.dataset.legal] || ''; });
+    dlg.querySelectorAll('[data-legal-mail]').forEach(function (a) { a.textContent = CONTACT.email; a.href = 'mailto:' + CONTACT.email; });
+    function show(doc) {
+      tabs.forEach(function (b) { var on = b.dataset.doc === doc; b.setAttribute('aria-selected', String(on)); if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' }); });
+      DOCS.forEach(function (d) { document.getElementById('doc-' + d).hidden = d !== doc; });
+      body.scrollTop = 0;
+    }
+    function open(doc) { if (!dlg.open) dlg.showModal(); show(doc); }
+    function fromHash() { var h = location.hash.slice(1); if (DOCS.indexOf(h) > -1) { open(h); return true; } return false; }
+    tabs.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.doc); history.replaceState(null, '', '#' + b.dataset.doc); }); });
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+      var h = a.getAttribute('href').slice(1); if (DOCS.indexOf(h) < 0) return;
+      e.preventDefault(); history.replaceState(null, '', '#' + h); open(h);
+    });
+    function close() { dlg.close(); }
+    document.getElementById('legal-close').addEventListener('click', close);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+    dlg.addEventListener('close', function () { if (DOCS.indexOf(location.hash.slice(1)) > -1) history.replaceState(null, '', location.pathname + location.search); });
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
   })();
 
   // ===== FAQ: the floating scene follows the pointer; searching filters questions =====
