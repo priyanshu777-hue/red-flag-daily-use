@@ -293,8 +293,8 @@
   .day-head { display: grid; gap: 8px; margin-bottom: clamp(12px, 2vh, 24px); }
   .day-head h2 { font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem); }
   .day-head p { color: var(--mute-on-cream); max-width: 52ch; }
-  .day-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); align-items: center; min-height: 0; padding-bottom: 4vh; }
-  .day-stage { position: relative; height: min(62svh, 560px); border-radius: 32px; overflow: hidden; isolation: isolate;
+  .day-grid { position: relative; display: block; min-height: 0; padding-bottom: 3vh; }
+  .day-stage { position: relative; height: min(70svh, 660px); border-radius: 32px; overflow: hidden; isolation: isolate;
     background: linear-gradient(180deg, var(--sky1, #1B1F3B), var(--sky2, #2E2A55)); transition: background .2s linear; box-shadow: 0 30px 70px -40px rgba(30,20,10,.6); }
   .day-stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, transparent, rgba(0,0,0,.12)); z-index: -1; }
   .celestial { position: absolute; left: var(--cx, 20%); top: var(--cy, 30%); width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; z-index: -1; transition: background .6s, box-shadow .6s; }
@@ -302,24 +302,31 @@
   .celestial.moon { background: radial-gradient(circle at 40% 35%, #FFFFFF, #E2E4F2 60%, #B9BDD6); box-shadow: 0 0 34px 8px rgba(220,225,255,.35), inset -12px -6px 0 rgba(150,155,190,.45); }
   .stars { position: absolute; inset: 0; z-index: -2; opacity: var(--night, 1); transition: opacity .3s linear;
     background-image: radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 30% 8%, #fff, transparent), radial-gradient(1.5px 1.5px at 62% 22%, #fff, transparent), radial-gradient(1px 1px at 80% 12%, #fff, transparent), radial-gradient(1.5px 1.5px at 90% 35%, #fff, transparent), radial-gradient(1px 1px at 45% 30%, #fff, transparent), radial-gradient(1px 1px at 20% 40%, #fff, transparent); }
-  .day-figure { position: absolute; inset: 0; }
-  .day-figure img { position: absolute; left: 50%; bottom: 0; height: 92%; width: auto; max-width: none; transform: translate(-50%, 24px) scale(.96); opacity: 0;
+  .lyr { position: absolute; inset: -2% -6% 0; pointer-events: none; transform: translate3d(calc(var(--pan, 0px) * var(--d)), calc(var(--rise, 0px) * var(--d)), 0); will-change: transform; }
+  .lyr svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .lyr path, .lyr ellipse, .lyr g { transition: fill .25s linear; }
+  .lyr-trees-l { transform: translate3d(calc(var(--pan, 0px) * var(--d) - (1 - var(--enter, 1)) * 45%), 0, 0); }
+  .lyr-trees-r { transform: translate3d(calc(var(--pan, 0px) * var(--d) + (1 - var(--enter, 1)) * 45%), 0, 0); }
+  .lyr-cabin { opacity: calc(.2 + var(--enter, 1) * .8); }
+  .day-figure { position: absolute; inset: 0; z-index: 1; transform: translate3d(calc(var(--pan, 0px) * .95), calc((1 - var(--enter, 1)) * 30%), 0); }
+  .lyr-fg { z-index: 1; }
+  .day-figure img { position: absolute; left: 30%; bottom: 2%; height: 74%; width: auto; max-width: none; transform: translate(-50%, 24px) scale(.96); opacity: 0;
     transition: opacity .45s var(--ease), transform .55s cubic-bezier(.34,1.4,.5,1); filter: drop-shadow(0 18px 18px rgba(0,0,0,.25)); }
   .day-figure img.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
   .day-stage.hop .day-figure img.on { animation: dayhop .55s cubic-bezier(.34,1.6,.5,1); }
   @keyframes dayhop { 0% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -26px) rotate(-3deg); } 100% { transform: translate(-50%, 0); } }
-  .day-say { position: absolute; left: 50%; top: 9%; z-index: 2; transform: translateX(-10%) scale(.9); opacity: 0; max-width: min(260px, 70%);
+  .day-say { position: absolute; left: 34%; top: 12%; z-index: 2; transform: translateX(-10%) scale(.9); opacity: 0; max-width: min(260px, 70%);
     padding: 10px 14px; border-radius: 18px 18px 18px 4px; background: #fff; color: var(--ink); font: 500 .95rem/1.3 var(--font-display); box-shadow: 0 16px 30px -14px rgba(0,0,0,.5);
     transition: opacity .3s var(--ease), transform .45s cubic-bezier(.34,1.5,.5,1); pointer-events: none; }
   .day-say.on { opacity: 1; transform: translateX(-10%); }
-  .day-hit { position: absolute; left: 25%; right: 25%; top: 6%; bottom: 0; border: 0; background: transparent; cursor: pointer; border-radius: 40% 40% 0 0; }
+  .day-hit { position: absolute; left: 16%; width: 30%; top: 20%; bottom: 0; z-index: 2; border: 0; background: transparent; cursor: pointer; border-radius: 40% 40% 0 0; }
   .day-hit:focus-visible { outline: 2px dashed #fff; outline-offset: -6px; }
-  .day-side { display: grid; gap: 18px; min-width: 0; }
+  .day-side { position: absolute; right: clamp(16px, 3vw, 32px); bottom: calc(3vh + clamp(16px, 3vw, 32px)); width: min(420px, 44%); display: grid; gap: 12px; min-width: 0; z-index: 3; padding: 14px; border-radius: 26px; background: rgba(255,255,255,.55); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 30px 60px -30px rgba(0,0,0,.5); }
   .day-track { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .day-track button { min-height: 44px; padding: 6px 2px; border-radius: 12px; border: 1px solid rgba(11,10,12,.1); background: rgba(255,255,255,.7); cursor: pointer;
     font: 600 .72rem/1.1 var(--font-display); color: #4B4239; font-variant-numeric: tabular-nums; transition: background-color .25s var(--ease), color .25s var(--ease); }
   .day-track button[aria-selected="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
-  .day-cards { list-style: none; margin: 0; padding: 0; position: relative; min-height: 210px; }
+  .day-cards { list-style: none; margin: 0; padding: 0; position: relative; min-height: 200px; }
   .day-cards li { position: absolute; inset: 0 0 auto 0; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 6px 16px; align-items: start; padding: 22px; border-radius: 24px;
     background: #fff; box-shadow: 0 24px 50px -34px rgba(40,30,20,.55); border: 1px solid rgba(11,10,12,.05);
     opacity: 0; transform: translateY(26px); transition: opacity .4s var(--ease), transform .5s cubic-bezier(.34,1.3,.5,1); pointer-events: none; }
@@ -337,8 +344,11 @@
     .day-head { margin-bottom: 10px; }
     .day-head h2 { font-size: 1.7rem; }
     .day-head p { display: none; }
-    .day-grid { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 12px; }
-    .day-stage { height: 36svh; border-radius: 24px; }
+    .day-grid { display: grid; gap: 10px; align-content: start; }
+    .day-side { position: static; width: auto; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
+    .day-figure img { left: 34%; height: 80%; }
+    .day-say { left: 46%; top: 6%; }
+    .day-stage { height: 42svh; border-radius: 24px; }
     .day-side { gap: 10px; }
     .day-track { grid-template-columns: repeat(7, minmax(52px, 1fr)); overflow-x: auto; scrollbar-width: none; }
     .day-cards { min-height: 172px; }
@@ -347,7 +357,7 @@
     .day-cards p { font-size: .92rem; }
     .day-hint { display: none; }
   }
-  @media (max-height: 700px) and (max-width: 860px) { .day-stage { height: 30svh; } }
+  @media (max-height: 700px) and (max-width: 860px) { .day-stage { height: 34svh; } }
 
   .host-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 28px); align-items: end; max-width: 980px; margin-inline: auto; position: relative; }
   .host-stage::after { content: ""; position: absolute; left: 4%; right: 4%; bottom: 34px; height: 2px; background: rgba(11,10,12,.12); z-index: 0; }
@@ -799,12 +809,25 @@
         <div class="day-stage" id="day-stage">
           <span class="stars" aria-hidden="true"></span>
           <span class="celestial moon" id="celestial" aria-hidden="true"></span>
+          <div class="lyr lyr-far" style="--d:.15" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><path d="M-40 540 L230 380 L400 450 L610 150 L700 260 L780 360 L930 290 L1240 480 L1240 700 L-40 700Z" fill="var(--far)"/><path d="M610 150 L560 235 L600 220 L640 260 L700 260Z" fill="#fff" opacity=".35"/><ellipse cx="560" cy="430" rx="520" ry="60" fill="#fff" opacity="var(--mist, .25)"/></svg></div>
+          <div class="lyr lyr-mid" style="--d:.35" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><path d="M-40 560 C180 500 400 515 600 545 C800 575 930 515 1240 535 L1240 700 L-40 700Z" fill="var(--mid)"/></svg></div>
+          <div class="lyr lyr-cabin" style="--d:.45" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><g transform="translate(-170 4)">
+            <circle cx="810" cy="505" r="90" fill="url(#glowg)" opacity="var(--lit, .4)"/>
+            <defs><radialGradient id="glowg"><stop offset="0" stop-color="#FFC266" stop-opacity=".9"/><stop offset="1" stop-color="#FFC266" stop-opacity="0"/></radialGradient></defs>
+            <rect x="868" y="478" width="70" height="66" fill="#2B2128"/><rect x="884" y="494" width="20" height="22" fill="#FFC266" opacity="var(--lit, .4)"/><rect x="912" y="494" width="14" height="22" fill="#FFC266" opacity="var(--lit, .4)"/>
+            <polygon points="720,545 805,395 890,545" fill="#33252C"/><polygon points="736,545 805,420 874,545" fill="#241A20"/>
+            <polygon points="772,545 805,478 838,545" fill="#FFB347" opacity="var(--lit, .4)"/><rect x="800" y="505" width="10" height="40" fill="#241A20"/>
+            <rect x="842" y="420" width="12" height="38" fill="#2B2128"/></g></svg></div>
+          <div class="lyr lyr-ground" style="--d:.55" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><path d="M-40 600 C300 570 700 595 1240 585 L1240 700 L-40 700Z" fill="var(--ground)"/><path d="M470 700 C530 640 590 600 630 552" stroke="var(--path)" stroke-width="26" fill="none" stroke-linecap="round" opacity=".55"/></svg></div>
+          <div class="lyr lyr-trees-l" style="--d:.8" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><g fill="var(--tree)"><polygon points="40,600 95,380 150,600"/><polygon points="120,610 185,330 250,610"/><polygon points="-10,620 40,450 90,620"/><rect x="180" y="600" width="10" height="30"/></g></svg></div>
+          <div class="lyr lyr-trees-r" style="--d:.8" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><g fill="var(--tree)"><polygon points="1000,600 1060,360 1120,600"/><polygon points="1080,615 1150,300 1220,615"/><polygon points="950,615 990,470 1030,615"/></g></svg></div>
           <div class="day-figure" aria-hidden="true">
             <img data-pose="typing" class="on" src="bella-assets/pose-typing.webp" width="230" height="610" alt="">
             <img data-pose="phone" src="bella-assets/bella-phone.webp" width="286" height="688" alt="" loading="lazy">
             <img data-pose="key" src="bella-assets/pose-key.webp" width="252" height="612" alt="" loading="lazy">
             <img data-pose="calendar" src="bella-assets/pose-calendar.webp" width="318" height="608" alt="" loading="lazy">
           </div>
+          <div class="lyr lyr-fg" style="--d:1.2" aria-hidden="true"><svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice"><g fill="var(--fg)"><ellipse cx="60" cy="700" rx="200" ry="70"/><ellipse cx="1160" cy="705" rx="230" ry="80"/><ellipse cx="300" cy="712" rx="120" ry="40"/></g></svg></div>
           <span class="day-say" id="day-say" aria-live="polite"></span>
           <button type="button" class="day-hit" id="day-hit" aria-label="Ask Bella what she just did"></button>
         </div>
@@ -1960,6 +1983,22 @@
       cel.style.setProperty('--cy', (62 - Math.sin(t * Math.PI) * 48).toFixed(1) + '%');
       stage.style.setProperty('--night', day ? Math.max(0, 1 - Math.min(h - 6, 19 - h) / 1.5).toFixed(2) : 1);
       bar.style.width = (p * 100).toFixed(1) + '%';
+      // landscape: day greens fade to night blues; the cabin lights up after dark
+      var nf = day ? Math.max(0, 1 - Math.min(h - 6, 19 - h) / 1.5) : 1;
+      var dusk = day ? Math.max(0, 1 - Math.abs(h - 18) / 1.8) * 0.5 + Math.max(0, 1 - Math.abs(h - 6.5) / 1.5) * 0.4 : 0;
+      var sky2 = hexMix(a.dataset.sky2, b.dataset.sky2, frac), sky1 = hexMix(a.dataset.sky1, b.dataset.sky1, frac);
+      stage.style.setProperty('--far', hexMix(hexMix(sky2, '#FFFFFF', .22), '#2B3150', nf * .55));
+      stage.style.setProperty('--mid', hexMix(hexMix('#6E9A73', sky1, dusk), '#1A2333', nf));
+      stage.style.setProperty('--ground', hexMix(hexMix('#3F7A4A', '#8A6A3A', dusk * .6), '#0F1820', nf));
+      stage.style.setProperty('--tree', hexMix('#23523A', '#0A110F', nf));
+      stage.style.setProperty('--fg', hexMix('#1C4630', '#060B0A', nf));
+      stage.style.setProperty('--path', hexMix('#E8D3A8', '#3A3A44', nf));
+      stage.style.setProperty('--lit', (0.25 + nf * 0.75).toFixed(2));
+      stage.style.setProperty('--mist', (0.32 - nf * 0.22).toFixed(2));
+      // the camera drifts across the valley as the day goes on; trees slide in as the scene opens
+      stage.style.setProperty('--pan', ((0.5 - p) * Math.min(160, stage.clientWidth * 0.14)).toFixed(1) + 'px');
+      var top = sec.getBoundingClientRect().top, enter = Math.min(1, Math.max(0, 1 - top / (window.innerHeight * 0.9)));
+      stage.style.setProperty('--enter', (reduce ? 1 : enter).toFixed(3));
     }
     var ticking = false;
     window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; update(); }); } }, { passive: true });
