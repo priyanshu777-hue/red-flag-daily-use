@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bella by Red Flag Homes</title>
+<meta name="description" content="Bella is your next-gen AI Co-Host. Guest replies in 50+ languages, smart pricing, check-ins and calendar blocking, 24/7. No commission. Cancel anytime.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one long scroll, alternating black "night" and cream "day" bands, content capped at 1160px. */
+  :root {
+    --ink: #0B0A0C;
+    --ink-2: #16141A;
+    --ink-3: #221F27;
+    --cream: #F4EFE8;
+    --cream-2: #E9E1D5;
+    --gold: #C9A66B;
+    --gold-soft: rgba(201, 166, 107, 0.28);
+    --red: #C8102E;
+    --red-hover: #A50D26;
+    --mute-on-ink: #B9B2A8;
+    --mute-on-cream: #5C554D;
+    --ok: #3FA66B;
+
+    --font-display: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+    --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --step--1: 0.8125rem;
+    --step-0: 1rem;
+    --step-1: 1.125rem;
+    --step-2: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+    --step-3: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+    --step-4: clamp(2.6rem, 1.6rem + 4.4vw, 5rem);
+
+    --gutter: clamp(16px, 4vw, 40px);
+    --radius: 18px;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+  p { margin: 0; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+
+  .wrap { width: 100%; max-width: 1160px; margin-inline: auto; padding-inline: var(--gutter); }
+  .band { padding-block: clamp(64px, 9vw, 120px); }
+  .band--cream { background: var(--cream); color: var(--ink); }
+  .band--ink2 { background: var(--ink-2); }
+  .eyebrow {
+    font-size: var(--step--1); font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+  .band--cream .eyebrow { color: #8A6A35; }
+  .section-head { display: grid; gap: 16px; max-width: 720px; margin-bottom: clamp(36px, 5vw, 56px); }
+  .section-head h2 { font-size: var(--step-3); }
+  .section-head p { color: var(--mute-on-ink); font-size: var(--step-1); max-width: 60ch; }
+  .band--cream .section-head p { color: var(--mute-on-cream); }
+  .center { text-align: center; margin-inline: auto; justify-items: center; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 12px 26px; border-radius: 999px;
+    font: 500 var(--step-0)/1 var(--font-body); text-decoration: none; cursor: pointer;
+    border: 1px solid transparent; transition: background-color .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn--red { background: var(--red); color: #fff; }
+  .btn--red:hover { background: var(--red-hover); }
+  .btn--ghost { border-color: var(--gold-soft); color: var(--cream); background: transparent; }
+  .btn--ghost:hover { border-color: var(--gold); }
+  .band--cream .btn--ghost { color: var(--ink); border-color: rgba(11,10,12,.25); }
+  .band--cream .btn--ghost:hover { border-color: var(--ink); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn--block { width: 100%; }
+
+  /* Header */
+  .site-header {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    background: rgba(11, 10, 12, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(201,166,107,.14);
+  }
+  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; }
+  .brand b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; letter-spacing: 0.01em; }
+  .brand span { font-size: 0.72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+  .nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 32px); }
+  .nav a.link { text-decoration: none; font-size: 0.95rem; color: var(--mute-on-ink); transition: color .2s; }
+  .nav a.link:hover { color: var(--cream); }
+  .nav .btn { min-height: 42px; padding: 10px 20px; font-size: 0.95rem; }
+  @media (max-width: 720px) { .nav a.link { display: none; } .brand span { display: none; } }
+
+  /* Hero */
+  .hero { position: relative; overflow: hidden; padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px); }
+  .hero::before {
+    content: ""; position: absolute; inset: auto -20% -40% auto; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+    background: radial-gradient(closest-side, rgba(201,166,107,.18), transparent 70%); pointer-events: none;
+  }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hero-copy { display: grid; gap: 24px; min-width: 0; }
+  .hero h1 { font-size: var(--step-4); font-weight: 600; }
+  .hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
+  .hero .lede { font-size: var(--step-1); color: var(--mute-on-ink); max-width: 46ch; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .fine { font-size: var(--step--1); color: var(--mute-on-ink); display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .fine span { display: inline-flex; align-items: center; gap: 6px; }
+  .fine svg { width: 14px; height: 14px; color: var(--gold); }
+  @media (max-width: 880px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Phone chat mockup */
+  .phone {
+    justify-self: center; width: min(100%, 340px); border-radius: 40px; padding: 12px;
+    background: linear-gradient(160deg, #2A2630, #121015); border: 1px solid rgba(201,166,107,.35);
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 0 0 6px rgba(201,166,107,.05);
+  }
+  .screen { border-radius: 30px; background: #F7F3EE; color: var(--ink); overflow: hidden; }
+  .screen-top { display: flex; align-items: center; gap: 12px; padding: 18px 18px 14px; border-bottom: 1px solid #E6DED2; background: #FFFDF9; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--gold); display: grid; place-items: center; font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; flex: none; }
+  .screen-top b { display: block; font-size: .95rem; }
+  .screen-top small { color: var(--ok); font-size: .75rem; display: inline-flex; align-items: center; gap: 5px; }
+  .screen-top small::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .chat { display: grid; gap: 10px; padding: 18px 14px 22px; min-height: 300px; align-content: start; }
+  .stamp { justify-self: center; font-size: .7rem; letter-spacing: .08em; color: #8B847A; text-transform: uppercase; }
+  .msg { max-width: 82%; padding: 10px 14px; border-radius: 18px; font-size: .92rem; line-height: 1.4; }
+  .msg small { display: block; font-size: .68rem; opacity: .6; margin-top: 4px; }
+  .msg.guest { background: #E8E2D9; border-bottom-left-radius: 6px; justify-self: start; }
+  .msg.bella { background: var(--ink); color: var(--cream); border: 1px solid var(--gold); border-bottom-right-radius: 6px; justify-self: end; }
+  .typing { justify-self: end; display: inline-flex; gap: 4px; padding: 12px 14px; background: var(--ink); border: 1px solid var(--gold); border-radius: 18px; border-bottom-right-radius: 6px; }
+  .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+  .speed { justify-self: end; font-size: .7rem; color: #8A6A35; font-weight: 500; }
+
+  /* Trust strip */
+  .trust { border-block: 1px solid rgba(201,166,107,.16); background: var(--ink-2); }
+  .trust ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .trust li { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 20px 12px; font-size: .95rem; text-align: center; }
+  .trust li + li { border-left: 1px solid rgba(201,166,107,.16); }
+  .trust svg { width: 18px; height: 18px; color: var(--gold); flex: none; }
+  @media (max-width: 760px) {
+    .trust ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .trust li:nth-child(3) { border-left: 0; }
+    .trust li:nth-child(n+3) { border-top: 1px solid rgba(201,166,107,.16); }
+  }
+
+  /* Problem */
+  .problem-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .problem-grid h2 { font-size: var(--step-3); }
+  .pains { list-style: none; margin: 0; padding: 0; display: grid; }
+  .pains li { display: grid; grid-template-columns: auto 1fr; gap: 16px; padding-block: 18px; border-top: 1px solid rgba(11,10,12,.12); font-size: var(--step-1); }
+  .pains li:last-child { border-bottom: 1px solid rgba(11,10,12,.12); }
+  .pains .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); margin-top: 10px; }
+  .pains strong { font-weight: 700; }
+  @media (max-width: 820px) { .problem-grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Features */
+  .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: rgba(201,166,107,.18); border: 1px solid rgba(201,166,107,.18); border-radius: var(--radius); overflow: hidden; }
+  .feature { background: var(--ink); padding: clamp(24px, 3vw, 36px); display: grid; gap: 12px; align-content: start; }
+  .feature .ic { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--gold-soft); display: grid; place-items: center; color: var(--gold); }
+  .feature .ic svg { width: 22px; height: 22px; }
+  .feature h3 { font-size: 1.6rem; }
+  .feature p { color: var(--mute-on-ink); }
+  @media (max-width: 900px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .features { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Languages + Co-Host chat */
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 32px); }
+  .panel { border: 1px solid rgba(201,166,107,.22); border-radius: var(--radius); padding: clamp(24px, 3.4vw, 40px); display: grid; gap: 18px; align-content: start; background: var(--ink); min-width: 0; }
+  .panel h3 { font-size: var(--step-2); }
+  .panel p { color: var(--mute-on-ink); }
+  .big-num { font-variant-numeric: lining-nums; font-family: var(--font-display); font-size: clamp(4rem, 3rem + 4vw, 6.5rem); line-height: .9; color: var(--gold); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(244,239,232,.16); font-size: .88rem; }
+  .chip--gold { border-color: var(--gold); color: var(--gold); }
+  .cmds { display: grid; gap: 10px; }
+  .cmd { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--ink-3); font-size: .95rem; }
+  .cmd span { min-width: 0; }
+  .cmd em { font-style: normal; font-size: .75rem; color: var(--ok); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .cmd em svg { width: 14px; height: 14px; }
+  @media (max-width: 820px) { .split { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Steps */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); counter-reset: step; }
+  .steps li { display: grid; gap: 10px; padding-top: 22px; border-top: 1px solid rgba(11,10,12,.18); counter-increment: step; }
+  .steps li::before { font-variant-numeric: lining-nums; content: counter(step, decimal-leading-zero); font-family: var(--font-display); font-size: 3rem; line-height: 1; color: #8A6A35; }
+  .steps h3 { font-size: 1.6rem; }
+  .steps p { color: var(--mute-on-cream); }
+  .steps code { font-family: var(--font-body); font-weight: 700; background: var(--cream-2); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
+  @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Pricing */
+  .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 20px; margin-bottom: clamp(32px, 4vw, 48px); }
+  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--ink-3); border: 1px solid rgba(201,166,107,.2); }
+  .seg button {
+    min-height: 42px; min-width: 92px; padding: 8px 18px; border-radius: 999px; border: 0; background: transparent;
+    color: var(--mute-on-ink); font: 500 .95rem/1 var(--font-body); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .seg button[aria-pressed="true"] { background: var(--cream); color: var(--ink); }
+  .save {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+    background: var(--red); color: #fff; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    animation: flash 1.6s ease-in-out infinite;
+  }
+  .save.on { animation: none; background: var(--ok); }
+  @keyframes flash { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,16,46,.55); } 50% { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(200,16,46,0); } }
+
+  .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); align-items: stretch; }
+  .plan { position: relative; display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 18px; padding: clamp(24px, 3vw, 34px); border-radius: var(--radius); border: 1px solid rgba(244,239,232,.12); background: var(--ink); min-width: 0; }
+  .plan--pop { border-color: var(--gold); box-shadow: 0 30px 60px -36px rgba(201,166,107,.5); }
+  .tag { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--ink); font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
+  .plan h3 { font-size: 2rem; }
+  .plan .listings { color: var(--gold); font-size: .95rem; font-weight: 500; }
+  .price { display: grid; gap: 4px; }
+  .price .amt { font-family: var(--font-display); font-size: clamp(2.6rem, 2rem + 2vw, 3.4rem); font-weight: 600; line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+  .price .per { font-size: 1rem; color: var(--mute-on-ink); font-family: var(--font-body); font-weight: 400; }
+  .price .sub { font-size: .88rem; color: var(--mute-on-ink); min-height: 1.4em; font-variant-numeric: tabular-nums; }
+  .price .sub s { opacity: .7; }
+  .incl { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; font-size: .95rem; }
+  .incl li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; }
+  .incl svg { width: 18px; height: 18px; color: var(--gold); margin-top: 3px; }
+  .plan .note { font-size: .8rem; color: var(--mute-on-ink); text-align: center; margin-top: -8px; }
+  @media (max-width: 900px) { .plans { grid-template-columns: minmax(0, 1fr); max-width: 460px; margin-inline: auto; } .plan--pop { order: -1; } }
+
+  .portfolio {
+    margin-top: clamp(16px, 2vw, 24px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; align-items: center;
+    padding: clamp(24px, 3vw, 34px); border-radius: var(--radius); border: 1px dashed var(--gold); background: linear-gradient(120deg, rgba(201,166,107,.10), transparent 60%);
+  }
+  .portfolio h3 { font-size: var(--step-2); }
+  .portfolio p { color: var(--mute-on-ink); margin-top: 6px; max-width: 60ch; }
+  .portfolio .acts { display: flex; flex-wrap: wrap; gap: 10px; }
+  @media (max-width: 820px) { .portfolio { grid-template-columns: minmax(0, 1fr); max-width: 460px; margin-inline: auto; } }
+  .price-foot { text-align: center; color: var(--mute-on-ink); font-size: .9rem; margin-top: 28px; }
+
+  /* FAQ */
+  .faq { max-width: 820px; margin-inline: auto; display: grid; }
+  .faq details { border-top: 1px solid rgba(11,10,12,.14); }
+  .faq details:last-child { border-bottom: 1px solid rgba(11,10,12,.14); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 22px; font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; line-height: 1.2; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: var(--font-body); font-size: 1.5rem; font-weight: 400; color: #8A6A35; transition: transform .25s var(--ease); flex: none; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { padding-bottom: 22px; color: var(--mute-on-cream); max-width: 64ch; }
+
+  /* Final CTA + contact */
+  .final { text-align: center; display: grid; gap: 22px; justify-items: center; }
+  .final h2 { font-size: var(--step-4); max-width: 16ch; }
+  .final h2 em { color: var(--gold); font-weight: 500; }
+  .final .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .contact-card { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: rgba(201,166,107,.2); border: 1px solid rgba(201,166,107,.2); border-radius: var(--radius); overflow: hidden; width: min(100%, 720px); text-align: left; }
+  .contact-card > div { background: var(--ink-2); padding: 22px 24px; display: grid; gap: 6px; min-width: 0; }
+  .contact-card small { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .contact-card .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .contact-card a.val { font-size: 1.05rem; text-decoration: none; overflow-wrap: anywhere; user-select: all; }
+  .copy { flex: none; min-height: 36px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--gold-soft); background: transparent; color: var(--cream); font: 500 .8rem/1 var(--font-body); cursor: pointer; }
+  .copy:hover { border-color: var(--gold); }
+  @media (max-width: 600px) { .contact-card { grid-template-columns: minmax(0, 1fr); } }
+
+  footer { border-top: 1px solid rgba(201,166,107,.14); padding-block: 32px; font-size: .88rem; color: var(--mute-on-ink); }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 28px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--cream); }
+
+  /* Floating WhatsApp */
+  .wa-float {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+    width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+    background: #25D366; color: #fff; box-shadow: 0 12px 30px -8px rgba(0,0,0,.6); transition: transform .2s var(--ease);
+  }
+  .wa-float:hover { transform: scale(1.06); }
+  .wa-float svg { width: 28px; height: 28px; }
+
+  /* Reveal: content is visible at rest; JS only adds a gentle lift for elements below the fold. */
+  .reveal { transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .js .reveal.pending { opacity: 0; transform: translateY(18px); }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .reveal.pending { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Bella by Red Flag Homes, back to top"><b>Bella</b><span>by Red Flag Homes</span></a>
+    <nav class="nav" aria-label="Bella page">
+      <a class="link" href="#features">Features</a>
+      <a class="link" href="#pricing">Pricing</a>
+      <a class="link" href="#faq">FAQ</a>
+      <a class="btn btn--red" href="#pricing">Get Bella</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Your next-gen AI Co-Host</span>
+        <h1 id="hero-title">Your bnb never sleeps. <em>Now neither does Bella.</em></h1>
+        <p class="lede">Bella replies to guests, sets your prices, sends check-in details and blocks your calendar. 24/7, in 50+ languages.</p>
+        <div class="ctas">
+          <a class="btn btn--red" href="#pricing">Get Bella
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--ghost js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+        <div class="fine">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Cancel anytime</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>No booking commission</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Live in 3 steps</span>
+        </div>
+      </div>
+
+      <div class="phone" role="img" aria-label="Example chat: a guest asks at 2:04 AM 'India Gate kitni door hai?' and Bella replies 'Sirf 10 min door' in 3 seconds.">
+        <div class="screen">
+          <div class="screen-top">
+            <div class="avatar" aria-hidden="true">B</div>
+            <div><b>Bella · Co-Host</b><small>Online 24/7</small></div>
+          </div>
+          <div class="chat" id="demo-chat" aria-hidden="true">
+            <span class="stamp">Today · 2:04 AM</span>
+            <div class="msg guest">India Gate kitni door hai?<small>Guest · 2:04 AM</small></div>
+            <div class="msg bella">Sirf 10 min door.<small>Bella · 2:04 AM</small></div>
+            <span class="speed">Replied in 3 seconds</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust strip -->
+  <section class="trust" aria-label="Highlights">
+    <ul class="wrap">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 17.5l11-11"/></svg>No commission</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>50+ languages</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>Powered by GPT-5.6 Sol</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/></svg>Cancel anytime</li>
+    </ul>
+  </section>
+
+  <!-- Problem -->
+  <section class="band band--cream" aria-labelledby="problem-title">
+    <div class="wrap problem-grid">
+      <div class="section-head reveal" style="margin-bottom:0">
+        <span class="eyebrow">The problem</span>
+        <h2 id="problem-title">Hosting is a 24-hour job. You are one person.</h2>
+        <p>Every missed message, wrong price or double booking costs you money and reviews.</p>
+      </div>
+      <ul class="pains reveal">
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Guests message at 2 AM</strong> and expect an answer in minutes.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Prices that are too low</strong> lose you money. Too high, and your nights stay empty.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Check-in details go out late.</strong> Calendars get double booked.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>A property manager takes 15 to 25%</strong> of every booking.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="band" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">What Bella does</span>
+        <h2 id="features-title">Everything your listing needs, handled.</h2>
+        <p>Add Bella as a co-host once. She takes care of the daily work, and you keep 100% of every booking.</p>
+      </div>
+      <div class="features reveal">
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12Z"/><path d="M8.5 11h7M8.5 14h4"/></svg></div>
+          <h3>Instant guest replies</h3>
+          <p>Answers every guest in seconds, day or night, in 50+ languages including Hinglish.</p>
+        </article>
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+          <h3>Smart pricing</h3>
+          <p>Adjusts your nightly rates for weekends, festivals and local demand.</p>
+        </article>
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></div>
+          <h3>Automatic check-in</h3>
+          <p>Sends every guest their check-in details on time, every time.</p>
+        </article>
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></div>
+          <h3>Calendar blocking</h3>
+          <p>Blocks your dates for you, so you never get a double booking.</p>
+        </article>
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M8 11l2 2 4-4"/></svg></div>
+          <h3>A to Z listing audit</h3>
+          <p>Reviews your photos, title, description and settings, then fixes the gaps.</p>
+        </article>
+        <article class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5Z"/><path d="M9 10l2 2-2 2M13 14h3"/></svg></div>
+          <h3>Co-Host chat</h3>
+          <p>Need anything else? Type it to Bella in the Co-Host section and it is done.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Languages + Co-Host chat -->
+  <section class="band band--ink2" aria-label="Languages and Co-Host chat">
+    <div class="wrap split">
+      <div class="panel reveal">
+        <span class="eyebrow">Every guest feels at home</span>
+        <div class="big-num">50+</div>
+        <h3>Languages, detected automatically.</h3>
+        <p>Bella reads the guest's language and replies in it. You never have to translate.</p>
+        <div class="chips">
+          <span class="chip chip--gold">Hinglish</span><span class="chip">Hindi</span><span class="chip">English</span><span class="chip">Arabic</span><span class="chip">French</span><span class="chip">German</span><span class="chip">Spanish</span><span class="chip">Japanese</span><span class="chip">Korean</span><span class="chip">Thai</span><span class="chip">Russian</span><span class="chip">+ 40 more</span>
+        </div>
+      </div>
+      <div class="panel reveal">
+        <span class="eyebrow">Your Co-Host chat</span>
+        <h3>Want anything else? Just ask Bella.</h3>
+        <p>No dashboards and no learning curve. Type a request and it is done.</p>
+        <div class="cmds">
+          <div class="cmd"><span>"Block 24 to 27 December."</span><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Done</em></div>
+          <div class="cmd"><span>"Raise weekend prices by 10%."</span><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Done</em></div>
+          <div class="cmd"><span>"Send this week's guests their check-in reminder."</span><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Done</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="band band--cream" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-title">Three steps. Then Bella takes over.</h2>
+      </div>
+      <ol class="steps reveal">
+        <li><h3>Choose your plan</h3><p>Pick monthly or yearly and pay securely. Cancel anytime.</p></li>
+        <li><h3>Add Bella as co-host</h3><p>Invite <code>bella@redflaghomes.in</code> as a co-host on your listing with full access.</p></li>
+        <li><h3>Save. Done.</h3><p>Bella starts managing your guests, pricing, check-ins and calendar right away.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="band" id="pricing" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Pricing</span>
+        <h2 id="pricing-title">Choose your plan.</h2>
+        <p>No commission on your bookings. One simple subscription.</p>
+      </div>
+
+      <div class="controls" role="group" aria-label="Pricing options">
+        <div class="seg" role="group" aria-label="Billing period">
+          <button type="button" id="period-monthly" data-period="monthly" aria-pressed="true">Monthly</button>
+          <button type="button" id="period-yearly" data-period="yearly" aria-pressed="false">Yearly</button>
+        </div>
+        <span class="save" id="save-badge">Save 15% on yearly</span>
+        <div class="seg" role="group" aria-label="Currency">
+          <button type="button" id="cur-inr" data-currency="INR" aria-pressed="true">₹ INR</button>
+          <button type="button" id="cur-usd" data-currency="USD" aria-pressed="false">$ USD</button>
+        </div>
+      </div>
+
+      <div class="plans" id="plans" aria-live="polite">
+        <article class="plan" data-plan="solo">
+          <h3>Solo</h3>
+          <div class="listings">1 listing</div>
+          <div class="price"><div class="amt"><span class="js-amt">₹999</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
+          <ul class="incl">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>24/7 guest replies in 50+ languages</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Smart pricing and auto check-in</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Calendar blocking and listing audit</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Co-Host chat</li>
+          </ul>
+          <a class="btn btn--ghost btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Solo</a>
+        </article>
+
+        <article class="plan plan--pop" data-plan="growth">
+          <span class="tag">Most popular</span>
+          <h3>Growth</h3>
+          <div class="listings">Up to 3 listings</div>
+          <div class="price"><div class="amt"><span class="js-amt">₹1,699</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
+          <ul class="incl">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Everything in Solo</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Manage up to 3 listings</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Pricing tuned per listing</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Co-Host chat across all listings</li>
+          </ul>
+          <a class="btn btn--red btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Growth</a>
+        </article>
+
+        <article class="plan" data-plan="pro">
+          <h3>Pro</h3>
+          <div class="listings">Up to 5 listings</div>
+          <div class="price"><div class="amt"><span class="js-amt">₹2,499</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
+          <ul class="incl">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Everything in Growth</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Manage up to 5 listings</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Priority WhatsApp support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Full listing audit for every property</li>
+          </ul>
+          <a class="btn btn--ghost btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Pro</a>
+        </article>
+      </div>
+
+      <div class="portfolio reveal" id="portfolio">
+        <div>
+          <span class="eyebrow">More than 5 listings?</span>
+          <h3>Bella for portfolios and property managers</h3>
+          <p>Running 6 or more listings? We will set up a custom plan for your portfolio. Message us on WhatsApp or send us an email.</p>
+        </div>
+        <div class="acts">
+          <a class="btn btn--red js-wa" data-msg="Hi, I have more than 5 listings and want a custom Bella plan." href="#contact" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>
+            WhatsApp us
+          </a>
+          <a class="btn btn--ghost js-mail" data-subject="Bella plan for 6+ listings" href="#contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            Email us
+          </a>
+        </div>
+      </div>
+
+      <p class="price-foot">No free trial. Pay monthly, or pay yearly and save 15%. Cancel anytime, and your access continues until the end of the period you paid for.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="band band--cream" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2 id="faq-title">Questions hosts ask us</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Is there a free trial?</summary><p>No. Bella is a paid subscription. You can cancel anytime, and your access continues until the end of the period you paid for.</p></details>
+        <details><summary>When am I charged?</summary><p>When you subscribe, and then every month or every year based on the plan you chose.</p></details>
+        <details><summary>Can I cancel anytime?</summary><p>Yes. Cancel from your billing portal or message us on WhatsApp. Access continues until the end of the period you paid for.</p></details>
+        <details><summary>Does Bella take a commission?</summary><p>No. You only pay your subscription and keep 100% of every booking.</p></details>
+        <details><summary>How many listings are included?</summary><p>Solo covers 1 listing, Growth up to 3 and Pro up to 5. For 6 or more listings, message us on WhatsApp or email us for a custom plan.</p></details>
+        <details><summary>Which languages does Bella speak?</summary><p>50+ languages, including Hindi, Hinglish, English, Arabic, French, German, Spanish and Japanese.</p></details>
+        <details><summary>How do I set Bella up?</summary><p>After payment, invite bella@redflaghomes.in as a co-host on your listing with full access and save. That is all.</p></details>
+        <details><summary>Is my data safe?</summary><p>Bella only accesses what you share through the co-host invite. Payments are handled by Razorpay and Stripe, and we never store your card details.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA + contact -->
+  <section class="band" id="contact" aria-labelledby="final-title">
+    <div class="wrap final">
+      <span class="eyebrow">Get started</span>
+      <h2 id="final-title">Your guests don't wait. <em>Neither should your bnb.</em></h2>
+      <div class="ctas">
+        <a class="btn btn--red" href="#pricing">Get Bella</a>
+        <a class="btn btn--ghost js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">Chat on WhatsApp</a>
+      </div>
+      <div class="contact-card">
+        <div>
+          <small>WhatsApp</small>
+          <div class="row"><a class="val js-wa js-wa-text" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">Message us</a><button class="copy" type="button" id="copy-wa" data-copy="wa">Copy</button></div>
+        </div>
+        <div>
+          <small>Email</small>
+          <div class="row"><a class="val js-mail js-mail-text" data-subject="Question about Bella" href="#contact">bella@redflaghomes.in</a><button class="copy" type="button" id="copy-mail" data-copy="mail">Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Bella by Red Flag Homes Network</span>
+    <nav aria-label="Legal">
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/refund-policy">Refund and cancellation</a>
+      <a class="js-mail" data-subject="Question about Bella" href="#contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<a class="wa-float js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>
+</a>
+
+<script>
+(function () {
+  /* ===== Edit these before going live ===== */
+  var CONTACT = {
+    whatsapp: '',                 // Your WhatsApp number with country code, digits only, e.g. '919876543210'
+    email: 'bella@redflaghomes.in'
+  };
+
+  // Checkout links per plan, currency and billing period.
+  // USD = Stripe Payment Links. INR = Razorpay links (paste them in; until then, INR buttons open WhatsApp).
+  var LINKS = {
+    USD: {
+      monthly: {
+        solo:   'https://buy.stripe.com/3cI6oJfHdgnt6Qn9yZ6EU0b',
+        growth: 'https://buy.stripe.com/aFacN7gLh1szcaH3aB6EU0d',
+        pro:    'https://buy.stripe.com/6oU28t66Ddbh1w38uV6EU0e'
+      },
+      yearly: {
+        solo:   'https://buy.stripe.com/eVq6oJ1Qn5IPfmT4eF6EU0f',
+        growth: 'https://buy.stripe.com/8x2fZj1Qn9Z5fmT7qR6EU0g',
+        pro:    'https://buy.stripe.com/8x27sN3YvfjpeiP5iJ6EU0h'
+      }
+    },
+    INR: {
+      monthly: { solo: '', growth: '', pro: '' },
+      yearly:  { solo: '', growth: '', pro: '' }
+    }
+  };
+
+  var PRICES = {
+    INR: { symbol: '₹', locale: 'en-IN',
+      monthly: { solo: 999,  growth: 1699,  pro: 2499 },
+      yearly:  { solo: 10190, growth: 17330, pro: 25490 } },
+    USD: { symbol: '$', locale: 'en-US',
+      monthly: { solo: 23,  growth: 39,  pro: 57 },
+      yearly:  { solo: 235, growth: 398, pro: 581 } }
+  };
+  var PLAN_NAMES = { solo: 'Solo', growth: 'Growth', pro: 'Pro' };
+  /* ======================================== */
+
+  document.documentElement.classList.add('js');
+  var yr = document.getElementById('yr'); if (yr) yr.textContent = new Date().getFullYear();
+
+  function store(key, val) {
+    try { if (val === undefined) return localStorage.getItem(key); localStorage.setItem(key, val); } catch (e) { return null; }
+  }
+  function waUrl(msg) {
+    var text = encodeURIComponent(msg || 'Hi, I want to know more about Bella.');
+    return CONTACT.whatsapp ? 'https://wa.me/' + CONTACT.whatsapp + '?text=' + text : 'https://wa.me/?text=' + text;
+  }
+  function mailUrl(subject) {
+    return 'mailto:' + CONTACT.email + '?subject=' + encodeURIComponent(subject || 'Question about Bella');
+  }
+
+  // Contact links
+  document.querySelectorAll('.js-wa').forEach(function (a) { a.href = waUrl(a.dataset.msg); });
+  document.querySelectorAll('.js-mail').forEach(function (a) { a.href = mailUrl(a.dataset.subject); });
+  var waText = document.querySelector('.js-wa-text');
+  if (waText && CONTACT.whatsapp) waText.textContent = '+' + CONTACT.whatsapp;
+  document.querySelectorAll('.js-mail-text').forEach(function (a) { a.textContent = CONTACT.email; });
+
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var val = btn.dataset.copy === 'wa' ? (CONTACT.whatsapp ? '+' + CONTACT.whatsapp : waUrl()) : CONTACT.email;
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done, function () { selectText(btn); });
+      } else { selectText(btn); }
+    });
+  });
+  function selectText(btn) {
+    var el = btn.parentNode.querySelector('.val'); if (!el) return;
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Pricing state: default currency INR for India visitors, USD for everyone else.
+  function guessCurrency() {
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      if (tz === 'Asia/Kolkata' || tz === 'Asia/Calcutta') return 'INR';
+    } catch (e) {}
+    var lang = (navigator.language || '').toLowerCase();
+    return /-in$/.test(lang) ? 'INR' : 'USD';
+  }
+  var saved = store('bella-currency');
+  var state = {
+    currency: saved === 'INR' || saved === 'USD' ? saved : guessCurrency(),
+    period: store('bella-period') === 'yearly' ? 'yearly' : 'monthly'
+  };
+
+  function fmt(cur, n) {
+    var p = PRICES[cur];
+    var opts = { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 };
+    return p.symbol + n.toLocaleString(p.locale, opts);
+  }
+
+  function render() {
+    var cur = state.currency, per = state.period, P = PRICES[cur];
+    document.querySelectorAll('.plan[data-plan]').forEach(function (card) {
+      var id = card.dataset.plan;
+      var amt = P[per][id];
+      card.querySelector('.js-amt').textContent = fmt(cur, amt);
+      card.querySelector('.js-per').textContent = per === 'monthly' ? '/ month' : '/ year';
+      var sub = card.querySelector('.js-sub');
+      if (per === 'yearly') {
+        var perMonth = cur === 'INR' ? Math.round(amt / 12) : Math.round(amt / 12 * 10) / 10;
+        var full = P.monthly[id] * 12;
+        sub.innerHTML = 'About ' + fmt(cur, perMonth) + '/mo · <s>' + fmt(cur, full) + '</s> billed yearly';
+      } else {
+        sub.textContent = 'Billed monthly · cancel anytime';
+      }
+      var btn = card.querySelector('.js-buy');
+      var link = LINKS[cur][per][id];
+      btn.href = link || waUrl('Hi, I want Bella ' + PLAN_NAMES[id] + ' (' + per + ', ' + cur + ').');
+    });
+    document.querySelectorAll('[data-period]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.period === per)); });
+    document.querySelectorAll('[data-currency]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.currency === cur)); });
+    var badge = document.getElementById('save-badge');
+    badge.classList.toggle('on', per === 'yearly');
+    badge.textContent = per === 'yearly' ? 'You save 15%' : 'Save 15% on yearly';
+  }
+
+  document.querySelectorAll('[data-period]').forEach(function (b) {
+    b.addEventListener('click', function () { state.period = b.dataset.period; store('bella-period', state.period); render(); });
+  });
+  document.querySelectorAll('[data-currency]').forEach(function (b) {
+    b.addEventListener('click', function () { state.currency = b.dataset.currency; store('bella-currency', state.currency); render(); });
+  });
+  render();
+
+  // Gentle reveal for sections below the first screen only.
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pending'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add('pending'); io.observe(el); }
+    });
+  }
+})();
+</script>
+</body>
+</html>
