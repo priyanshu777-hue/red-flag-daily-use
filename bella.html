@@ -220,34 +220,88 @@
   .eye i { position: absolute; inset: 9%; border-radius: 50%; background: radial-gradient(circle at 34% 32%, #fff 0 13%, #151012 15% 58%, rgba(255,255,255,.35) 60% 70%, transparent 72%); transform: translate(var(--px, 0px), var(--py, 0px)) scaleY(var(--lid, 1)); transition: transform .12s linear; }
 
 
-  .trust { border-block: 1px solid rgba(201,166,107,.16); background: var(--ink-2); }
-  .trust-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .trust-grid li + li { border-left: 1px solid rgba(201,166,107,.16); }
-  .tile { position: relative; width: 100%; min-height: 92px; padding: 18px 14px; border: 0; background: transparent; color: var(--cream); cursor: pointer; perspective: 800px; overflow: hidden;
-    font: 500 .98rem/1.3 var(--font-body); transition: background-color .3s var(--ease); }
-  .tile:hover { background: rgba(255,255,255,.04); }
-  .tile-front, .tile-back { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 14px; text-align: center;
-    backface-visibility: hidden; transition: transform .6s cubic-bezier(.34,1.3,.5,1), opacity .3s var(--ease); }
-  .tile-back { flex-direction: column; gap: 4px; transform: rotateX(-90deg); opacity: 0; }
-  .tile[aria-expanded="true"] .tile-front { transform: rotateX(90deg); opacity: 0; }
-  .tile[aria-expanded="true"] .tile-back { transform: none; opacity: 1; }
-  .tile svg { width: 20px; height: 20px; color: var(--gold); flex: none; }
-  .tile:hover .t-sun { animation: spin 3s linear infinite; }
-  .tile:hover .t-undo { animation: undo .7s var(--ease); }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes undo { 50% { transform: rotate(-200deg); } }
-  .t-hello { display: inline-block; min-width: 4.5em; color: var(--gold); transition: opacity .25s var(--ease), transform .25s var(--ease); }
-  .t-hello.out { opacity: 0; transform: translateY(-6px); }
-  .tile-big { font: 600 1.55rem/1 var(--font-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .tile-big b { color: #9BE3B8; font-weight: 600; }
-  .tile-small { font-size: .78rem; color: var(--mute-on-ink); max-width: 30ch; }
-  @media (max-width: 760px) {
-    .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .trust-grid li:nth-child(3) { border-left: 0; }
-    .trust-grid li:nth-child(n+3) { border-top: 1px solid rgba(201,166,107,.16); }
-    .tile { min-height: 104px; font-size: .92rem; }
-    .tile-front { flex-direction: column; gap: 6px; }
+  /* Highlights dashboard */
+  .dash { position: relative; overflow: hidden; color: #F2ECE4; padding-block: clamp(56px, 8vw, 96px);
+    background: linear-gradient(180deg, #8B8FA3 0%, #C9A79A 38%, #D9AE8A 55%, #B88A6A 100%); }
+  .dash-sky { position: absolute; inset: 0; pointer-events: none; }
+  .dash-sky svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .lamp { position: absolute; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #FFF1D8, #F7B977 55%, #E08A4A); box-shadow: 0 0 60px 20px rgba(255,170,90,.45); animation: lamp 4s ease-in-out infinite; }
+  .l1 { left: 6%; bottom: 10%; width: 90px; height: 90px; } .l2 { right: 4%; bottom: 6%; width: 120px; height: 120px; animation-delay: -1.5s; } .l3 { left: 46%; bottom: 3%; width: 46px; height: 46px; animation-delay: -3s; }
+  @keyframes lamp { 50% { box-shadow: 0 0 80px 30px rgba(255,170,90,.6); } }
+  .dash-grid { position: relative; display: grid; grid-template-columns: 1fr 1.05fr 1.25fr auto; grid-template-rows: auto auto auto; gap: 16px; align-items: start; }
+  .w { background: rgba(70,62,62,.55); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.06), 0 30px 60px -30px rgba(40,20,10,.7); border-radius: 30px; padding: 20px; text-align: center; display: grid; gap: 12px; justify-items: center; }
+  .w h3 { font-size: 1.15rem; font-weight: 500; letter-spacing: -.01em; color: #fff; }
+  .w-sub { font-size: .8rem; color: rgba(242,236,228,.6); margin-top: -8px; }
+  .w-commission { grid-column: 1; grid-row: 1; }
+  .gauge { position: relative; width: 92px; height: 92px; }
+  .gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .g-bg { fill: rgba(0,0,0,.25); stroke: rgba(255,255,255,.12); stroke-width: 8; }
+  .g-fg { fill: none; stroke: #F7B977; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 251.3; stroke-dashoffset: 251.3; transition: stroke-dashoffset .8s cubic-bezier(.34,1.3,.5,1), stroke .4s; filter: drop-shadow(0 0 6px rgba(247,185,119,.8)); }
+  .gauge b { position: absolute; inset: 0; display: grid; place-items: center; font: 600 1.2rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .w-toggle { display: inline-flex; padding: 4px; border-radius: 999px; background: rgba(0,0,0,.28); box-shadow: inset 0 2px 5px rgba(0,0,0,.4); }
+  .w-toggle button { min-height: 40px; min-width: 76px; padding: 6px 12px; border: 0; border-radius: 999px; background: transparent; color: rgba(242,236,228,.65); font: 500 .85rem/1 var(--font-display); cursor: pointer; transition: background .3s, color .3s, box-shadow .3s; }
+  .w-toggle button[aria-pressed="true"] { color: #2A1A10; background: radial-gradient(120% 140% at 30% 20%, #FFE9C8, #F7B977 60%, #E39A55); box-shadow: 0 0 18px rgba(247,185,119,.6); }
+  .w-stats { grid-column: 2; grid-row: 1 / span 2; border-radius: 120px 120px 30px 30px; padding-top: 34px; }
+  .stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+  .stat-row div { display: grid; gap: 6px; font-size: .72rem; color: rgba(242,236,228,.6); }
+  .stat-row b { padding: 10px 4px; border-radius: 14px; background: rgba(0,0,0,.22); color: #fff; font: 600 .95rem/1 var(--font-display); }
+  .stat-row b.hot { color: #F7B977; }
+  .hello-orb { position: relative; width: min(220px, 100%); aspect-ratio: 1; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-content: center; gap: 6px; color: #fff;
+    background: radial-gradient(circle at 50% 60%, #E39A55 0%, #A85E3A 45%, #3A2A2A 75%); box-shadow: inset 0 0 0 6px rgba(255,255,255,.08), inset 0 -20px 40px rgba(0,0,0,.35), 0 20px 40px -20px rgba(0,0,0,.6); transition: transform .4s cubic-bezier(.34,1.5,.5,1); }
+  .hello-orb:active { transform: scale(.96); }
+  .hello-word { font: 600 clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem)/1.1 var(--font-display); transition: opacity .25s, transform .25s; }
+  .hello-word.out { opacity: 0; transform: translateY(8px); }
+  .hello-lang { font-size: .75rem; color: rgba(255,255,255,.75); }
+  .w-hello { grid-column: 3; grid-row: 1 / span 2; padding-top: 16px; }
+  .w-top { font-size: .78rem; color: rgba(242,236,228,.75); }
+  .w-top b { color: #fff; font-weight: 600; } .w-ico { color: var(--ok); }
+  .portrait { width: min(200px, 70%); aspect-ratio: 1; border-radius: 50%; padding: 0; border: 0; cursor: pointer; overflow: hidden; background: #F3EFE6;
+    box-shadow: 0 0 0 4px rgba(255,214,160,.55), 0 0 40px 10px rgba(247,185,119,.55), inset 0 0 20px rgba(0,0,0,.2); animation: halo 3.2s ease-in-out infinite; transition: transform .4s cubic-bezier(.34,1.5,.5,1); }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait:active, .portrait.bump { transform: scale(1.06) rotate(-3deg); }
+  @keyframes halo { 50% { box-shadow: 0 0 0 4px rgba(255,214,160,.75), 0 0 60px 16px rgba(247,185,119,.7), inset 0 0 20px rgba(0,0,0,.2); } }
+  .w-hello h3 { font-size: 1.5rem; }
+  .w-icons { display: flex; gap: 10px; }
+  .w-icons button { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: rgba(0,0,0,.15); color: #fff; cursor: pointer; display: grid; place-items: center; transition: background .25s, transform .25s; }
+  .w-icons button:hover { background: rgba(255,255,255,.12); }
+  .w-icons button[aria-pressed="true"] { background: rgba(247,185,119,.3); border-color: #F7B977; }
+  .w-icons svg { width: 22px; height: 22px; }
+  .w-side { grid-column: 4; grid-row: 1 / span 2; display: grid; gap: 14px; justify-items: center; }
+  .w-round { width: 84px; height: 84px; border-radius: 50%; border: 0; cursor: pointer; color: #fff; display: grid; place-content: center; gap: 2px;
+    background: rgba(20,18,20,.7); backdrop-filter: blur(12px); box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 16px 30px -14px rgba(0,0,0,.7); }
+  .w-round b { font: 600 1.25rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .w-round span { font-size: .6rem; color: rgba(255,255,255,.6); }
+  .w-pill-v { width: 84px; padding: 10px 0 12px; border-radius: 999px; background: rgba(20,18,20,.6); backdrop-filter: blur(12px); display: grid; gap: 8px; justify-items: center; font-size: .75rem; box-shadow: 0 16px 30px -14px rgba(0,0,0,.7); }
+  .w-pill-v img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px rgba(255,255,255,.3); }
+  .w-plus { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.25); font-size: 1.1rem; }
+  .w-dock { grid-column: 1 / span 2; grid-row: 3; justify-self: start; display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 999px;
+    background: rgba(40,34,34,.6); backdrop-filter: blur(18px); box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 20px 40px -20px rgba(0,0,0,.7); }
+  .dock-btn { min-height: 52px; padding: 10px 22px; border-radius: 999px; border: 0; cursor: pointer; color: #fff; font: 500 .95rem/1 var(--font-display); background: rgba(0,0,0,.35); transition: background .3s; }
+  .dock-btn[aria-pressed="true"] { background: rgba(63,166,107,.5); }
+  .dock-spark { width: 52px; height: 52px; border-radius: 16px; border: 0; cursor: pointer; display: grid; place-items: center; background: rgba(0,0,0,.35); color: #F7B977; }
+  .dock-spark svg { width: 22px; height: 22px; transition: transform .6s cubic-bezier(.34,1.5,.5,1); }
+  .dock-spark.spin svg { transform: rotate(180deg) scale(1.2); }
+  .flip { display: grid; gap: 2px; padding: 4px 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,.25); font: 500 1.05rem/1 var(--font-display); text-align: center; font-variant-numeric: tabular-nums; }
+  .flip span + span { border-top: 1px solid rgba(255,255,255,.25); padding-top: 2px; }
+  .dock-note { grid-column: 3 / span 2; grid-row: 3; align-self: center; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.35); min-height: 1.3em; }
+  @media (max-width: 980px) {
+    .dash-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: none; }
+    .w-hello { grid-column: 1 / -1; grid-row: auto; }
+    .w-stats { grid-column: 2; grid-row: auto / span 2; }
+    .w-commission { grid-column: 1; grid-row: auto; }
+    .w-side { grid-column: 1; grid-row: auto; grid-auto-flow: column; justify-content: center; align-items: center; }
+    .w-pill-v { grid-auto-flow: column; width: auto; padding: 8px 14px 8px 8px; align-items: center; }
+    .w-dock { grid-column: 1 / -1; grid-row: auto; justify-self: center; }
+    .dock-note { grid-column: 1 / -1; grid-row: auto; text-align: center; }
   }
+  @media (max-width: 560px) {
+    .dash-grid { grid-template-columns: minmax(0, 1fr); }
+    .w-stats, .w-commission, .w-side { grid-column: 1; }
+    .w-stats { border-radius: 90px 90px 30px 30px; }
+    .dock-btn { padding: 10px 16px; font-size: .88rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lamp, .portrait { animation: none; } }
 
   /* Problem */
   .problem-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
@@ -849,26 +903,58 @@
     </div>
   </section>
 
-  <!-- Trust strip: tap a tile to see it in action -->
-  <section class="trust" aria-label="Highlights">
-    <ul class="wrap trust-grid">
-      <li><button type="button" class="tile" data-tile="commission" aria-expanded="false">
-        <span class="tile-front"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 17.5l11-11"/></svg>No commission</span>
-        <span class="tile-back"><span class="tile-big"><span id="t-pm">20%</span> → <b id="t-bella">0%</b></span><span class="tile-small">A manager's cut vs Bella's. You keep every booking.</span></span>
-      </button></li>
-      <li><button type="button" class="tile" data-tile="lang" aria-expanded="false">
-        <span class="tile-front"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span><span class="t-hello" id="t-hello">Hello</span> · 50+ languages</span></span>
-        <span class="tile-back"><span class="tile-big" id="t-hello-big" dir="auto">Namaste</span><span class="tile-small" id="t-hello-lang">Hindi · tap again for the next one</span></span>
-      </button></li>
-      <li><button type="button" class="tile" data-tile="ai" aria-expanded="false">
-        <span class="tile-front"><svg class="t-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>Powered by GPT&#8209;5.6&nbsp;Sol</span>
-        <span class="tile-back"><span class="tile-big"><span id="t-ms">3.0</span> s</span><span class="tile-small">Average time for Bella to reply to a guest.</span></span>
-      </button></li>
-      <li><button type="button" class="tile" data-tile="cancel" aria-expanded="false">
-        <span class="tile-front"><svg class="t-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/></svg>Cancel anytime</span>
-        <span class="tile-back"><span class="tile-big">1 tap</span><span class="tile-small">Cancel from your billing portal. Access lasts until your period ends.</span></span>
-      </button></li>
-    </ul>
+  <!-- Highlights dashboard: glass widgets over a dusk scene -->
+  <section class="dash" id="highlights" aria-labelledby="dash-title">
+    <div class="dash-sky" aria-hidden="true">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMax slice"><path d="M0 330 C200 300 380 320 560 300 C760 280 980 310 1200 290 L1200 600 L0 600Z" fill="#B88A6A" opacity=".55"/><path d="M0 400 C260 360 520 420 760 380 C940 350 1080 390 1200 370 L1200 600 L0 600Z" fill="#C99A72"/><path d="M0 480 C300 440 600 500 900 460 C1020 445 1120 470 1200 460 L1200 600 L0 600Z" fill="#B07E58"/></svg>
+      <span class="lamp l1"></span><span class="lamp l2"></span><span class="lamp l3"></span>
+    </div>
+    <div class="wrap dash-grid">
+      <h2 class="sr-only" id="dash-title">Why hosts choose Bella</h2>
+
+      <article class="w w-commission">
+        <h3>Commission</h3><p class="w-sub" id="w-com-sub">What Bella takes</p>
+        <div class="gauge"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" class="g-bg"/><circle cx="50" cy="50" r="40" class="g-fg" id="g-fg"/></svg><b id="g-val">0%</b></div>
+        <div class="w-toggle" role="group" aria-label="Compare">
+          <button type="button" data-who="bella" aria-pressed="true">Bella</button><button type="button" data-who="pm" aria-pressed="false">Manager</button>
+        </div>
+      </article>
+
+      <article class="w w-stats">
+        <h3>Guest stats</h3><p class="w-sub">Bella, every night</p>
+        <div class="stat-row">
+          <div><span>Reply</span><b id="st-reply">3 s</b></div>
+          <div><span>Online</span><b>24/7</b></div>
+          <div><span>Languages</span><b class="hot">50+</b></div>
+        </div>
+        <button type="button" class="hello-orb" id="hello-orb" aria-label="Show Bella's greeting in another language">
+          <span class="hello-word" id="hello-word" dir="auto">Namaste</span><span class="hello-lang" id="hello-lang">Hindi · tap for next</span>
+        </button>
+      </article>
+
+      <article class="w w-hello">
+        <p class="w-top"><span class="w-ico" aria-hidden="true">●</span> Next check-in: <b id="w-next">4:30 PM</b></p>
+        <button type="button" class="portrait" id="w-portrait" aria-label="Say hi to Bella"><img src="bella-assets/face-happy.webp" width="300" height="276" alt=""></button>
+        <h3 id="w-greet">Hello, host</h3><p class="w-sub" id="w-status">Co-host ready</p>
+        <div class="w-icons" role="group" aria-label="What Bella handles">
+          <button type="button" data-say="Guests answered, 24/7" aria-label="Guests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+          <button type="button" data-say="Prices tuned for tonight" aria-label="Pricing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8M14 4v6M8 14v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+          <button type="button" data-say="Replying in 50+ languages" aria-label="Languages"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5a13 13 0 0 1 0 17M12 3.5a13 13 0 0 0 0 17" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+        </div>
+      </article>
+
+      <div class="w-side">
+        <button type="button" class="w-round w-speed" id="w-speed" aria-label="Powered by GPT-5.6 Sol. Tap to measure a reply"><b id="w-speed-val">3.0s</b><span>GPT&#8209;5.6 Sol</span></button>
+        <div class="w-pill-v"><img src="bella-assets/face-wink.webp" width="300" height="276" alt=""><span>Bella</span><span class="w-plus" aria-hidden="true">+</span></div>
+      </div>
+
+      <div class="w-dock">
+        <button type="button" class="dock-btn" id="w-cancel" aria-pressed="false">Cancel anytime</button>
+        <button type="button" class="dock-spark" id="w-spark" aria-label="No booking commission"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 5.4 4.6 9.4 10 10-5.4.6-9.4 4.6-10 10-.6-5.4-4.6-9.4-10-10 5.4-.6 9.4-4.6 10-10z" fill="currentColor"/></svg></button>
+        <div class="flip" aria-label="Current time" role="img" id="flip"><span id="flip-h">17</span><span id="flip-m">01</span></div>
+      </div>
+      <p class="dock-note" id="dock-note" aria-live="polite">Tap any widget</p>
+    </div>
   </section>
 
   <!-- Problem -->
@@ -2042,33 +2128,65 @@
     window.addEventListener('scroll', chk, { passive: true }); chk();
   })();
 
-  // ===== Highlights strip: tap a tile to flip it; languages cycle on their own =====
-  (function initTiles() {
-    var tiles = document.querySelectorAll('.tile'); if (!tiles.length) return;
-    var HELLO = [['Namaste', 'Hindi'], ['Hello', 'English'], ['Bonjour', 'French'], ['Hola', 'Spanish'], ['こんにちは', 'Japanese'], ['مرحبا', 'Arabic'], ['Ciao', 'Italian'], ['안녕하세요', 'Korean'], ['Olá', 'Portuguese'], ['Hallo', 'German']];
-    var hi = 0, small = document.getElementById('t-hello'), big = document.getElementById('t-hello-big'), lang = document.getElementById('t-hello-lang');
-    function nextHello() {
-      hi = (hi + 1) % HELLO.length;
-      big.textContent = HELLO[hi][0]; lang.textContent = HELLO[hi][1] + ' · tap again for the next one';
-      small.classList.add('out');
-      setTimeout(function () { small.textContent = HELLO[hi][0]; small.classList.remove('out'); }, 250);
+  // ===== Highlights dashboard widgets =====
+  (function initDash() {
+    var dash = document.getElementById('highlights'); if (!dash) return;
+    var note = document.getElementById('dock-note'), noteT = null;
+    function say(t) { note.textContent = t; clearTimeout(noteT); noteT = setTimeout(function () { note.textContent = 'Tap any widget'; }, 3500); }
+    // Commission gauge: Bella 0% vs a manager's 20%
+    var fg = document.getElementById('g-fg'), val = document.getElementById('g-val'), sub = document.getElementById('w-com-sub');
+    function gauge(pct) {
+      fg.style.strokeDashoffset = (251.3 * (1 - pct / 100)).toFixed(1);
+      fg.style.stroke = pct ? '#E2576B' : '#F7B977';
+      var from = parseInt(val.textContent, 10) || 0, t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / 700); val.textContent = Math.round(from + (pct - from) * k) + '%'; if (k < 1) requestAnimationFrame(step); })(t0);
     }
-    if (!reduceMotion) setInterval(function () { if (!document.hidden) nextHello(); }, 2200);
-    function countTo(el, from, to, dur, dec, suf) {
-      var t0 = performance.now();
-      (function step(t) { var k = Math.min(1, (t - t0) / dur); el.textContent = (from + (to - from) * (1 - Math.pow(1 - k, 3))).toFixed(dec) + (suf || ''); if (k < 1) requestAnimationFrame(step); })(t0);
-    }
-    tiles.forEach(function (t) {
-      t.addEventListener('click', function () {
-        var open = t.getAttribute('aria-expanded') === 'true';
-        if (open && t.dataset.tile === 'lang') { nextHello(); return; }
-        t.setAttribute('aria-expanded', String(!open));
-        if (open) return;
-        if (t.dataset.tile === 'commission') countTo(document.getElementById('t-pm'), 0, 20, 700, 0, '%');
-        if (t.dataset.tile === 'ai') countTo(document.getElementById('t-ms'), 9.9, 3.0, 900, 1);
-        clearTimeout(t._t); t._t = setTimeout(function () { t.setAttribute('aria-expanded', 'false'); }, 6000);
+    dash.querySelectorAll('.w-toggle button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        dash.querySelectorAll('.w-toggle button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        var pm = b.dataset.who === 'pm'; gauge(pm ? 20 : 0);
+        sub.textContent = pm ? 'What a property manager takes' : 'What Bella takes';
+        say(pm ? 'A manager takes about 20% of every booking.' : 'Bella takes 0%. You keep every booking.');
       });
     });
+    // Greetings orb
+    var HELLO = [['Namaste', 'Hindi'], ['Hello', 'English'], ['Bonjour', 'French'], ['Hola', 'Spanish'], ['こんにちは', 'Japanese'], ['مرحبا', 'Arabic'], ['Ciao', 'Italian'], ['안녕하세요', 'Korean'], ['Olá', 'Portuguese'], ['Hallo', 'German']];
+    var hi = 0, word = document.getElementById('hello-word'), lang = document.getElementById('hello-lang');
+    function nextHello() {
+      hi = (hi + 1) % HELLO.length; word.classList.add('out');
+      setTimeout(function () { word.textContent = HELLO[hi][0]; lang.textContent = HELLO[hi][1] + ' · tap for next'; word.classList.remove('out'); }, 250);
+    }
+    document.getElementById('hello-orb').addEventListener('click', function () { nextHello(); say('Bella replies in the guest’s own language.'); });
+    if (!reduceMotion) setInterval(function () { if (!document.hidden) nextHello(); }, 2600);
+    // Portrait and icon buttons
+    var greet = document.getElementById('w-greet'), status = document.getElementById('w-status'), por = document.getElementById('w-portrait');
+    por.addEventListener('click', function () {
+      por.classList.remove('bump'); void por.offsetWidth; por.classList.add('bump'); setTimeout(function () { por.classList.remove('bump'); }, 400);
+      greet.textContent = HELLO[hi][0] + ', host'; status.textContent = 'Co-host ready · ' + HELLO[hi][1]; say('Hi! I’m Bella, your next-gen AI co-host.');
+    });
+    dash.querySelectorAll('.w-icons button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        dash.querySelectorAll('.w-icons button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        status.textContent = b.dataset.say; say(b.dataset.say + '.');
+      });
+    });
+    // Next check-in: the next half hour from now
+    var d = new Date(); d.setMinutes(d.getMinutes() < 30 ? 30 : 60, 0, 0);
+    document.getElementById('w-next').textContent = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    // Reply speed: tap to "measure" a reply
+    var sp = document.getElementById('w-speed'), spv = document.getElementById('w-speed-val');
+    sp.addEventListener('click', function () {
+      var t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / 900); spv.textContent = (9.9 - 6.9 * (1 - Math.pow(1 - k, 3))).toFixed(1) + 's'; if (k < 1) requestAnimationFrame(step); })(t0);
+      say('Powered by GPT-5.6 Sol: about 3 seconds per reply.');
+    });
+    // Dock
+    var cb = document.getElementById('w-cancel');
+    cb.addEventListener('click', function () { var on = cb.getAttribute('aria-pressed') !== 'true'; cb.setAttribute('aria-pressed', String(on)); cb.textContent = on ? '✓ 1 tap to cancel' : 'Cancel anytime'; say('Cancel from your billing portal. Access lasts until your period ends.'); });
+    var spk = document.getElementById('w-spark');
+    spk.addEventListener('click', function () { spk.classList.toggle('spin'); say('No booking commission. Ever.'); });
+    function clock() { var n = new Date(); document.getElementById('flip-h').textContent = ('0' + n.getHours()).slice(-2); document.getElementById('flip-m').textContent = ('0' + n.getMinutes()).slice(-2); }
+    clock(); setInterval(clock, 15000);
   })();
 
   // ===== bnb support cards: watch Bella handle a case step by step =====
