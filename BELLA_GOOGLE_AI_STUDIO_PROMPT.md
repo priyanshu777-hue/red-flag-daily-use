@@ -49,6 +49,14 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
 - AIRBNB SUPPORT AND CLAIMS: add a cream section after the features titled "Bella even talks to Airbnb support for you." with two cards: "Airbnb customer support" (emergencies, cancellations and urgent guest issues, so the host is less likely to be penalised for a missed response; all plans) and "Airbnb claims, filed for you" with a red "Yearly plans" tag (included with every yearly plan, up to 5 listings). Small note: "Bella works as your co-host with the access you give her. Airbnb makes the final decision on every claim."
 - Under the pricing switches: "Yearly plans also include Airbnb claims filed on your behalf." In every plan card, list "Talks to Airbnb support for you" and "Airbnb claims for you [Yearly]". When Monthly is selected, the claims line turns grey and reads "Airbnb claims: switch to yearly".
 - Add the two matching FAQ entries from the file, and the extra pain point "Miss an emergency or cancellation and Airbnb can penalise your listing for not responding."
+- QUESTIONS BEFORE PAYMENT: when a visitor taps any plan button, do NOT go to the payment link straight away. Open a full-screen (mobile) / centred (desktop) popup that asks one question at a time, rapid-fire, with a gold progress bar ("Question 1 of 5"), Back button and Enter-to-continue:
+  1. "First, what's your name?"
+  2. "Hi <first name>! What email do you use on Airbnb?" (helper: "Your 60-second setup guide will be sent here.")
+  3. "Which city is your listing in?"
+  4. "And your phone number?" (prefill +91 for India visitors; helper: "We only use it for WhatsApp updates about your setup.")
+  5. "Last one: how many listings do you have?" with buttons 1 / 2–3 / 4–5 / 6+.
+  Validate each answer inline. If their listings exceed the chosen plan, show a tip with a "Switch to Growth/Pro" button. If they pick 6+, show WhatsApp us / Email us for a custom plan instead of payment. Otherwise show "Continue to payment · <price>", which saves the answers (POST to the LEAD_ENDPOINT Google Apps Script URL, see bella-leads-google-sheet.gs) and opens the plan's payment link. For Stripe links, add ?prefilled_email=<their email>.
+- SETUP COPY: never show the co-host email or setup steps on the page. The "How it works" section says: "No new app. No new sign-up. Just 60 seconds." Steps: Choose your plan → Check your inbox (setup guide arrives at your registered email right after payment) → Bella goes live (finish the single 60-second step). Under it: "No new app to install · No new account or sign-up · Works with your existing Airbnb account". Hero fine print says "60-second setup".
 - Line under pricing: "No free trial. Pay monthly, or pay yearly and save 15%. Cancel anytime, and your access continues until the end of the period you paid for."
 
 4. CONTACT
