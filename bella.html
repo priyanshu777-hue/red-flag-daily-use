@@ -489,6 +489,71 @@
   .final-art { width: min(100%, 760px); border-radius: 24px; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
   .final-art img { display: block; width: 100%; height: auto; }
 
+  /* bnb support + claims: glass cards over a dusk lake */
+  .gl { position: relative; overflow: hidden; isolation: isolate; color: #fff; padding-block: clamp(64px, 9vw, 120px);
+    background: linear-gradient(180deg, #B98C8A 0%, #C9A096 30%, #B4A0B6 60%, #9D8C9E 100%); }
+  .gl-scene { position: absolute; inset: 0; z-index: -1; }
+  .gl-scene svg { position: absolute; inset: 0; width: 100%; height: 100%; filter: blur(1.5px); }
+  .gl-orb { position: absolute; right: 8%; top: 52%; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #FFE3EE, #F3AFC8 60%, #D987A9); box-shadow: 0 0 80px 30px rgba(243,175,200,.55); opacity: .85; }
+  .gl-wrap { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+  .gl-head { display: grid; justify-items: center; text-align: center; gap: 14px; }
+  .gl-tap { position: relative; width: 84px; height: 84px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(255,255,255,.28); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(255,255,255,.35); }
+  .gl-tap span { position: absolute; inset: 18px; border-radius: 50%; background: #fff; box-shadow: 0 6px 20px rgba(80,40,60,.25); transition: transform .3s cubic-bezier(.34,1.6,.5,1); }
+  .gl-tap::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(255,255,255,.6); animation: ping2 2.2s ease-out infinite; }
+  .gl-tap:active span { transform: scale(.8); }
+  @keyframes ping2 { from { transform: scale(.8); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+  .gl-line { width: 1px; height: clamp(50px, 8vw, 100px); background: rgba(255,255,255,.75); margin-top: -14px; }
+  .gl-head h2 { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem); font-weight: 400; color: #fff; text-shadow: 0 2px 20px rgba(80,40,60,.25); }
+  .gl-head p { color: rgba(255,255,255,.92); max-width: 44ch; }
+  .gl-hint { font-size: .9rem; }
+  .gl-cards { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(16px, 2.5vw, 28px); align-items: start; }
+  .pod, .book { background: linear-gradient(180deg, rgba(120,104,108,.55), rgba(70,60,62,.72)); backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 0 0 1px rgba(255,255,255,.08), 0 40px 70px -40px rgba(50,20,30,.8); }
+  .pod { border-radius: 200px 200px 60px 60px; padding: 18px 22px 26px; display: grid; justify-items: center; text-align: center; gap: 10px; }
+  .pod-window { width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2), 0 10px 30px -10px rgba(0,0,0,.5); }
+  .pod-window svg { width: 100%; height: 100%; display: block; }
+  .pod-kicker { font-size: .85rem; color: rgba(255,255,255,.7); margin-top: 6px; }
+  .pod h3 { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem); font-weight: 400; color: #fff; }
+  .pod-meta { font-size: .95rem; line-height: 1.5; color: rgba(255,255,255,.9); }
+  .pod-desc { font-size: .88rem; color: rgba(255,255,255,.7); max-width: 30ch; }
+  .pod-btn, .book-more { min-height: 48px; padding: 10px 22px; border-radius: 999px; border: 0; cursor: pointer; background: #2A2626; color: #fff; font: 500 .98rem/1 var(--font-display); display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px -12px rgba(0,0,0,.8); }
+  .pod .pod-btn.sim-play { margin-top: 4px; min-height: 48px; padding: 10px 22px; background: #2A2626; color: #fff; font: 500 .98rem/1 var(--font-display); box-shadow: 0 10px 20px -12px rgba(0,0,0,.8); }
+  .pod .pod-btn.sim-play::before, .book-cta.sim-play::before { content: none; }
+  .book-wrap .book-cta.sim-play { margin-top: 0; min-height: 52px; padding: 12px 36px; background: #fff; color: #1C1A1A; font: 500 1.05rem/1 var(--font-display); }
+  .chev { display: inline-block; transition: transform .3s var(--ease); }
+  [aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .pod .sim-steps { width: 100%; text-align: left; margin-top: 4px; display: none; }
+  .pod.playing .sim-steps { display: grid; }
+  .pod .sim-steps::before { background: rgba(255,255,255,.2); }
+  .pod .sim-steps li { color: #fff; }
+  .pod .sim-steps li::before { background: transparent; border-color: rgba(255,255,255,.5); }
+  .pod .sim-steps time { color: #FFD6A0; }
+  .pod .sim-steps li:last-child.on span { color: #9BE3B8; }
+  .pod-foot { font-size: .78rem; color: rgba(255,255,255,.65); }
+  .book-wrap { display: grid; justify-items: center; gap: 14px; }
+  .book { width: 100%; border-radius: 44px; padding: 14px; display: grid; gap: 4px; }
+  .book::before { content: ""; justify-self: center; width: 40px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.4); margin-bottom: 8px; }
+  .book-img { position: relative; border-radius: 32px; overflow: hidden; aspect-ratio: 5 / 3; }
+  .book-img svg { width: 100%; height: 100%; display: block; }
+  .book-chip { position: absolute; top: 46%; padding: 7px 12px; border-radius: 999px; background: rgba(80,70,74,.55); backdrop-filter: blur(8px); font-size: .82rem; }
+  .book-chip:first-of-type { left: 6%; } .book-chip:last-of-type { left: 46%; }
+  .book-body { display: grid; gap: 12px; padding: 18px 16px 10px; }
+  .book-body h3 { font-size: 1.15rem; font-weight: 400; color: #fff; }
+  .book-h2 { margin-top: 8px; }
+  .book-rule { height: 1px; background: rgba(255,255,255,.3); }
+  .book-row { display: flex; align-items: center; gap: 10px; font-size: .95rem; color: rgba(255,255,255,.92); }
+  .book-row svg { width: 18px; height: 18px; }
+  .book-more { justify-self: start; }
+  .book-detail { font-size: .88rem; color: rgba(255,255,255,.8); }
+  .book .claim-bar { background: rgba(255,255,255,.18); }
+  .book .claim-bar i { background: linear-gradient(90deg, #FFD6A0, #9BE3B8); }
+  .book .claim-steps { color: rgba(255,255,255,.6); }
+  .book .claim-steps li.on { color: #fff; }
+  .book-cta { min-height: 52px; padding: 12px 36px; border-radius: 999px; border: 0; cursor: pointer; background: #fff; color: #1C1A1A; font: 500 1.05rem/1 var(--font-display); box-shadow: 0 16px 30px -14px rgba(50,20,30,.7); transition: transform .2s; }
+  .book-cta:active { transform: scale(.97); }
+  .gl-note { grid-column: 1 / -1; text-align: center; font-size: .82rem; color: rgba(255,255,255,.8); }
+  @media (max-width: 900px) { .gl-wrap { grid-template-columns: minmax(0, 1fr); } .gl-cards { grid-template-columns: minmax(0, 1fr); max-width: 420px; margin-inline: auto; width: 100%; } .gl-orb { top: 70%; width: 120px; height: 120px; } }
+
   /* Languages + Co-Host chat */
   .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 32px); }
   .panel { border: 1px solid rgba(201,166,107,.22); border-radius: var(--radius); padding: clamp(24px, 3.4vw, 40px); display: grid; gap: 18px; align-content: start; background: var(--ink); min-width: 0; }
@@ -1101,42 +1166,70 @@
     </div>
   </section>
 
-  <!-- bnb support + claims -->
-  <section class="band band--cream" id="support" aria-labelledby="support-title">
-    <div class="wrap support">
-      <div class="section-head" style="margin-bottom:0">
+  <!-- bnb support + claims: glass cards over a dusk lake -->
+  <section class="gl" id="support" aria-labelledby="support-title">
+    <div class="gl-scene" aria-hidden="true">
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice">
+        <path d="M-20 470 C140 400 260 380 420 430 C520 460 600 470 700 440 C860 390 1000 330 1220 380 L1220 800 L-20 800Z" fill="#8E6E72" opacity=".55"/>
+        <path d="M-20 520 C220 480 420 500 640 520 C860 540 1020 500 1220 510 L1220 800 L-20 800Z" fill="#A98582" opacity=".55"/>
+        <rect x="-20" y="560" width="1240" height="240" fill="#B28E88" opacity=".55"/>
+        <g stroke="#7A4E36" stroke-width="3" stroke-linecap="round" opacity=".85">
+          <path d="M60 800 L70 690 M80 800 L96 660 M100 800 L104 700 M120 800 L140 670 M140 800 L150 710 M40 800 L30 700 M160 800 L176 690"/>
+          <path d="M1000 800 L1010 680 M1020 800 L1040 650 M1040 800 L1046 700 M1060 800 L1084 670 M1080 800 L1090 710 M1100 800 L1120 690 M1130 800 L1136 700 M980 800 L968 700"/>
+        </g>
+      </svg>
+      <span class="gl-orb"></span>
+    </div>
+    <div class="wrap gl-wrap">
+      <div class="gl-head">
+        <button type="button" class="gl-tap" id="gl-tap" aria-label="Play both demos"><span></span></button>
+        <span class="gl-line" aria-hidden="true"></span>
         <h2 id="support-title">Bella even talks to bnb support for you.</h2>
-        <p>If a guest has an emergency or a booking gets cancelled and you don't respond in time, the bnb platform can penalise your listing. Bella steps in, contacts bnb customer support for you and keeps the issue moving.</p>
+        <p>If a guest has an emergency or a booking is cancelled and you don't reply in time, the bnb platform can penalise your listing. Bella steps in, contacts bnb support and keeps the issue moving.</p>
+        <p class="gl-hint">— tap the dot to see Bella at work —</p>
       </div>
-      <div class="support-list">
-        <article class="support-item sim" data-sim="support">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.5-2 2.5-5 2.5"/></svg></div>
-          <div>
-            <h3>bnb customer support</h3>
-            <p>Emergencies, cancellations and urgent guest issues get a fast reply and a call to bnb support when needed, so you are less likely to be penalised for a missed response.</p>
-            <button type="button" class="sim-play" aria-expanded="false">Watch Bella handle a late cancellation</button>
-            <ol class="sim-steps" aria-live="polite">
-              <li><time>11:42 PM</time><span>Guest: "My flight is cancelled, I can't come."</span></li>
-              <li><time>11:42 PM</time><span>Bella replies and offers new dates</span></li>
-              <li><time>11:44 PM</time><span>Bella contacts bnb support with the details</span></li>
-              <li><time>11:58 PM</time><span>Booking moved. No penalty on your listing</span></li>
-            </ol>
-          </div>
+      <div class="gl-cards">
+        <article class="pod sim" data-sim="support">
+          <div class="pod-window" aria-hidden="true"><svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice"><rect width="200" height="160" fill="#2B2547"/><circle cx="150" cy="38" r="14" fill="#F3EEF7"/><circle cx="40" cy="30" r="1.5" fill="#fff"/><circle cx="90" cy="18" r="1.2" fill="#fff"/><circle cx="118" cy="52" r="1" fill="#fff"/><path d="M0 120 C60 96 120 104 200 92 L200 160 L0 160Z" fill="#3D3560"/><polygon points="70,128 100,76 130,128" fill="#1C1730"/><polygon points="92,128 100,110 108,128" fill="#FFB347"/><rect x="118" y="96" width="5" height="14" fill="#1C1730"/><rect x="136" y="70" width="44" height="28" rx="8" fill="#fff"/><text x="158" y="89" font-family="Outfit, sans-serif" font-size="12" font-weight="700" fill="#C8102E" text-anchor="middle">!</text></svg></div>
+          <p class="pod-kicker">case · tonight</p>
+          <h3>bnb customer support</h3>
+          <p class="pod-meta">11:42 PM · Late cancellation<br>Guest from Mumbai</p>
+          <p class="pod-desc">Emergencies and cancellations get a fast reply, and Bella contacts bnb support when needed.</p>
+          <button type="button" class="pod-btn sim-play" aria-expanded="false">Watch Bella handle it <span class="chev" aria-hidden="true">⌄</span></button>
+          <ol class="sim-steps" aria-live="polite">
+            <li><time>11:42 PM</time><span>Guest: "My flight is cancelled, I can't come."</span></li>
+            <li><time>11:42 PM</time><span>Bella replies and offers new dates</span></li>
+            <li><time>11:44 PM</time><span>Bella contacts bnb support</span></li>
+            <li><time>11:58 PM</time><span>Booking moved. No penalty</span></li>
+          </ol>
+          <p class="pod-foot">Reply, relax and sleep.</p>
         </article>
-        <article class="support-item sim" data-sim="claims">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div>
-            <h3>bnb claims, filed for you <span class="pill">Yearly plans</span></h3>
-            <p>Damage or reimbursement claims are prepared and followed up with the bnb platform on your behalf. Included with every yearly plan, for up to 5 listings.</p>
-            <button type="button" class="sim-play" aria-expanded="false">Follow a broken-lamp claim</button>
-            <div class="claim-track" aria-live="polite">
-              <span class="claim-bar"><i></i></span>
-              <ol class="claim-steps"><li>Photos collected</li><li>Claim filed</li><li>Followed up</li><li>Platform decides</li></ol>
+
+        <div class="book-wrap">
+          <article class="book sim" data-sim="claims">
+            <div class="book-img" aria-hidden="true">
+              <svg viewBox="0 0 300 180" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="bk-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9A3B6"/><stop offset="1" stop-color="#E8C8B8"/></linearGradient></defs><rect width="300" height="180" fill="url(#bk-sky)"/><path d="M120 120 C170 70 220 60 300 70 L300 180 L120 180Z" fill="#6F5A5C" opacity=".8"/><rect y="118" width="300" height="62" fill="#A48A88"/><g transform="translate(130 80)"><rect x="10" y="0" width="34" height="20" rx="4" fill="#F6C343"/><rect x="24" y="20" width="6" height="34" fill="#B98A2E"/><path d="M12 54 L42 54 L38 62 L16 62Z" fill="#B98A2E"/><path d="M42 24 L60 44" stroke="#5A3A22" stroke-width="3"/><path d="M50 30 L56 34 L52 40" stroke="#E8574D" stroke-width="3" fill="none"/></g><g stroke="#8A5A3A" stroke-width="2" opacity=".8"><path d="M10 180 L16 140 M20 180 L30 130 M34 180 L36 146 M260 180 L270 136 M276 180 L282 146 M290 180 L292 138"/></g></svg>
+              <span class="book-chip">⟳ Yearly plans</span><span class="book-chip">⌂ Up to 5 listings</span>
             </div>
-          </div>
-        </article>
-        <p class="support-note">Bella works as your co-host with the access you give her. The bnb platform makes the final decision on every claim.</p>
+            <div class="book-body">
+              <h3>bnb claims, filed for you</h3>
+              <span class="book-rule"></span>
+              <p class="book-row">Broken lamp · Living room</p>
+              <p class="book-row"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="1.7"/></svg>Reported after checkout</p>
+              <button type="button" class="book-more" aria-expanded="false" id="book-more">More details <span class="chev" aria-hidden="true">⌄</span></button>
+              <p class="book-detail" id="book-detail" hidden>Bella collects photos and the guest's messages, files the claim with the bnb platform and follows up until it is decided. Included with every yearly plan, for up to 5 listings.</p>
+              <h3 class="book-h2">Claim status</h3>
+              <span class="book-rule"></span>
+              <div class="claim-track" aria-live="polite">
+                <span class="claim-bar"><i></i></span>
+                <ol class="claim-steps"><li>Photos</li><li>Filed</li><li>Followed up</li><li>Decided</li></ol>
+              </div>
+            </div>
+          </article>
+          <button type="button" class="book-cta sim-play" aria-expanded="false">Track claim</button>
+        </div>
       </div>
+      <p class="gl-note">Bella works as your co-host with the access you give her. The bnb platform makes the final decision on every claim.</p>
     </div>
   </section>
 
@@ -2267,8 +2360,9 @@
   // ===== bnb support cards: watch Bella handle a case step by step =====
   (function initSims() {
     document.querySelectorAll('.sim').forEach(function (card) {
-      var btn = card.querySelector('.sim-play'), timers = [];
-      function play() {
+      var btn = card.querySelector('.sim-play') || card.parentNode.querySelector('.sim-play'), timers = [];
+      function play(e) {
+        if (e && card.dataset.sim === 'support' && card.classList.contains('playing')) { timers.forEach(clearTimeout); card.classList.remove('playing'); btn.setAttribute('aria-expanded', 'false'); return; }
         timers.forEach(clearTimeout); timers = [];
         card.classList.add('playing'); btn.setAttribute('aria-expanded', 'true');
         if (card.dataset.sim === 'support') {
@@ -2281,11 +2375,18 @@
         }
       }
       btn.addEventListener('click', play);
-      if ('IntersectionObserver' in window) {
+      if ('IntersectionObserver' in window && card.dataset.sim !== 'support') {
         var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.3 });
         io.observe(card);
       }
     });
+  })();
+
+  (function initGlass() {
+    var more = document.getElementById('book-more'), det = document.getElementById('book-detail');
+    if (more) more.addEventListener('click', function () { var o = more.getAttribute('aria-expanded') !== 'true'; more.setAttribute('aria-expanded', String(o)); det.hidden = !o; });
+    var tap = document.getElementById('gl-tap');
+    if (tap) tap.addEventListener('click', function () { document.querySelectorAll('#support .sim').forEach(function (c) { c.classList.remove('playing'); }); document.querySelectorAll('#support .sim-play').forEach(function (b) { b.click(); }); });
   })();
 
   // ===== Setup steps: light up as you scroll, each with a tiny demo =====
