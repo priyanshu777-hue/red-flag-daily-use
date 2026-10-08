@@ -114,6 +114,10 @@
   }
   .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
   .site-header .wrap > * { pointer-events: auto; }
+  .site-header::before { content: ""; position: absolute; inset: 0 0 -24px; pointer-events: none; opacity: 0; transition: opacity .3s var(--ease);
+    background: linear-gradient(180deg, rgba(251,248,243,.92) 55%, rgba(251,248,243,0)); }
+  body.scrolled .site-header::before { opacity: 1; }
+  body.in-story .site-header::before, body.on-dark .site-header::before { opacity: 0; }
   .brand { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 24px -16px rgba(0,0,0,.4); }
   .nav { padding: 6px 6px 6px 22px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(245,243,240,.66)); backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(255,255,255,.6), 0 14px 34px -18px rgba(40,30,20,.55); }
   .nav .btn { background: linear-gradient(180deg, #2A2730, #0B0A0C); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 -2px 4px rgba(0,0,0,.5), 0 10px 20px -10px rgba(0,0,0,.7); }
@@ -217,14 +221,32 @@
 
 
   .trust { border-block: 1px solid rgba(201,166,107,.16); background: var(--ink-2); }
-  .trust ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .trust li { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 20px 12px; font-size: .95rem; text-align: center; }
-  .trust li + li { border-left: 1px solid rgba(201,166,107,.16); }
-  .trust svg { width: 18px; height: 18px; color: var(--gold); flex: none; }
+  .trust-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .trust-grid li + li { border-left: 1px solid rgba(201,166,107,.16); }
+  .tile { position: relative; width: 100%; min-height: 92px; padding: 18px 14px; border: 0; background: transparent; color: var(--cream); cursor: pointer; perspective: 800px; overflow: hidden;
+    font: 500 .98rem/1.3 var(--font-body); transition: background-color .3s var(--ease); }
+  .tile:hover { background: rgba(255,255,255,.04); }
+  .tile-front, .tile-back { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 14px; text-align: center;
+    backface-visibility: hidden; transition: transform .6s cubic-bezier(.34,1.3,.5,1), opacity .3s var(--ease); }
+  .tile-back { flex-direction: column; gap: 4px; transform: rotateX(-90deg); opacity: 0; }
+  .tile[aria-expanded="true"] .tile-front { transform: rotateX(90deg); opacity: 0; }
+  .tile[aria-expanded="true"] .tile-back { transform: none; opacity: 1; }
+  .tile svg { width: 20px; height: 20px; color: var(--gold); flex: none; }
+  .tile:hover .t-sun { animation: spin 3s linear infinite; }
+  .tile:hover .t-undo { animation: undo .7s var(--ease); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes undo { 50% { transform: rotate(-200deg); } }
+  .t-hello { display: inline-block; min-width: 4.5em; color: var(--gold); transition: opacity .25s var(--ease), transform .25s var(--ease); }
+  .t-hello.out { opacity: 0; transform: translateY(-6px); }
+  .tile-big { font: 600 1.55rem/1 var(--font-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .tile-big b { color: #9BE3B8; font-weight: 600; }
+  .tile-small { font-size: .78rem; color: var(--mute-on-ink); max-width: 30ch; }
   @media (max-width: 760px) {
-    .trust ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .trust li:nth-child(3) { border-left: 0; }
-    .trust li:nth-child(n+3) { border-top: 1px solid rgba(201,166,107,.16); }
+    .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .trust-grid li:nth-child(3) { border-left: 0; }
+    .trust-grid li:nth-child(n+3) { border-top: 1px solid rgba(201,166,107,.16); }
+    .tile { min-height: 104px; font-size: .92rem; }
+    .tile-front { flex-direction: column; gap: 6px; }
   }
 
   /* Problem */
@@ -457,6 +479,33 @@
   .steps li::before { font-variant-numeric: lining-nums; content: counter(step, decimal-leading-zero); font-family: var(--font-display); font-size: 3rem; line-height: 1; color: #8A6A35; }
   .steps h3 { font-size: 1.6rem; }
   .steps p { color: var(--mute-on-cream); }
+  .steps--live { position: relative; }
+  .steps--live::after { content: ""; position: absolute; left: 0; top: 0; height: 2px; width: var(--sp, 0%); background: linear-gradient(90deg, #8A6A35, var(--red)); transition: width .6s var(--ease); }
+  .step { transition: opacity .4s var(--ease), transform .4s var(--ease); }
+  .steps--live:not(.done) .step:not(.lit) { opacity: .45; transform: translateY(8px); }
+  .step-demo { margin-top: 14px; }
+  .mini-plans { display: inline-flex; padding: 4px; border-radius: 999px; background: rgba(11,10,12,.07); box-shadow: inset 0 2px 4px rgba(0,0,0,.08); }
+  .mini-plans button { min-height: 38px; padding: 6px 14px; border: 0; border-radius: 999px; background: transparent; cursor: pointer; font: 600 .85rem/1 var(--font-display); color: #5C554D; transition: background-color .25s, color .25s, box-shadow .25s; }
+  .mini-plans button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 4px 10px -4px rgba(0,0,0,.35); }
+  .mini-price { margin-top: 8px; font-size: .9rem; color: var(--mute-on-cream); }
+  .mini-price b { font: 600 1.2rem/1 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+  .env { position: relative; display: block; width: 180px; height: 120px; border: 0; padding: 0; background: none; cursor: pointer; perspective: 600px; }
+  .env-back, .env-front, .env-flap { position: absolute; left: 0; right: 0; }
+  .env-back { bottom: 0; height: 100px; border-radius: 10px; background: #D9C9AC; }
+  .env-front { bottom: 0; height: 100px; border-radius: 10px; background: linear-gradient(160deg, #EADBC0, #D9C6A3); clip-path: polygon(0 18%, 50% 62%, 100% 18%, 100% 100%, 0 100%); z-index: 3; box-shadow: 0 14px 24px -14px rgba(60,40,20,.6); }
+  .env-flap { top: 20px; height: 60px; background: #CDB892; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; z-index: 4; transition: transform .5s var(--ease), z-index 0s .25s; }
+  .env-letter { position: absolute; left: 12px; right: 12px; bottom: 8px; height: 92px; z-index: 2; border-radius: 8px; background: #fff; padding: 10px; display: grid; gap: 2px; align-content: start; text-align: left;
+    font-size: .72rem; color: #5C554D; transition: transform .6s cubic-bezier(.34,1.4,.5,1) .2s; box-shadow: 0 4px 10px -6px rgba(0,0,0,.3); }
+  .env-letter b { font: 600 .85rem/1.2 var(--font-display); color: var(--ink); }
+  .env-cta { justify-self: start; margin-top: 4px; padding: 3px 8px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 700; font-size: .65rem; }
+  .env.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+  .env.open .env-letter { transform: translateY(-58px); }
+  .ring-demo { position: relative; width: 120px; height: 120px; border: 0; padding: 0; background: none; cursor: pointer; display: block; }
+  .ring-demo svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-bg { fill: #fff; stroke: rgba(11,10,12,.08); stroke-width: 10; }
+  .ring-fg { fill: none; stroke: var(--ok); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 314.16; stroke-dashoffset: 314.16; }
+  .ring-txt { position: absolute; inset: 0; display: grid; place-items: center; font: 600 1.15rem/1.1 var(--font-display); color: var(--ink); text-align: center; font-variant-numeric: tabular-nums; }
+  .ring-demo.live .ring-txt { color: #1F7A45; font-size: .95rem; }
   .steps code { font-family: var(--font-body); font-weight: 700; background: var(--cream-2); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
   @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
 
@@ -543,6 +592,26 @@
   .support-item .ic svg { width: 24px; height: 24px; }
   .support-item h3 { font-size: 1.55rem; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .support-item p { color: var(--mute-on-cream); margin-top: 6px; }
+  .sim { cursor: default; transition: box-shadow .3s var(--ease), transform .3s var(--ease); }
+  .sim.playing { box-shadow: 0 30px 60px -36px rgba(11,10,12,.6), 0 0 0 2px rgba(200,16,46,.25); }
+  .sim-play { margin-top: 12px; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 0; cursor: pointer; font: 600 .88rem/1 var(--font-display); color: var(--ink);
+    background: linear-gradient(180deg, #fff, #ECEAE6); box-shadow: inset 0 1px 0 #fff, inset 0 -2px 4px rgba(0,0,0,.06), 0 8px 16px -10px rgba(0,0,0,.45); }
+  .sim-play::before { content: "▶"; font-size: .7rem; margin-right: 8px; color: var(--red); }
+  .sim.playing .sim-play::before { content: "↻"; font-size: .9rem; }
+  .sim-steps { list-style: none; margin: 14px 0 0; padding: 0 0 0 18px; display: grid; gap: 10px; position: relative; }
+  .sim-steps::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: rgba(11,10,12,.1); }
+  .sim-steps li { position: relative; display: grid; gap: 2px; font-size: .92rem; opacity: .3; transform: translateX(-6px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
+  .sim-steps li::before { content: ""; position: absolute; left: -18px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid rgba(11,10,12,.2); transition: background-color .3s, border-color .3s; }
+  .sim-steps li.on { opacity: 1; transform: none; }
+  .sim-steps li.on::before { background: var(--ok); border-color: var(--ok); }
+  .sim-steps li:last-child.on span { color: #1F7A45; font-weight: 600; }
+  .sim-steps time { font: 600 .75rem/1 var(--font-display); color: #8A6A35; font-variant-numeric: tabular-nums; }
+  .claim-track { margin-top: 16px; display: grid; gap: 10px; }
+  .claim-bar { height: 8px; border-radius: 8px; background: rgba(11,10,12,.08); overflow: hidden; }
+  .claim-bar i { display: block; height: 100%; width: var(--cp, 0%); border-radius: 8px; background: linear-gradient(90deg, #8A6A35, var(--ok)); transition: width .6s var(--ease); }
+  .claim-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; font-size: .78rem; color: var(--mute-on-cream); }
+  .claim-steps li { transition: color .3s var(--ease); }
+  .claim-steps li.on { color: var(--ink); font-weight: 600; }
   .pill { font-family: var(--font-body); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: var(--red); color: #fff; }
   .support-note { font-size: .85rem; color: var(--mute-on-cream); }
   @media (max-width: 860px) { .support { grid-template-columns: minmax(0, 1fr); } }
@@ -780,13 +849,25 @@
     </div>
   </section>
 
-  <!-- Trust strip -->
+  <!-- Trust strip: tap a tile to see it in action -->
   <section class="trust" aria-label="Highlights">
-    <ul class="wrap">
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 17.5l11-11"/></svg>No commission</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>50+ languages</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>Powered by GPT-5.6 Sol</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/></svg>Cancel anytime</li>
+    <ul class="wrap trust-grid">
+      <li><button type="button" class="tile" data-tile="commission" aria-expanded="false">
+        <span class="tile-front"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 17.5l11-11"/></svg>No commission</span>
+        <span class="tile-back"><span class="tile-big"><span id="t-pm">20%</span> → <b id="t-bella">0%</b></span><span class="tile-small">A manager's cut vs Bella's. You keep every booking.</span></span>
+      </button></li>
+      <li><button type="button" class="tile" data-tile="lang" aria-expanded="false">
+        <span class="tile-front"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span><span class="t-hello" id="t-hello">Hello</span> · 50+ languages</span></span>
+        <span class="tile-back"><span class="tile-big" id="t-hello-big" dir="auto">Namaste</span><span class="tile-small" id="t-hello-lang">Hindi · tap again for the next one</span></span>
+      </button></li>
+      <li><button type="button" class="tile" data-tile="ai" aria-expanded="false">
+        <span class="tile-front"><svg class="t-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>Powered by GPT&#8209;5.6&nbsp;Sol</span>
+        <span class="tile-back"><span class="tile-big"><span id="t-ms">3.0</span> s</span><span class="tile-small">Average time for Bella to reply to a guest.</span></span>
+      </button></li>
+      <li><button type="button" class="tile" data-tile="cancel" aria-expanded="false">
+        <span class="tile-front"><svg class="t-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/></svg>Cancel anytime</span>
+        <span class="tile-back"><span class="tile-big">1 tap</span><span class="tile-small">Cancel from your billing portal. Access lasts until your period ends.</span></span>
+      </button></li>
     </ul>
   </section>
 
@@ -819,7 +900,7 @@
         <li><span class="dot" aria-hidden="true"></span><span><strong>Prices that are too low</strong> lose you money. Too high, and your nights stay empty.</span></li>
         <li><span class="dot" aria-hidden="true"></span><span><strong>Check-in details go out late.</strong> Calendars get double booked.</span></li>
         <li><span class="dot" aria-hidden="true"></span><span><strong>A property manager takes 15 to 25%</strong> of every booking.</span></li>
-        <li><span class="dot" aria-hidden="true"></span><span><strong>Miss an emergency or cancellation</strong> and Airbnb can penalise your listing.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Miss an emergency or cancellation</strong> and the bnb platform can penalise your listing.</span></li>
       </ul>
     </div>
   </section>
@@ -866,7 +947,7 @@
           <li id="day-3" role="tabpanel" aria-labelledby="day-tab-3" data-pose="calendar" data-hour="14.25" data-say="Dates blocked. Enjoy your flat!" data-sky1="#7EC3EC" data-sky2="#DDF0FA"><img class="day-face" src="bella-assets/face-wink.webp" width="300" height="276" alt="" loading="lazy"><time>2:15 PM</time><h3>Calendar blocking</h3><p>You need the flat next week. Bella blocks the dates so nobody books them.</p></li>
           <li id="day-4" role="tabpanel" aria-labelledby="day-tab-4" data-pose="typing" data-hour="17.67" data-say="Found a dark cover photo. Fixed it!" data-sky1="#F29E5C" data-sky2="#F6D6A8"><img class="day-face" src="bella-assets/face-surprised.webp" width="300" height="276" alt="" loading="lazy"><time>5:40 PM</time><h3>Listing audit</h3><p>Bella spots a dark cover photo and a missing amenity, and fixes the gaps.</p></li>
           <li id="day-5" role="tabpanel" aria-labelledby="day-tab-5" data-pose="phone" data-hour="21.33" data-say="Weekend prices up 10%. Done!" data-sky1="#3A2C5C" data-sky2="#6B4F8A"><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><time>9:20 PM</time><h3>Co-Host chat</h3><p>You type "Raise weekend prices by 10%". It’s done before you put your phone down.</p></li>
-          <li id="day-6" role="tabpanel" aria-labelledby="day-tab-6" data-pose="typing" data-hour="23.83" data-say="Cancellation handled with Airbnb support." data-sky1="#10132A" data-sky2="#262A48"><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><time>11:50 PM</time><h3>Airbnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts Airbnb support for you.</p></li>
+          <li id="day-6" role="tabpanel" aria-labelledby="day-tab-6" data-pose="typing" data-hour="23.83" data-say="Cancellation handled with bnb support." data-sky1="#10132A" data-sky2="#262A48"><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><time>11:50 PM</time><h3>bnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts bnb support for you.</p></li>
           </ol>
           <div class="day-progress" aria-hidden="true"><i id="day-bar"></i></div>
           <p class="day-hint">Keep scrolling, or tap a time. Tap Bella to hear what she did.</p>
@@ -894,23 +975,41 @@
     </div>
   </section>
 
-  <!-- Airbnb support + claims -->
+  <!-- bnb support + claims -->
   <section class="band band--cream" id="support" aria-labelledby="support-title">
     <div class="wrap support">
       <div class="section-head" style="margin-bottom:0">
-        <h2 id="support-title">Bella even talks to Airbnb support for you.</h2>
-        <p>If a guest has an emergency or a booking gets cancelled and you don't respond in time, Airbnb can penalise your listing. Bella steps in, contacts Airbnb customer support for you and keeps the issue moving.</p>
+        <h2 id="support-title">Bella even talks to bnb support for you.</h2>
+        <p>If a guest has an emergency or a booking gets cancelled and you don't respond in time, the bnb platform can penalise your listing. Bella steps in, contacts bnb customer support for you and keeps the issue moving.</p>
       </div>
       <div class="support-list">
-        <article class="support-item">
+        <article class="support-item sim" data-sim="support">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.5-2 2.5-5 2.5"/></svg></div>
-          <div><h3>Airbnb customer support</h3><p>Emergencies, cancellations and urgent guest issues get a fast reply and a call to Airbnb support when needed, so you are less likely to be penalised for a missed response.</p></div>
+          <div>
+            <h3>bnb customer support</h3>
+            <p>Emergencies, cancellations and urgent guest issues get a fast reply and a call to bnb support when needed, so you are less likely to be penalised for a missed response.</p>
+            <button type="button" class="sim-play" aria-expanded="false">Watch Bella handle a late cancellation</button>
+            <ol class="sim-steps" aria-live="polite">
+              <li><time>11:42 PM</time><span>Guest: "My flight is cancelled, I can't come."</span></li>
+              <li><time>11:42 PM</time><span>Bella replies and offers new dates</span></li>
+              <li><time>11:44 PM</time><span>Bella contacts bnb support with the details</span></li>
+              <li><time>11:58 PM</time><span>Booking moved. No penalty on your listing</span></li>
+            </ol>
+          </div>
         </article>
-        <article class="support-item">
+        <article class="support-item sim" data-sim="claims">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div><h3>Airbnb claims, filed for you <span class="pill">Yearly plans</span></h3><p>Damage or reimbursement claims are prepared and followed up with Airbnb on your behalf. Included with every yearly plan, for up to 5 listings.</p></div>
+          <div>
+            <h3>bnb claims, filed for you <span class="pill">Yearly plans</span></h3>
+            <p>Damage or reimbursement claims are prepared and followed up with the bnb platform on your behalf. Included with every yearly plan, for up to 5 listings.</p>
+            <button type="button" class="sim-play" aria-expanded="false">Follow a broken-lamp claim</button>
+            <div class="claim-track" aria-live="polite">
+              <span class="claim-bar"><i></i></span>
+              <ol class="claim-steps"><li>Photos collected</li><li>Claim filed</li><li>Followed up</li><li>Platform decides</li></ol>
+            </div>
+          </div>
         </article>
-        <p class="support-note">Bella works as your co-host with the access you give her. Airbnb makes the final decision on every claim.</p>
+        <p class="support-note">Bella works as your co-host with the access you give her. The bnb platform makes the final decision on every claim.</p>
       </div>
     </div>
   </section>
@@ -970,17 +1069,34 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="how-title">No new app. No new sign-up. Just 60 seconds.</h2>
-        <p>Bella works with your existing Airbnb account. After payment, your one-step setup guide is emailed to you.</p>
+        <p>Bella works with your existing bnb account. After payment, your one-step setup guide is emailed to you.</p>
       </div>
-      <ol class="steps">
-        <li><h3>Choose your plan</h3><p>Pick monthly or yearly and pay securely. Cancel anytime.</p></li>
-        <li><h3>Check your inbox</h3><p>Your setup guide arrives at your registered email right after payment.</p></li>
-        <li><h3>Bella goes live</h3><p>Finish the single 60-second step and Bella starts managing your guests, pricing and calendar.</p></li>
+      <ol class="steps steps--live" id="steps">
+        <li class="step" data-step="0">
+          <h3>Choose your plan</h3><p>Pick monthly or yearly and pay securely. Cancel anytime.</p>
+          <div class="step-demo" role="group" aria-label="Try picking a plan">
+            <div class="mini-plans"><button type="button" data-p="solo">Solo</button><button type="button" data-p="growth" aria-pressed="true">Growth</button><button type="button" data-p="pro">Pro</button></div>
+            <p class="mini-price"><b id="mini-price">₹1,699</b> / month · <a href="#pricing">See all plans</a></p>
+          </div>
+        </li>
+        <li class="step" data-step="1">
+          <h3>Check your inbox</h3><p>Your setup guide arrives at your registered email right after payment.</p>
+          <button type="button" class="step-demo env" aria-label="Open the setup email">
+            <span class="env-back"></span><span class="env-letter"><b>Welcome to Bella</b><span>Your 1-step setup guide</span><span class="env-cta">Start setup</span></span><span class="env-front"></span><span class="env-flap"></span>
+          </button>
+        </li>
+        <li class="step" data-step="2">
+          <h3>Bella goes live</h3><p>Finish the single 60-second step and Bella starts managing your guests, pricing and calendar.</p>
+          <button type="button" class="step-demo ring-demo" aria-label="Run the 60-second setup">
+            <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" class="ring-bg"/><circle cx="60" cy="60" r="50" class="ring-fg" id="ring-fg"/></svg>
+            <span class="ring-txt" id="ring-txt">60 s</span>
+          </button>
+        </li>
       </ol>
       <ul class="assure" aria-label="Setup promises">
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>No new app to install</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>No new account or sign-up</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Works with your existing Airbnb account</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Works with your existing bnb account</li>
       </ul>
     </div>
   </section>
@@ -1041,7 +1157,7 @@
         </div>
       </div>
 
-      <p class="yearly-note">Yearly plans also include <b>Airbnb claims filed on your behalf</b>.</p>
+      <p class="yearly-note">Yearly plans also include <b>bnb claims filed on your behalf</b>.</p>
 
       <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pc-cabin" viewBox="0 0 80 70"><polygon points="4,70 40,4 76,70" fill="#2E2229"/><polygon points="12,70 40,18 68,70" fill="#21181E"/><polygon points="28,70 40,46 52,70" fill="#FFB347" class="pc-lit"/><rect x="58" y="22" width="6" height="18" fill="#2E2229"/></symbol></svg>
       <div class="plans" id="plans" aria-live="polite">
@@ -1063,7 +1179,7 @@
             <div class="pcard-title"><h3>Solo</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
             <p class="pcard-desc">For hosts with one listing. Bella replies to guests, sets prices, checks guests in and keeps your calendar tidy.</p>
             <p class="sub js-sub">Billed monthly</p>
-            <ul class="chips"><li>1 listing</li><li>50+ languages</li><li>Airbnb support</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <ul class="chips"><li>1 listing</li><li>50+ languages</li><li>bnb support</li><li class="perk js-perk"><span class="js-perk-text">bnb claims for you</span></li></ul>
             <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Solo</a>
           </div>
         </article>
@@ -1086,7 +1202,7 @@
             <div class="pcard-title"><h3>Growth</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
             <p class="pcard-desc">For hosts with up to three listings. Everything in Solo, with pricing tuned for each place.</p>
             <p class="sub js-sub">Billed monthly</p>
-            <ul class="chips"><li>Up to 3 listings</li><li>Per-listing pricing</li><li>Airbnb support</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <ul class="chips"><li>Up to 3 listings</li><li>Per-listing pricing</li><li>bnb support</li><li class="perk js-perk"><span class="js-perk-text">bnb claims for you</span></li></ul>
             <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Growth</a>
           </div>
         </article>
@@ -1109,7 +1225,7 @@
             <div class="pcard-title"><h3>Pro</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
             <p class="pcard-desc">For hosts with up to five listings. Everything in Growth, plus priority WhatsApp support and full audits.</p>
             <p class="sub js-sub">Billed monthly</p>
-            <ul class="chips"><li>Up to 5 listings</li><li>Priority support</li><li>Full audits</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <ul class="chips"><li>Up to 5 listings</li><li>Priority support</li><li>Full audits</li><li class="perk js-perk"><span class="js-perk-text">bnb claims for you</span></li></ul>
             <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Pro</a>
           </div>
         </article>
@@ -1161,9 +1277,9 @@
         <details><summary>Does Bella take a commission?</summary><div class="ans"><p>No. You only pay your subscription and keep 100% of every booking.</p></div></details>
         <details><summary>How many listings are included?</summary><div class="ans"><p>Solo covers 1 listing, Growth up to 3 and Pro up to 5. For 6 or more listings, message us on WhatsApp or email us for a custom plan.</p></div></details>
         <details><summary>Which languages does Bella speak?</summary><div class="ans"><p>50+ languages, including Hindi, Hinglish, English, Arabic, French, German, Spanish and Japanese.</p></div></details>
-        <details><summary>How do I set Bella up?</summary><div class="ans"><p>Right after payment, a one-step setup guide is emailed to the address you registered with. It takes about 60 seconds. There is no new app to install and no new account to create, because Bella works with your existing Airbnb account.</p></div></details>
-        <details><summary>Can Bella talk to Airbnb support for me?</summary><div class="ans"><p>Yes. For emergencies, cancellations and urgent guest issues, Bella replies fast and contacts Airbnb customer support on your behalf, so a missed response is less likely to lead to a penalty.</p></div></details>
-        <details><summary>Can Bella file Airbnb claims for me?</summary><div class="ans"><p>Yes, on any yearly plan, for up to 5 listings. Bella prepares and follows up damage or reimbursement claims with Airbnb for you. Airbnb makes the final decision on every claim.</p></div></details>
+        <details><summary>How do I set Bella up?</summary><div class="ans"><p>Right after payment, a one-step setup guide is emailed to the address you registered with. It takes about 60 seconds. There is no new app to install and no new account to create, because Bella works with your existing bnb account.</p></div></details>
+        <details><summary>Can Bella talk to bnb support for me?</summary><div class="ans"><p>Yes. For emergencies, cancellations and urgent guest issues, Bella replies fast and contacts bnb customer support on your behalf, so a missed response is less likely to lead to a penalty.</p></div></details>
+        <details><summary>Can Bella file bnb claims for me?</summary><div class="ans"><p>Yes, on any yearly plan, for up to 5 listings. Bella prepares and follows up damage or reimbursement claims with the bnb platform for you. The bnb platform makes the final decision on every claim.</p></div></details>
         <details><summary>Is my data safe?</summary><div class="ans"><p>Bella only accesses what you share through the co-host invite. Payments are handled by Razorpay and Stripe, and we never store your card details.</p></div></details>
       </div>
         <p class="faq-empty" id="faq-empty" hidden>No question matches that. Try another word, or message us on WhatsApp.</p>
@@ -1376,8 +1492,8 @@
       var on = per === 'yearly';
       li.classList.toggle('off', !on);
       li.querySelector('.js-perk-text').innerHTML = on
-        ? 'Airbnb claims for you <span class="pill">Yearly</span>'
-        : 'Airbnb claims: switch to yearly';
+        ? 'bnb claims for you <span class="pill">Yearly</span>'
+        : 'bnb claims: switch to yearly';
     });
   }
 
@@ -1389,7 +1505,7 @@
   });
   render();
 
-  // ===== Pre-checkout questions: name, Airbnb email, city, phone, listings, then payment =====
+  // ===== Pre-checkout questions: name, bnb email, city, phone, listings, then payment =====
   (function initQuestions() {
     var dlg = document.getElementById('qf');
     if (!dlg || typeof dlg.showModal !== 'function') return; // Old browsers go straight to payment.
@@ -1407,7 +1523,7 @@
         label: function () { return 'First, what’s your name?'; },
         check: function (v) { return v.trim().length >= 2 || 'Please enter your name.'; } },
       { key: 'email', type: 'email', auto: 'email', ph: 'you@example.com', help: 'Your 60-second setup guide will be sent here.',
-        label: function () { return 'Hi ' + first(data.name) + '! What email do you use on Airbnb?'; },
+        label: function () { return 'Hi ' + first(data.name) + '! What email do you use for your bnb?'; },
         check: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || 'Please enter a valid email address, like name@gmail.com.'; } },
       { key: 'city', type: 'text', auto: 'address-level2', ph: india ? 'e.g. New Delhi' : 'e.g. Austin',
         label: function () { return 'Which city is your listing in?'; },
@@ -1781,7 +1897,7 @@
       { n: 'Emma', from: 'London', c: '#3E9C8C', q: 'Can we check in early, around 10 AM?', a: 'Yes, the room is ready at 10 AM. I’ve updated your check-in.' },
       { n: 'Hiro', from: 'Tokyo', c: '#8E6BB5', q: '駅からの道を教えてください', a: '駅から徒歩5分です。地図をお送りします。' },
       { n: 'Fatima', from: 'Dubai', c: '#E09A2D', q: 'Is there parking at the property?', a: 'Yes, one free spot in front of the gate. It’s yours.' },
-      { n: 'Ankit', from: 'Mumbai', c: '#2E5AAC', q: 'My flight is cancelled. Can I change my dates?', a: 'Sorry about the flight! I’ve moved you to the 14th and told Airbnb support.' }
+      { n: 'Ankit', from: 'Mumbai', c: '#2E5AAC', q: 'My flight is cancelled. Can I change my dates?', a: 'Sorry about the flight! I’ve moved you to the 14th and told bnb support.' }
     ];
     var started = false, timers = [], waits = [], tick = null, minutes = 4;
     function clearAll() { timers.forEach(clearTimeout); timers = []; clearInterval(tick); }
@@ -1918,6 +2034,104 @@
         var cur = +art.className.replace(/\D/g, ''), nxt = (cur + (dx < 0 ? 1 : 2)) % 3; dots[nxt].click();
       }, { passive: true });
     });
+  })();
+
+  (function initHeaderFade() {
+    var on = false;
+    function chk() { var y = window.pageYOffset > 40; if (y !== on) { on = y; document.body.classList.toggle('scrolled', y); } }
+    window.addEventListener('scroll', chk, { passive: true }); chk();
+  })();
+
+  // ===== Highlights strip: tap a tile to flip it; languages cycle on their own =====
+  (function initTiles() {
+    var tiles = document.querySelectorAll('.tile'); if (!tiles.length) return;
+    var HELLO = [['Namaste', 'Hindi'], ['Hello', 'English'], ['Bonjour', 'French'], ['Hola', 'Spanish'], ['こんにちは', 'Japanese'], ['مرحبا', 'Arabic'], ['Ciao', 'Italian'], ['안녕하세요', 'Korean'], ['Olá', 'Portuguese'], ['Hallo', 'German']];
+    var hi = 0, small = document.getElementById('t-hello'), big = document.getElementById('t-hello-big'), lang = document.getElementById('t-hello-lang');
+    function nextHello() {
+      hi = (hi + 1) % HELLO.length;
+      big.textContent = HELLO[hi][0]; lang.textContent = HELLO[hi][1] + ' · tap again for the next one';
+      small.classList.add('out');
+      setTimeout(function () { small.textContent = HELLO[hi][0]; small.classList.remove('out'); }, 250);
+    }
+    if (!reduceMotion) setInterval(function () { if (!document.hidden) nextHello(); }, 2200);
+    function countTo(el, from, to, dur, dec, suf) {
+      var t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / dur); el.textContent = (from + (to - from) * (1 - Math.pow(1 - k, 3))).toFixed(dec) + (suf || ''); if (k < 1) requestAnimationFrame(step); })(t0);
+    }
+    tiles.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var open = t.getAttribute('aria-expanded') === 'true';
+        if (open && t.dataset.tile === 'lang') { nextHello(); return; }
+        t.setAttribute('aria-expanded', String(!open));
+        if (open) return;
+        if (t.dataset.tile === 'commission') countTo(document.getElementById('t-pm'), 0, 20, 700, 0, '%');
+        if (t.dataset.tile === 'ai') countTo(document.getElementById('t-ms'), 9.9, 3.0, 900, 1);
+        clearTimeout(t._t); t._t = setTimeout(function () { t.setAttribute('aria-expanded', 'false'); }, 6000);
+      });
+    });
+  })();
+
+  // ===== bnb support cards: watch Bella handle a case step by step =====
+  (function initSims() {
+    document.querySelectorAll('.sim').forEach(function (card) {
+      var btn = card.querySelector('.sim-play'), timers = [];
+      function play() {
+        timers.forEach(clearTimeout); timers = [];
+        card.classList.add('playing'); btn.setAttribute('aria-expanded', 'true');
+        if (card.dataset.sim === 'support') {
+          var lis = card.querySelectorAll('.sim-steps li'); lis.forEach(function (l) { l.classList.remove('on'); });
+          lis.forEach(function (l, k) { timers.push(setTimeout(function () { l.classList.add('on'); }, reduceMotion ? 0 : 200 + k * 800)); });
+        } else {
+          var cs = card.querySelectorAll('.claim-steps li'), bar = card.querySelector('.claim-bar i');
+          cs.forEach(function (l) { l.classList.remove('on'); }); bar.style.setProperty('--cp', '0%');
+          cs.forEach(function (l, k) { timers.push(setTimeout(function () { l.classList.add('on'); bar.style.setProperty('--cp', ((k + 1) / cs.length * 100) + '%'); }, reduceMotion ? 0 : 250 + k * 750)); });
+        }
+      }
+      btn.addEventListener('click', play);
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.3 });
+        io.observe(card);
+      }
+    });
+  })();
+
+  // ===== Setup steps: light up as you scroll, each with a tiny demo =====
+  (function initSteps() {
+    var list = document.getElementById('steps'); if (!list) return;
+    var steps = list.querySelectorAll('.step');
+    function light(i) {
+      steps.forEach(function (s, k) { s.classList.toggle('lit', k <= i); });
+      list.style.setProperty('--sp', ((i + 1) / steps.length * 100) + '%');
+      if (i === 1) list.querySelector('.env').classList.add('open');
+      if (i === 2) runRing();
+    }
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      var io = new IntersectionObserver(function (en) {
+        en.forEach(function (e) { if (e.isIntersecting) light(+e.target.dataset.step); });
+      }, { rootMargin: '-35% 0px -40% 0px' });
+      steps.forEach(function (s) { io.observe(s); });
+    } else { list.classList.add('done'); light(2); }
+    // 01: mini plan picker follows the page's currency and billing
+    var mp = list.querySelectorAll('.mini-plans button'), price = document.getElementById('mini-price'), pick = 'growth';
+    function showPrice() { price.textContent = fmt(state.currency, PRICES[state.currency][state.period][pick]); price.parentNode.childNodes[1].nodeValue = state.period === 'monthly' ? ' / month · ' : ' / year · '; }
+    mp.forEach(function (b) { b.addEventListener('click', function () { pick = b.dataset.p; mp.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); showPrice(); }); });
+    document.querySelectorAll('[data-currency],[data-period]').forEach(function (b) { b.addEventListener('click', showPrice); });
+    showPrice();
+    // 02: envelope opens and closes
+    var env = list.querySelector('.env'); env.addEventListener('click', function () { env.classList.toggle('open'); });
+    // 03: 60-second ring runs in 3 seconds, then Bella is live
+    var ring = document.getElementById('ring-fg'), txt = document.getElementById('ring-txt'), demo = list.querySelector('.ring-demo'), running = false;
+    function runRing() {
+      if (running) return; running = true; demo.classList.remove('live');
+      var t0 = performance.now(), D = reduceMotion ? 1 : 3000;
+      (function step(t) {
+        var k = Math.min(1, (t - t0) / D);
+        ring.style.strokeDashoffset = (314.16 * (1 - k)).toFixed(1);
+        txt.textContent = Math.ceil(60 * (1 - k)) + ' s';
+        if (k < 1) requestAnimationFrame(step); else { demo.classList.add('live'); txt.innerHTML = '✓<br>Bella is live'; running = false; }
+      })(t0);
+    }
+    demo.addEventListener('click', runRing);
   })();
 
   // ===== Listings roller (tactile number wheel) =====
@@ -2091,7 +2305,7 @@
     var HOSTS = [
       { t: 'The homestay host', p: 'Serves chai to every guest and still gets messages at 2 AM. Bella answers them in the guest’s language, so the host can sleep.' },
       { t: 'The city apartment host', p: 'Hands over keys between a day job and meetings. Bella sends check-in details on time and blocks the calendar when the flat is needed.' },
-      { t: 'The villa host', p: 'Gets a rush every festival weekend. Bella raises the nightly rate before demand peaks and contacts Airbnb support if a booking is cancelled late.' }
+      { t: 'The villa host', p: 'Gets a rush every festival weekend. Bella raises the nightly rate before demand peaks and contacts bnb support if a booking is cancelled late.' }
     ];
     var btns = document.querySelectorAll('.host'), note = document.getElementById('host-note');
     if (!btns.length || !note) return;
