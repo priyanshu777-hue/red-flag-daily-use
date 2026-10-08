@@ -17,6 +17,11 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
 - Design system: black #0B0A0C, cream #F4EFE8, champagne gold #C9A66B, red #C8102E for buttons only. Fonts: Cormorant Garamond (headings) and DM Sans (body) from Google Fonts.
 - Sections, top to bottom: header, hero with phone chat demo, highlights strip, problem, features (6 cards), languages + Co-Host chat, how it works (3 steps), pricing, FAQ, final call to action with WhatsApp and email contact, footer, floating WhatsApp button.
 - It is a single landing page. All "Get Bella" buttons scroll to the pricing section.
+- HERO 3D CHARACTER: keep the animated 3D Bella exactly as in the file (built with three.js 0.149.0 from primitives, no model files): a friendly female co-host with a gold headset, black blazer and a phone, who waves every few seconds, blinks, follows the mouse with her head and nods when she replies. Tapping her makes her wave. Pause the animation when it is off screen, and show a still pose when the visitor prefers reduced motion.
+- LIVE LANGUAGE DEMO: the guest question and Bella's reply in the hero (and the chat in the languages section) change with the visitor:
+  - Visitors in India (timezone Asia/Kolkata) see Hinglish: Guest "India Gate kitni door hai?" / Bella "Sirf 10 min door."
+  - Everyone else sees their browser language if available, otherwise English: Guest "How far is the nearest metro station?" / Bella "Just a 5-minute walk. I'll send you the directions now."
+  - The language buttons (hero: English, Hinglish, العربية, Français, 日本語, All 50+; languages section: 13 languages) are tappable. Tapping one shows a typing indicator for about 1 second, then Bella's reply in that language. Arabic is shown right-to-left. Use the exact translations from the file.
 
 3. PRICING SECTION (most important)
 - Above the plan cards, show two switches: "Monthly / Yearly" and "₹ INR / $ USD".
