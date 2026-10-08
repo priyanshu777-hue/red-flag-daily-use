@@ -34,9 +34,12 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
   USD yearly:  Solo https://buy.stripe.com/eVq6oJ1Qn5IPfmT4eF6EU0f
                Growth https://buy.stripe.com/8x2fZj1Qn9Z5fmT7qR6EU0g
                Pro https://buy.stripe.com/8x27sN3YvfjpeiP5iJ6EU0h
-  INR monthly: Solo [RAZORPAY LINK] · Growth [RAZORPAY LINK] · Pro [RAZORPAY LINK]
-  INR yearly:  Solo [RAZORPAY LINK] · Growth [RAZORPAY LINK] · Pro [RAZORPAY LINK]
-  If an INR link is missing, the button opens WhatsApp with the message "Hi, I want Bella <Plan> (<monthly/yearly>, INR)."
+  INR monthly: Solo https://rzp.io/rzp/3Zsqj85
+               Growth https://rzp.io/rzp/9umNXlPX
+               Pro https://rzp.io/rzp/HEfRz13h
+  INR yearly:  Solo https://rzp.io/rzp/fX36cAf
+               Growth https://rzp.io/rzp/O4yuwWqY
+               Pro https://rzp.io/rzp/VcOfpiv
 - Below the three plans, add a full-width card "More than 5 listings?" titled "Bella for portfolios and property managers", with two buttons: "WhatsApp us" and "Email us".
 - Line under pricing: "No free trial. Pay monthly, or pay yearly and save 15%. Cancel anytime, and your access continues until the end of the period you paid for."
 

@@ -619,7 +619,7 @@
   };
 
   // Checkout links per plan, currency and billing period.
-  // USD = Stripe Payment Links. INR = Razorpay links (paste them in; until then, INR buttons open WhatsApp).
+  // USD = Stripe Payment Links. INR = Razorpay Payment Links. An empty link falls back to WhatsApp.
   var LINKS = {
     USD: {
       monthly: {
@@ -634,8 +634,16 @@
       }
     },
     INR: {
-      monthly: { solo: '', growth: '', pro: '' },
-      yearly:  { solo: '', growth: '', pro: '' }
+      monthly: {
+        solo:   'https://rzp.io/rzp/3Zsqj85',
+        growth: 'https://rzp.io/rzp/9umNXlPX',
+        pro:    'https://rzp.io/rzp/HEfRz13h'
+      },
+      yearly: {
+        solo:   'https://rzp.io/rzp/fX36cAf',
+        growth: 'https://rzp.io/rzp/O4yuwWqY',
+        pro:    'https://rzp.io/rzp/VcOfpiv'
+      }
     }
   };
 
