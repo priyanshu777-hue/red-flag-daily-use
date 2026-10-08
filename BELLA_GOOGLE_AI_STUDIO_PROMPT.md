@@ -14,7 +14,16 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
 
 2. PAGE CONTENT AND DESIGN
 - Use the attached file bella.html as the exact design, copy and behaviour for the /bella page. Convert it to the same framework and file structure my site already uses (components, routing, styling). Keep the text, sections, colours, fonts, spacing and animations exactly as in the file.
-- Design system: sand #D8C2A4 (hero and hosts background), paper #FBF8F3, black #0B0A0C, cream #F4EFE8, champagne gold #C9A66B, red #C8102E for buttons only. Fonts: Cormorant Garamond (headings) and DM Sans (body) from Google Fonts.
+- Design system: sand #D8C2A4 (hero and hosts background), paper #FBF8F3, black #0B0A0C, cream #F4EFE8, champagne gold #C9A66B, red #C8102E for buttons only. Fonts: Outfit (headings, buttons, numbers; a geometric face in the style of Surgena, weights 500–600, tight letter-spacing) and DM Sans (body) from Google Fonts. The wordmark is lowercase "bella" followed by a red dot.
+- BUTTONS AND CONTROLS (tactile, glossy, glass):
+  - Primary button: red pill with a vertical gradient (#E5324A → #C8102E → #A40B24), a soft white highlight on the top half, inner shadow at the bottom and a red glow below; lifts 1px on hover and presses in on tap.
+  - Secondary button: frosted-glass pill (white gradient, backdrop blur, bright top edge, soft drop shadow); on dark sections, a translucent glass pill.
+  - Header: brand pill on the left and a centred-right frosted-glass pill nav (Features, Pricing, FAQ) with a black glossy "Get Bella" button inside, floating over the page.
+  - Toggles (Monthly/Yearly, INR/USD): dark inset track with a glossy white glass knob that slides behind the active option with a slight springy overshoot.
+  - "Turn Bella on" switch: dark inset track with a large glass knob showing a moon when off and a glowing sun when on; the track turns green.
+  - Listings in the savings calculator: a tactile number roller (orange glossy window with a rolling digit, up/down arrows; also works with arrow keys, mouse wheel and swiping).
+- RECEIPT ON THE WAY TO PAYMENT: after the last question, a gold printer slot "prints" a paper receipt (Bella by Red Flag Homes, Plan, Billing, Listings, Commission: None, Total, "Cancel anytime · Setup guide by email") for about 1.5 seconds, with "Thanks, <first name>! Printing your plan…", then redirect automatically (keep the "Tap here to pay" fallback link).
+- FOOTER: a dark section with large rounded top corners, a short line "Your bnb never sleeps. Now neither does Bella.", a Get Bella button, three link columns (Bella, Contact, Legal), a huge "bella" wordmark with a red dot fading out downwards, and a small glowing purple orb that slides along the footer's top edge following the pointer.
 - Sections, top to bottom: light header, hero scroll story, highlights strip, problem, "a day with Bella" timeline, hosts, Airbnb support and claims, languages + Co-Host chat, how it works, pricing, FAQ, final call to action with the "Hosted by Bella" house picture and WhatsApp/email contact, footer, floating WhatsApp button.
 - It is a single landing page. All "Get Bella" buttons scroll to the pricing section.
 - HERO SCROLL STORY (inspired by a colour-changing chameleon site): the hero is pinned while the visitor scrolls through about 3.4 screen heights.
