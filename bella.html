@@ -200,6 +200,16 @@
   .rider-body { cursor: pointer; }
   .rider-hit { position: absolute; left: 0; right: 0; top: 38%; bottom: 0; border: 0; background: transparent; cursor: pointer; border-radius: 40% 40% 20% 20%; }
   .rider-hit:focus-visible { outline: 2px dashed var(--ink); outline-offset: -6px; }
+  .rider-hand { position: absolute; inset: 0; transform-origin: 55.88% 22.69%; pointer-events: none; }
+  .rider.waving .rider-hand { animation: wave 1.5s ease-in-out; }
+  @keyframes wave { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(-14deg); } 32% { transform: rotate(10deg); } 50% { transform: rotate(-12deg); } 68% { transform: rotate(9deg); } 84% { transform: rotate(-5deg); } }
+  .bella-hit { position: absolute; left: 43%; top: 4%; width: 24%; height: 56%; border: 0; background: transparent; cursor: pointer; border-radius: 40%; z-index: 2; }
+  .bella-hit:focus-visible { outline: 2px dashed var(--ink); outline-offset: -4px; }
+  .bella-say { position: absolute; left: 61%; top: -4%; z-index: 3; max-width: 230px; padding: 10px 14px; border-radius: 18px 18px 18px 4px; background: #fff; color: var(--ink);
+    font: 500 .95rem/1.3 var(--font-display); box-shadow: 0 16px 34px -16px rgba(60,40,20,.55); opacity: 0; transform: translateY(8px) scale(.9); transform-origin: 0 100%; pointer-events: none;
+    transition: opacity .3s var(--ease), transform .4s cubic-bezier(.34,1.5,.5,1); white-space: nowrap; }
+  .bella-say.on { opacity: 1; transform: none; }
+  @media (max-width: 860px) { .bella-say { left: auto; right: 50%; top: -9%; border-radius: 18px 18px 4px 18px; transform-origin: 100% 100%; white-space: normal; max-width: 46vw; font-size: .85rem; } }
   .rider.boop .rider-body { animation: boop .5s var(--ease); }
   @keyframes boop { 30% { transform: translateY(-14px) rotate(-1.5deg); } 60% { transform: translateY(2px); } }
   .eye { position: absolute; left: calc(17.63% - 2.4%); top: calc(51.4% - 2.95%); width: 4.8%; aspect-ratio: 1; pointer-events: none; }
@@ -478,15 +488,55 @@
   .incl li.perk .pill { margin-left: 6px; vertical-align: 1px; }
   .price-foot { text-align: center; color: var(--mute-on-ink); font-size: .9rem; margin-top: 28px; }
 
-  /* FAQ */
-  .faq { max-width: 820px; margin-inline: auto; display: grid; }
-  .faq details { border-top: 1px solid rgba(11,10,12,.14); }
-  .faq details:last-child { border-bottom: 1px solid rgba(11,10,12,.14); }
-  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 22px; font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; line-height: 1.2; }
+  /* FAQ: floating 3D question mark on a blue-violet stage */
+  .faq-band { position: relative; overflow: hidden; padding-block: clamp(64px, 9vw, 120px); color: #EEF0FF;
+    background: radial-gradient(80% 60% at 85% 10%, #8B67E0, transparent 60%), linear-gradient(135deg, #2D47C9 0%, #3E54D8 45%, #6A5AD9 100%); }
+  .faq-wrap { display: grid; justify-items: center; }
+  .faq-stage { position: relative; width: min(560px, 100%); height: clamp(270px, 34vw, 360px); margin-bottom: -70px; z-index: 2; pointer-events: none; }
+  .faq-stage > * { position: absolute; transform: translate(var(--dx, 0px), var(--dy, 0px)); transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+  .qmark { left: 50%; top: 0; margin-left: -.32em; font: 700 clamp(13rem, 30vw, 21rem)/.86 var(--font-display); color: #4F6BE6; letter-spacing: 0;
+    text-shadow: 1px 1px 0 #3F5AD6, 2px 2px 0 #3A54CF, 3px 3px 0 #354DC7, 4px 4px 0 #3047BF, 5px 5px 0 #2C41B6, 6px 6px 0 #283BAE, 7px 8px 0 #2436A5, 10px 18px 30px rgba(10,15,70,.55); animation: bob 5s ease-in-out infinite; }
+  .qmark::before { content: "?"; position: absolute; inset: 0; color: transparent; background: linear-gradient(160deg, rgba(255,255,255,.55), rgba(255,255,255,0) 45%); -webkit-background-clip: text; background-clip: text; text-shadow: none; }
+  .faq-band.ping .qmark { animation: ping .6s cubic-bezier(.34,1.6,.5,1), bob 5s ease-in-out .6s infinite; }
+  @keyframes bob { 0%, 100% { translate: 0 0; rotate: -4deg; } 50% { translate: 0 -10px; rotate: 3deg; } }
+  @keyframes ping { 0% { scale: 1; } 40% { scale: 1.12; rotate: 8deg; } 100% { scale: 1; } }
+  .goo { left: 50%; bottom: 58px; width: 300px; height: 70px; margin-left: -150px; border-radius: 55% 45% 50% 50% / 70% 60% 40% 30%;
+    background: radial-gradient(70% 90% at 40% 20%, #6FF0E2, #2CC5BC 55%, #1A9C9A); box-shadow: inset 0 -10px 18px rgba(0,60,70,.35), 0 16px 26px -10px rgba(10,20,80,.6); z-index: -1; }
+  .orb { width: 70px; height: 70px; border-radius: 50%; box-shadow: inset -10px -12px 20px rgba(0,0,40,.35), 0 18px 30px -12px rgba(10,15,70,.6); animation: float 6s ease-in-out infinite; }
+  .orb--teal { left: 4%; top: 6%; background: radial-gradient(circle at 32% 28%, #A8FFF3, #36C9C0 50%, #1A8F99); }
+  .orb--violet { left: 14%; top: 58%; width: 48px; height: 48px; background: radial-gradient(circle at 32% 28%, #C9B5FF, #7E5CF2 55%, #4B2FB8); animation-delay: -2s; }
+  .orb--blue { right: 14%; top: 64%; width: 40px; height: 40px; background: radial-gradient(circle at 32% 28%, #9DB5FF, #3D63F0 55%, #2238B0); animation-delay: -4s; }
+  @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+  .faq-bubble { right: 6%; top: 12%; display: flex; gap: 7px; align-items: center; padding: 18px 20px; border-radius: 22px; background: linear-gradient(180deg, #FFFFFF, #E6E9FF);
+    box-shadow: inset 0 -4px 8px rgba(60,70,160,.18), 0 18px 30px -12px rgba(10,15,70,.6); animation: float 5s ease-in-out -1s infinite; }
+  .faq-bubble::after { content: ""; position: absolute; left: 18px; bottom: -10px; width: 20px; height: 20px; background: #E9ECFF; clip-path: polygon(0 0, 100% 0, 0 100%); }
+  .faq-bubble i { width: 10px; height: 10px; border-radius: 50%; background: #5068D8; }
+  .faq-band.ping .faq-bubble i { animation: blink 1s infinite; }
+  .faq-band.ping .faq-bubble i:nth-child(2) { animation-delay: .15s; } .faq-band.ping .faq-bubble i:nth-child(3) { animation-delay: .3s; }
+  .faq-card { position: relative; z-index: 1; width: min(860px, 100%); padding: clamp(88px, 10vw, 104px) clamp(20px, 4vw, 44px) clamp(24px, 4vw, 40px); border-radius: 28px;
+    background: linear-gradient(180deg, rgba(37,49,140,.92), rgba(24,30,96,.96)); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 40px 80px -40px rgba(8,10,50,.9); display: grid; gap: 16px; }
+  .faq-chip { justify-self: start; padding: 6px 14px; border-radius: 10px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; }
+  .faq-card h2 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem); color: #fff; }
+  .faq-rule { height: 10px; border-radius: 6px; background: repeating-linear-gradient(-45deg, rgba(255,255,255,.18) 0 4px, transparent 4px 9px); }
+  .faq-lede { color: #C9CFF5; max-width: 60ch; }
+  .faq-search { min-height: 50px; padding: 12px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.07); color: #fff; font: 400 1rem var(--font-body); }
+  .faq-search::placeholder { color: #A9B0E0; }
+  .faq-search:focus { outline: none; border-color: #8FA3FF; box-shadow: 0 0 0 3px rgba(143,163,255,.25); }
+  .faq { display: grid; gap: 10px; }
+  .faq details { border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); transition: background-color .25s var(--ease), border-color .25s var(--ease); }
+  .faq details:hover { background: rgba(255,255,255,.09); }
+  .faq details[open] { background: rgba(255,255,255,.11); border-color: rgba(143,163,255,.4); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 20px; font: 500 1.1rem/1.3 var(--font-display); color: #fff; }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; font-family: var(--font-body); font-size: 1.5rem; font-weight: 400; color: #8A6A35; transition: transform .25s var(--ease); flex: none; }
+  .faq summary::after { content: "+"; flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; font: 400 1.3rem/1 var(--font-body); color: #fff;
+    background: linear-gradient(180deg, #6F86FF, #4560E0); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 12px -6px rgba(0,0,40,.8); transition: transform .3s var(--ease); }
   .faq details[open] summary::after { transform: rotate(45deg); }
-  .faq details p { padding-bottom: 22px; color: var(--mute-on-cream); max-width: 64ch; }
+  .faq .ans { padding: 0 20px 18px; color: #D3D8F7; animation: ans .35s var(--ease); }
+  .faq .ans p { max-width: 64ch; }
+  @keyframes ans { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  .faq-empty { color: #C9CFF5; text-align: center; }
+  @media (max-width: 560px) { .orb--teal { width: 52px; height: 52px; } .faq-bubble { padding: 12px 14px; } .goo { width: 220px; margin-left: -110px; } }
+  @media (prefers-reduced-motion: reduce) { .qmark, .orb, .faq-bubble, .faq .ans { animation: none !important; } }
 
   /* Final CTA + contact */
   .final { text-align: center; display: grid; gap: 22px; justify-items: center; }
@@ -645,7 +695,10 @@
           <span class="rider-shadow" aria-hidden="true"></span>
           <img src="bella-assets/bella-chameleon.webp" width="834" height="683" alt="Bella waving from the back of a friendly chameleon">
           <img class="rider-tint" src="bella-assets/chameleon-tint.webp" width="834" height="683" alt="" aria-hidden="true">
+          <img class="rider-hand" src="bella-assets/bella-hand.webp" width="834" height="683" alt="" aria-hidden="true">
           <span class="eye" aria-hidden="true"><i></i></span>
+          <span class="bella-say" id="bella-say" aria-live="polite"></span>
+          <button type="button" class="bella-hit" id="bella-hit" aria-label="Say hi to Bella"></button>
           <button type="button" class="rider-hit" id="rider-hit" aria-label="Change the chameleon's colour"></button>
         </div>
       </figure>
@@ -742,7 +795,7 @@
       <div class="host-stage" role="tablist" aria-label="Kinds of hosts">
         <button type="button" class="host" role="tab" id="host-0" aria-selected="true" aria-controls="host-note" data-host="0"><img src="bella-assets/host-lady-tea.webp" width="619" height="1086" alt="" loading="lazy"><span>Homestay host</span></button>
         <button type="button" class="host" role="tab" id="host-1" aria-selected="false" aria-controls="host-note" data-host="1"><img src="bella-assets/host-man-key.webp" width="554" height="1097" alt="" loading="lazy"><span>City apartment host</span></button>
-        <button type="button" class="host" role="tab" id="host-2" aria-selected="false" aria-controls="host-note" data-host="2"><img src="bella-assets/host-man-cake.webp" width="616" height="1100" alt="" loading="lazy"><span>Villa host</span></button>
+        <button type="button" class="host" role="tab" id="host-2" aria-selected="false" aria-controls="host-note" data-host="2"><img src="bella-assets/host-cowboy.webp" width="600" height="1097" alt="" loading="lazy"><span>Villa host</span></button>
       </div>
       <div class="host-note" id="host-note" role="tabpanel" aria-live="polite">
         <h3 id="host-title">The homestay host</h3>
@@ -970,22 +1023,36 @@
   </section>
 
   <!-- FAQ -->
-  <section class="band band--cream" id="faq" aria-labelledby="faq-title">
-    <div class="wrap">
-      <div class="section-head center">
-        <h2 id="faq-title">Questions hosts ask us</h2>
+  <section class="faq-band" id="faq" aria-labelledby="faq-title">
+    <div class="wrap faq-wrap">
+      <div class="faq-stage" id="faq-stage" aria-hidden="true">
+        <span class="orb orb--teal" data-depth="18"></span>
+        <span class="orb orb--violet" data-depth="10"></span>
+        <span class="orb orb--blue" data-depth="24"></span>
+        <span class="faq-bubble" data-depth="14"><i></i><i></i><i></i></span>
+        <span class="qmark" data-depth="6">?</span>
+        <span class="goo"></span>
       </div>
+      <div class="faq-card">
+        <span class="faq-chip">FAQ</span>
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <span class="faq-rule" aria-hidden="true"></span>
+        <p class="faq-lede">Answers to what hosts ask us most. Still unsure? Message us on WhatsApp.</p>
+        <label class="sr-only" for="faq-search">Search the questions</label>
+        <input class="faq-search" id="faq-search" type="search" placeholder="Search, e.g. cancel, listings, languages" autocomplete="off">
       <div class="faq">
-        <details><summary>Is there a free trial?</summary><p>No. Bella is a paid subscription. You can cancel anytime, and your access continues until the end of the period you paid for.</p></details>
-        <details><summary>When am I charged?</summary><p>When you subscribe, and then every month or every year based on the plan you chose.</p></details>
-        <details><summary>Can I cancel anytime?</summary><p>Yes. Cancel from your billing portal or message us on WhatsApp. Access continues until the end of the period you paid for.</p></details>
-        <details><summary>Does Bella take a commission?</summary><p>No. You only pay your subscription and keep 100% of every booking.</p></details>
-        <details><summary>How many listings are included?</summary><p>Solo covers 1 listing, Growth up to 3 and Pro up to 5. For 6 or more listings, message us on WhatsApp or email us for a custom plan.</p></details>
-        <details><summary>Which languages does Bella speak?</summary><p>50+ languages, including Hindi, Hinglish, English, Arabic, French, German, Spanish and Japanese.</p></details>
-        <details><summary>How do I set Bella up?</summary><p>Right after payment, a one-step setup guide is emailed to the address you registered with. It takes about 60 seconds. There is no new app to install and no new account to create, because Bella works with your existing Airbnb account.</p></details>
-        <details><summary>Can Bella talk to Airbnb support for me?</summary><p>Yes. For emergencies, cancellations and urgent guest issues, Bella replies fast and contacts Airbnb customer support on your behalf, so a missed response is less likely to lead to a penalty.</p></details>
-        <details><summary>Can Bella file Airbnb claims for me?</summary><p>Yes, on any yearly plan, for up to 5 listings. Bella prepares and follows up damage or reimbursement claims with Airbnb for you. Airbnb makes the final decision on every claim.</p></details>
-        <details><summary>Is my data safe?</summary><p>Bella only accesses what you share through the co-host invite. Payments are handled by Razorpay and Stripe, and we never store your card details.</p></details>
+        <details><summary>Is there a free trial?</summary><div class="ans"><p>No. Bella is a paid subscription. You can cancel anytime, and your access continues until the end of the period you paid for.</p></div></details>
+        <details><summary>When am I charged?</summary><div class="ans"><p>When you subscribe, and then every month or every year based on the plan you chose.</p></div></details>
+        <details><summary>Can I cancel anytime?</summary><div class="ans"><p>Yes. Cancel from your billing portal or message us on WhatsApp. Access continues until the end of the period you paid for.</p></div></details>
+        <details><summary>Does Bella take a commission?</summary><div class="ans"><p>No. You only pay your subscription and keep 100% of every booking.</p></div></details>
+        <details><summary>How many listings are included?</summary><div class="ans"><p>Solo covers 1 listing, Growth up to 3 and Pro up to 5. For 6 or more listings, message us on WhatsApp or email us for a custom plan.</p></div></details>
+        <details><summary>Which languages does Bella speak?</summary><div class="ans"><p>50+ languages, including Hindi, Hinglish, English, Arabic, French, German, Spanish and Japanese.</p></div></details>
+        <details><summary>How do I set Bella up?</summary><div class="ans"><p>Right after payment, a one-step setup guide is emailed to the address you registered with. It takes about 60 seconds. There is no new app to install and no new account to create, because Bella works with your existing Airbnb account.</p></div></details>
+        <details><summary>Can Bella talk to Airbnb support for me?</summary><div class="ans"><p>Yes. For emergencies, cancellations and urgent guest issues, Bella replies fast and contacts Airbnb customer support on your behalf, so a missed response is less likely to lead to a penalty.</p></div></details>
+        <details><summary>Can Bella file Airbnb claims for me?</summary><div class="ans"><p>Yes, on any yearly plan, for up to 5 listings. Bella prepares and follows up damage or reimbursement claims with Airbnb for you. Airbnb makes the final decision on every claim.</p></div></details>
+        <details><summary>Is my data safe?</summary><div class="ans"><p>Bella only accesses what you share through the co-host invite. Payments are handled by Razorpay and Stripe, and we never store your card details.</p></div></details>
+      </div>
+        <p class="faq-empty" id="faq-empty" hidden>No question matches that. Try another word, or message us on WhatsApp.</p>
       </div>
     </div>
   </section>
@@ -1511,7 +1578,7 @@
     function show(i, animate) {
       if (i === current) return; current = i;
       var sc = SCENES[i], L = LANGS[sc.lang] || LANGS.en, t = ++token;
-      story.style.backgroundColor = sc.bg;
+      story.style.backgroundColor = sc.bg; story.dataset.lang = sc.lang;
       rider.style.setProperty('--hue', sc.hue + 'deg');
       rider.style.setProperty('--sat', sc.sat);
       tabs.querySelectorAll('button').forEach(function (b, k) { b.setAttribute('aria-selected', String(k === i)); });
@@ -1747,6 +1814,55 @@
     f.addEventListener('pointermove', function (e) {
       var r = f.getBoundingClientRect();
       f.style.setProperty('--ox', Math.max(6, Math.min(94, (e.clientX - r.left) / r.width * 100)).toFixed(1) + '%');
+    });
+  })();
+
+  // ===== Bella waves and says hi in the current guest's language =====
+  (function initWave() {
+    var rider = document.getElementById('rider'), hit = document.getElementById('bella-hit'), say = document.getElementById('bella-say');
+    var story = document.getElementById('story'); if (!rider || !hit) return;
+    var HI = { hinglish: 'Namaste! Main Bella hoon.', en: 'Hi! I’m Bella.', hi: 'नमस्ते! मैं बेला हूँ।', fr: 'Bonjour ! Je suis Bella.', de: 'Hallo! Ich bin Bella.', es: '¡Hola! Soy Bella.', pt: 'Olá! Eu sou a Bella.', ru: 'Привет! Я Белла.', ar: 'مرحبًا! أنا بيلا.', ja: 'こんにちは！ベラです。', ko: '안녕하세요! 벨라예요.', zh: '你好！我是 Bella。', th: 'สวัสดีค่ะ! ฉันคือเบลล่า' };
+    var hideT = null, busy = false;
+    function wave(talk) {
+      if (busy && !talk) return; busy = true;
+      rider.classList.remove('waving'); void rider.offsetWidth; rider.classList.add('waving');
+      setTimeout(function () { busy = false; }, 1500);
+      if (talk && say) {
+        var lang = (story && story.dataset.lang) || 'en';
+        say.textContent = HI[lang] || HI.en; say.dir = lang === 'ar' ? 'rtl' : 'auto';
+        say.classList.add('on'); clearTimeout(hideT); hideT = setTimeout(function () { say.classList.remove('on'); }, 2600);
+      }
+    }
+    hit.addEventListener('click', function () { wave(true); });
+    hit.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') wave(true); });
+    if (!reduceMotion) {
+      setTimeout(function () { wave(true); }, 900);
+      setInterval(function () { if (!document.hidden) wave(false); }, 7000);
+    }
+  })();
+
+  // ===== FAQ: the floating scene follows the pointer; searching filters questions =====
+  (function initFaq() {
+    var band = document.getElementById('faq'), stage = document.getElementById('faq-stage'); if (!band || !stage) return;
+    var items = band.querySelectorAll('.faq details'), search = document.getElementById('faq-search'), empty = document.getElementById('faq-empty');
+    if (!reduceMotion) band.addEventListener('pointermove', function (e) {
+      var r = band.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
+      stage.querySelectorAll('[data-depth]').forEach(function (el) {
+        var d = +el.dataset.depth; el.style.setProperty('--dx', (nx * d * 2).toFixed(1) + 'px'); el.style.setProperty('--dy', (ny * d * 1.5).toFixed(1) + 'px');
+      });
+    });
+    items.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (!d.open) return;
+        items.forEach(function (o) { if (o !== d) o.open = false; });
+        band.classList.remove('ping'); void band.offsetWidth; band.classList.add('ping');
+        clearTimeout(d._t); d._t = setTimeout(function () { band.classList.remove('ping'); }, 1400);
+      });
+    });
+    if (search) search.addEventListener('input', function () {
+      var q = search.value.trim().toLowerCase(), shown = 0;
+      items.forEach(function (d) { var hit = !q || d.textContent.toLowerCase().indexOf(q) > -1; d.hidden = !hit; if (hit) shown++; });
+      empty.hidden = shown > 0;
     });
   })();
 
