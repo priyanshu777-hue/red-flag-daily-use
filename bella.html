@@ -484,22 +484,48 @@
   .save.on { animation: none; background: var(--ok); }
   @keyframes flash { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,16,46,.55); } 50% { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(200,16,46,0); } }
 
-  .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); align-items: stretch; }
-  .plan { position: relative; display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 18px; padding: clamp(24px, 3vw, 34px); border-radius: var(--radius); border: 1px solid rgba(244,239,232,.12); background: var(--ink); min-width: 0; }
-  .plan--pop { border-color: var(--gold); box-shadow: 0 30px 60px -36px rgba(201,166,107,.5); }
-  .tag { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--ink); font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
-  .plan h3 { font-size: 2rem; }
-  .plan .listings { color: var(--gold); font-size: .95rem; font-weight: 500; }
-  .price { display: grid; gap: 4px; }
-  .price .amt { font-family: var(--font-display); font-size: clamp(2.6rem, 2rem + 2vw, 3.4rem); font-weight: 600; line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
-  .price .per { font-size: 1rem; color: var(--mute-on-ink); font-family: var(--font-body); font-weight: 400; }
-  .price .sub { font-size: .88rem; color: var(--mute-on-ink); min-height: 1.4em; font-variant-numeric: tabular-nums; }
-  .price .sub s { opacity: .7; }
-  .incl { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; font-size: .95rem; }
-  .incl li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; }
-  .incl svg { width: 18px; height: 18px; color: var(--gold); margin-top: 3px; }
-  .plan .note { font-size: .8rem; color: var(--mute-on-ink); text-align: center; margin-top: -8px; }
-  @media (max-width: 900px) { .plans { grid-template-columns: minmax(0, 1fr); max-width: 460px; margin-inline: auto; } .plan--pop { order: -1; } }
+  .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 32px); align-items: stretch; }
+  .pcard { position: relative; display: flex; flex-direction: column; border-radius: 36px; overflow: hidden; isolation: isolate; color: #fff; min-width: 0;
+    background: linear-gradient(180deg, var(--tint) 0%, var(--tint2) 100%); box-shadow: 0 50px 70px -45px rgba(0,0,0,.9), inset 0 0 0 1px rgba(255,255,255,.06);
+    transition: transform .45s cubic-bezier(.34,1.3,.5,1), box-shadow .45s var(--ease); }
+  .pcard:hover { transform: translateY(-6px); box-shadow: 0 60px 80px -45px rgba(0,0,0,.95), inset 0 0 0 1px rgba(255,255,255,.1); }
+  .plan--pop { transform: translateY(-10px); }
+  .plan--pop:hover { transform: translateY(-16px); }
+  .pcard-art { position: relative; aspect-ratio: 4 / 3; }
+  .pcard-art svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .pcard-art svg * { transition: fill .6s var(--ease), opacity .6s var(--ease); }
+  .pcard-art::after { content: ""; position: absolute; inset: 35% 0 -1px; background: linear-gradient(180deg, transparent, var(--tint) 92%); }
+  .pcard-art.t0 { --s1: #F2B39B; --s2: #F7E0C8; --far: #C7A8AC; --mid: #6E8A73; --ground: #4E6E50; --tree: #24452F; --orb: #FFD9A0; --cxv: 70px; }
+  .pcard-art.t1 { --s1: #7EC0EA; --s2: #E3F2FA; --far: #B9CBD8; --mid: #6E9A73; --ground: #3F7A4A; --tree: #23523A; --orb: #FFE27A; --cxv: 200px; }
+  .pcard-art.t2 { --s1: #3B2A58; --s2: #E0855A; --far: #7A5A78; --mid: #4A3A4C; --ground: #2A2432; --tree: #141018; --orb: #FFB067; --cxv: 330px; }
+  .pcard-art .pc-orb { cx: var(--cxv); }
+  .pcard-art.t2 use { --lit: 1; }
+  .pcard-art .pc-lit, .pcard-art use { opacity: 1; }
+  .pcard .tag { position: absolute; top: 16px; left: 16px; z-index: 2; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.88); color: var(--ink);
+    font: 600 .78rem/1 var(--font-display); backdrop-filter: blur(8px); box-shadow: 0 6px 16px -8px rgba(0,0,0,.5); }
+  .pcard-dots { position: relative; z-index: 2; display: flex; justify-content: center; gap: 2px; margin-top: -40px; }
+  .pcard-dots button { width: 26px; height: 26px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .pcard-dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.45); transition: width .3s var(--ease), background-color .3s var(--ease); }
+  .pcard-dots button[aria-pressed="true"]::before { width: 16px; border-radius: 4px; background: #fff; }
+  .pcard-body { position: relative; z-index: 1; display: grid; gap: 12px; padding: 4px 22px 22px; flex: 1; align-content: start; }
+  .pcard-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .pcard-title h3 { font-size: clamp(1.6rem, 1.3rem + 1vw, 2rem); color: #fff; }
+  .pcard-price { flex: none; display: inline-flex; align-items: baseline; gap: 3px; padding: 7px 11px; border-radius: 12px; background: rgba(0,0,0,.32); backdrop-filter: blur(6px);
+    font: 600 1rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .pcard-price .per { font: 500 .72rem/1 var(--font-body); color: rgba(255,255,255,.7); }
+  .pcard-desc { color: rgba(255,255,255,.62); font-size: .98rem; line-height: 1.5; }
+  .pcard .sub { font-size: .82rem; color: rgba(255,255,255,.62); min-height: 1.3em; font-variant-numeric: tabular-nums; }
+  .pcard .sub s { opacity: .7; }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips li { padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,.14); font: 600 .8rem/1.1 var(--font-display); }
+  .chips li.perk.off { background: rgba(255,255,255,.06); color: rgba(255,255,255,.55); }
+  .chips li.perk .pill { margin-left: 4px; }
+  .pbtn { margin-top: auto; min-height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #fff; color: var(--ink); text-decoration: none;
+    font: 600 1.02rem/1 var(--font-display); box-shadow: inset 0 -3px 6px rgba(0,0,0,.08), 0 10px 20px -12px rgba(0,0,0,.6); transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+  .pbtn:hover { transform: translateY(-1px); box-shadow: inset 0 -3px 6px rgba(0,0,0,.08), 0 16px 26px -12px rgba(0,0,0,.7); }
+  .pbtn:active { transform: translateY(1px) scale(.99); }
+  .pcard-body { margin-top: 6px; }
+  @media (max-width: 900px) { .plans { grid-template-columns: minmax(0, 1fr); max-width: 440px; margin-inline: auto; } .plan--pop { order: -1; transform: none; } .plan--pop:hover { transform: translateY(-6px); } }
 
   .portfolio {
     margin-top: clamp(16px, 2vw, 24px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; align-items: center;
@@ -1017,51 +1043,75 @@
 
       <p class="yearly-note">Yearly plans also include <b>Airbnb claims filed on your behalf</b>.</p>
 
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pc-cabin" viewBox="0 0 80 70"><polygon points="4,70 40,4 76,70" fill="#2E2229"/><polygon points="12,70 40,18 68,70" fill="#21181E"/><polygon points="28,70 40,46 52,70" fill="#FFB347" class="pc-lit"/><rect x="58" y="22" width="6" height="18" fill="#2E2229"/></symbol></svg>
       <div class="plans" id="plans" aria-live="polite">
-        <article class="plan" data-plan="solo">
-          <h3>Solo</h3>
-          <div class="listings">1 listing</div>
-          <div class="price"><div class="amt"><span class="js-amt">₹999</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
-          <ul class="incl">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>24/7 guest replies in 50+ languages</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Smart pricing and auto check-in</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Calendar blocking and listing audit</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Co-Host chat</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Talks to Airbnb support for you</li>
-            <li class="perk js-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span class="js-perk-text">Airbnb claims on your behalf</span></li>
-          </ul>
-          <a class="btn btn--ghost btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Solo</a>
+        <article class="plan pcard" data-plan="solo" style="--tint:#1F4D58;--tint2:#102C33">
+          <div class="pcard-art t0" data-t="0" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+              <rect width="400" height="300" fill="url(#pc-sky-1)"/>
+              <defs><linearGradient id="pc-sky-1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient></defs>
+              <circle cx="200" cy="70" r="20" fill="var(--orb)" class="pc-orb"/>
+              <path d="M-10 200 L80 130 L140 160 L215 60 L260 120 L300 150 L350 120 L410 180 L410 300 L-10 300Z" fill="var(--far)"/>
+              <path d="M215 60 L196 96 L212 90 L228 104 L246 100Z" fill="#fff" opacity=".4"/>
+              <path d="M-10 230 C80 205 170 212 240 222 C310 232 350 214 410 220 L410 300 L-10 300Z" fill="var(--mid)"/>
+              <use href="#pc-cabin" x="160" y="176" width="80" height="70"/>
+              <path d="M-10 262 C120 248 280 258 410 252 L410 300 L-10 300Z" fill="var(--ground)"/>
+              <g fill="var(--tree)"><polygon points="8,262 30,170 52,262"/><polygon points="40,266 66,150 92,266"/><polygon points="342,264 368,160 394,264"/><polygon points="318,268 336,200 354,268"/></g>
+            </svg></div>
+          
+          <div class="pcard-dots" role="group" aria-label="Change the picture"><button type="button" data-t="0" aria-label="Show it at dawn" aria-pressed="true"></button><button type="button" data-t="1" aria-label="Show it at midday" aria-pressed="false"></button><button type="button" data-t="2" aria-label="Show it at dusk" aria-pressed="false"></button></div>
+          <div class="pcard-body">
+            <div class="pcard-title"><h3>Solo</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
+            <p class="pcard-desc">For hosts with one listing. Bella replies to guests, sets prices, checks guests in and keeps your calendar tidy.</p>
+            <p class="sub js-sub">Billed monthly</p>
+            <ul class="chips"><li>1 listing</li><li>50+ languages</li><li>Airbnb support</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Solo</a>
+          </div>
         </article>
 
-        <article class="plan plan--pop" data-plan="growth">
+        <article class="plan pcard plan--pop" data-plan="growth" style="--tint:#4D5326;--tint2:#2A2E12">
+          <div class="pcard-art t1" data-t="1" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+              <rect width="400" height="300" fill="url(#pc-sky-3)"/>
+              <defs><linearGradient id="pc-sky-3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient></defs>
+              <circle cx="200" cy="70" r="20" fill="var(--orb)" class="pc-orb"/>
+              <path d="M-10 200 L80 130 L140 160 L215 60 L260 120 L300 150 L350 120 L410 180 L410 300 L-10 300Z" fill="var(--far)"/>
+              <path d="M215 60 L196 96 L212 90 L228 104 L246 100Z" fill="#fff" opacity=".4"/>
+              <path d="M-10 230 C80 205 170 212 240 222 C310 232 350 214 410 220 L410 300 L-10 300Z" fill="var(--mid)"/>
+              <use href="#pc-cabin" x="70" y="182" width="80" height="70"/><use href="#pc-cabin" x="165" y="176" width="80" height="70"/><use href="#pc-cabin" x="260" y="183" width="80" height="70"/>
+              <path d="M-10 262 C120 248 280 258 410 252 L410 300 L-10 300Z" fill="var(--ground)"/>
+              <g fill="var(--tree)"><polygon points="8,262 30,170 52,262"/><polygon points="40,266 66,150 92,266"/><polygon points="342,264 368,160 394,264"/><polygon points="318,268 336,200 354,268"/></g>
+            </svg></div>
           <span class="tag">Most popular</span>
-          <h3>Growth</h3>
-          <div class="listings">Up to 3 listings</div>
-          <div class="price"><div class="amt"><span class="js-amt">₹1,699</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
-          <ul class="incl">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Everything in Solo</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Manage up to 3 listings</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Pricing tuned per listing</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Co-Host chat across all listings</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Talks to Airbnb support for you</li>
-            <li class="perk js-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span class="js-perk-text">Airbnb claims on your behalf</span></li>
-          </ul>
-          <a class="btn btn--red btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Growth</a>
+          <div class="pcard-dots" role="group" aria-label="Change the picture"><button type="button" data-t="0" aria-label="Show it at dawn" aria-pressed="false"></button><button type="button" data-t="1" aria-label="Show it at midday" aria-pressed="true"></button><button type="button" data-t="2" aria-label="Show it at dusk" aria-pressed="false"></button></div>
+          <div class="pcard-body">
+            <div class="pcard-title"><h3>Growth</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
+            <p class="pcard-desc">For hosts with up to three listings. Everything in Solo, with pricing tuned for each place.</p>
+            <p class="sub js-sub">Billed monthly</p>
+            <ul class="chips"><li>Up to 3 listings</li><li>Per-listing pricing</li><li>Airbnb support</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Growth</a>
+          </div>
         </article>
 
-        <article class="plan" data-plan="pro">
-          <h3>Pro</h3>
-          <div class="listings">Up to 5 listings</div>
-          <div class="price"><div class="amt"><span class="js-amt">₹2,499</span> <span class="per js-per">/ month</span></div><div class="sub js-sub">Billed monthly</div></div>
-          <ul class="incl">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Everything in Growth</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Manage up to 5 listings</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Priority WhatsApp support</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Full listing audit for every property</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Talks to Airbnb support for you</li>
-            <li class="perk js-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span class="js-perk-text">Airbnb claims on your behalf</span></li>
-          </ul>
-          <a class="btn btn--ghost btn--block js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Pro</a>
+        <article class="plan pcard" data-plan="pro" style="--tint:#4E2340;--tint2:#2B1022">
+          <div class="pcard-art t2" data-t="2" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+              <rect width="400" height="300" fill="url(#pc-sky-5)"/>
+              <defs><linearGradient id="pc-sky-5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient></defs>
+              <circle cx="200" cy="70" r="20" fill="var(--orb)" class="pc-orb"/>
+              <path d="M-10 200 L80 130 L140 160 L215 60 L260 120 L300 150 L350 120 L410 180 L410 300 L-10 300Z" fill="var(--far)"/>
+              <path d="M215 60 L196 96 L212 90 L228 104 L246 100Z" fill="#fff" opacity=".4"/>
+              <path d="M-10 230 C80 205 170 212 240 222 C310 232 350 214 410 220 L410 300 L-10 300Z" fill="var(--mid)"/>
+              <use href="#pc-cabin" x="22" y="185" width="80" height="70"/><use href="#pc-cabin" x="95" y="180" width="80" height="70"/><use href="#pc-cabin" x="165" y="176" width="80" height="70"/><use href="#pc-cabin" x="235" y="181" width="80" height="70"/><use href="#pc-cabin" x="305" y="186" width="80" height="70"/>
+              <path d="M-10 262 C120 248 280 258 410 252 L410 300 L-10 300Z" fill="var(--ground)"/>
+              <g fill="var(--tree)"><polygon points="8,262 30,170 52,262"/><polygon points="40,266 66,150 92,266"/><polygon points="342,264 368,160 394,264"/><polygon points="318,268 336,200 354,268"/></g>
+            </svg></div>
+          
+          <div class="pcard-dots" role="group" aria-label="Change the picture"><button type="button" data-t="0" aria-label="Show it at dawn" aria-pressed="false"></button><button type="button" data-t="1" aria-label="Show it at midday" aria-pressed="false"></button><button type="button" data-t="2" aria-label="Show it at dusk" aria-pressed="true"></button></div>
+          <div class="pcard-body">
+            <div class="pcard-title"><h3>Pro</h3><span class="pcard-price"><span class="js-amt">₹999</span><span class="per js-per">/ month</span></span></div>
+            <p class="pcard-desc">For hosts with up to five listings. Everything in Growth, plus priority WhatsApp support and full audits.</p>
+            <p class="sub js-sub">Billed monthly</p>
+            <ul class="chips"><li>Up to 5 listings</li><li>Priority support</li><li>Full audits</li><li class="perk js-perk"><span class="js-perk-text">Airbnb claims for you</span></li></ul>
+            <a class="pbtn js-buy" href="#pricing" target="_blank" rel="noopener">Get Bella Pro</a>
+          </div>
         </article>
       </div>
 
@@ -1849,6 +1899,25 @@
       if (btn) btn.click();
     });
     calc();
+  })();
+
+  // ===== Plan cards: the dots switch the picture between dawn, midday and dusk =====
+  (function initCardArt() {
+    document.querySelectorAll('.pcard').forEach(function (card) {
+      var art = card.querySelector('.pcard-art'), dots = card.querySelectorAll('.pcard-dots button');
+      dots.forEach(function (d) {
+        d.addEventListener('click', function () {
+          art.className = 'pcard-art t' + d.dataset.t;
+          dots.forEach(function (x) { x.setAttribute('aria-pressed', String(x === d)); });
+        });
+      });
+      var x0 = null;
+      art.parentNode.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      art.parentNode.addEventListener('touchend', function (e) {
+        if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) < 40) return;
+        var cur = +art.className.replace(/\D/g, ''), nxt = (cur + (dx < 0 ? 1 : 2)) % 3; dots[nxt].click();
+      }, { passive: true });
+    });
   })();
 
   // ===== Listings roller (tactile number wheel) =====

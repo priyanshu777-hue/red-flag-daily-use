@@ -58,6 +58,7 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
   Solo (1 listing):      ₹999 / month, ₹10,190 / year  |  $23 / month, $235 / year
   Growth (up to 3, "Most popular"): ₹1,699 / month, ₹17,330 / year  |  $39 / month, $398 / year
   Pro (up to 5):         ₹2,499 / month, ₹25,490 / year  |  $57 / month, $581 / year
+- PLAN CARDS (travel-app style): three tall cards with very rounded corners (about 36px). The top of each card is an illustrated landscape (inline SVG: mountain, hills, pine trees and A-frame cabins: 1 cabin for Solo, 3 for Growth, 5 for Pro) that fades into the card's tinted background: deep teal for Solo, olive for Growth (raised slightly, with a white "Most popular" tag), plum for Pro. Three small dots under the picture switch it between dawn, midday and dusk (swipe on phones). Below: plan name on the left and a dark translucent price pill on the right (e.g. "₹1,699 / month"), a short grey description, the billed-yearly line, rounded chips (listings, key features, "Airbnb claims for you [YEARLY]", greyed out on monthly), and a big white pill button "Get Bella <plan>" at the bottom. Cards lift a little on hover.
 - Under a yearly price, show the monthly equivalent and the full price struck through, for example "About ₹849/mo · ~~₹11,988~~ billed yearly".
 - Each plan's button opens that plan's payment link in a new tab:
   USD monthly: Solo https://buy.stripe.com/3cI6oJfHdgnt6Qn9yZ6EU0b
