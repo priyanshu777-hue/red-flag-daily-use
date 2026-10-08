@@ -1,6 +1,6 @@
 # Google AI Studio prompt: add a "Bella" tab to redflaghomes.in
 
-Upload `bella.html` from this repo together with the prompt below. It is the finished page, so AI Studio only has to move it into your site instead of designing it again.
+Upload `bella.html` and every image in the `bella-assets/` folder from this repo together with the prompt below. Keep the images in a folder called `bella-assets` next to the page (the page loads them from there). It is the finished page, so AI Studio only has to move it into your site instead of designing it again.
 
 ---
 
@@ -14,16 +14,25 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
 
 2. PAGE CONTENT AND DESIGN
 - Use the attached file bella.html as the exact design, copy and behaviour for the /bella page. Convert it to the same framework and file structure my site already uses (components, routing, styling). Keep the text, sections, colours, fonts, spacing and animations exactly as in the file.
-- Design system: black #0B0A0C, cream #F4EFE8, champagne gold #C9A66B, red #C8102E for buttons only. Fonts: Cormorant Garamond (headings) and DM Sans (body) from Google Fonts.
-- Sections, top to bottom: header, hero with phone chat demo, highlights strip, problem, features (6 cards), languages + Co-Host chat, how it works (3 steps), pricing, FAQ, final call to action with WhatsApp and email contact, footer, floating WhatsApp button.
+- Design system: sand #D8C2A4 (hero and hosts background), paper #FBF8F3, black #0B0A0C, cream #F4EFE8, champagne gold #C9A66B, red #C8102E for buttons only. Fonts: Cormorant Garamond (headings) and DM Sans (body) from Google Fonts.
+- Sections, top to bottom: light header, hero scroll story, highlights strip, problem, "a day with Bella" timeline, hosts, Airbnb support and claims, languages + Co-Host chat, how it works, pricing, FAQ, final call to action with the "Hosted by Bella" house picture and WhatsApp/email contact, footer, floating WhatsApp button.
 - It is a single landing page. All "Get Bella" buttons scroll to the pricing section.
-- FEATURES AS A DAY: the features section is a vertical timeline of one day with Bella (2:04 AM guest replies, 6:30 AM smart pricing, 11:00 AM automatic check-in, 2:15 PM calendar blocking, 5:40 PM listing audit, 9:20 PM Co-Host chat, 11:50 PM Airbnb support), with times in large serif numerals on a thin gold line. Do not turn it into a card grid.
-- STYLE RULES: no small all-caps labels above headings, no single coloured/italic word inside headlines, no arrows appended to buttons, no fade-in animation on every section. The only automatic animation is the hero: Bella waves and types her first reply when the page loads.
-- HERO 3D CHARACTER: keep the animated 3D Bella exactly as in the file (built with three.js 0.149.0 from primitives, no model files): a friendly female co-host with a gold headset, black blazer and a phone, who waves every few seconds, blinks, follows the mouse with her head and nods when she replies. Tapping her makes her wave. Pause the animation when it is off screen, and show a still pose when the visitor prefers reduced motion.
-- LIVE LANGUAGE DEMO: the guest question and Bella's reply in the hero (and the chat in the languages section) change with the visitor:
-  - Visitors in India (timezone Asia/Kolkata) see Hinglish: Guest "India Gate kitni door hai?" / Bella "Sirf 10 min door."
-  - Everyone else sees their browser language if available, otherwise English: Guest "How far is the nearest metro station?" / Bella "Just a 5-minute walk. I'll send you the directions now."
-  - The language buttons (hero: English, Hinglish, العربية, Français, 日本語, All 50+; languages section: 13 languages) are tappable. Tapping one shows a typing indicator for about 1 second, then Bella's reply in that language. Arabic is shown right-to-left. Use the exact translations from the file.
+- HERO SCROLL STORY (inspired by a colour-changing chameleon site): the hero is pinned while the visitor scrolls through about 3.4 screen heights.
+  - Headline: "Hi, I'm Bella, your next-gen AI co-host." Lede: "I reply to your guests, set your prices, send check-in details and block your calendar. 24/7, in 50+ languages." Buttons: Get Bella, Chat on WhatsApp.
+  - Behind everything, a giant cream "BELLA" in the serif font that drifts slightly sideways as you scroll.
+  - Bella sits on a big friendly chameleon (bella-assets/bella-chameleon.webp). On top of it sits bella-assets/chameleon-tint.webp, which contains only the chameleon's skin; recolour it with CSS filter hue-rotate so the chameleon changes colour while Bella stays the same. While the visitor scrolls, Bella and the chameleon move slowly from right to left and bob gently like walking.
+  - Four guest moments, one per quarter of the scroll. Each sets the chameleon colour, a matching soft background colour, and a chat card (bottom left) with the guest's question and Bella's reply, plus four tappable time tabs that jump to each moment:
+    1. 2:04 AM, guest from Delhi (Hinglish: "India Gate kitni door hai?" / "Sirf 10 min door.") for visitors in India; for everyone else their browser language or English ("How far is the nearest metro station?" / "Just a 5-minute walk. I'll send you the directions now.") — rose chameleon, background #E7C9C1
+    2. 7:30 AM, guest from Paris, French — teal chameleon, background #C3D5CB
+    3. 1:15 PM, guest from Dubai, Arabic (right-to-left) — saffron chameleon, background #EBCD9E
+    4. 9:40 PM, guest from Tokyo, Japanese — violet chameleon, background #D4C6D9
+  - When a moment changes, Bella's reply shows a typing indicator for about 1 second first. Use the exact translations from the file.
+  - Hide the floating WhatsApp button while the hero is on screen (the hero has its own WhatsApp button).
+- A DAY WITH BELLA: a timeline of one day (2:04 AM guest replies, 6:30 AM smart pricing, 11:00 AM automatic check-in, 2:15 PM calendar blocking, 5:40 PM listing audit, 9:20 PM Co-Host chat, 11:50 PM Airbnb support), times in large serif numerals on a thin gold line, each item with a small round Bella expression (bella-assets/face-*.webp). On desktop a sticky full-body Bella on the left changes pose to match the item being read (pose-typing, bella-phone, pose-key, pose-calendar), with the active item at full opacity and the rest dimmed. Do not turn it into a card grid.
+- HOSTS: a sand section "Bella works for every kind of host." with the three host characters standing on a line (bella-assets/host-lady-tea.webp, host-man-key.webp, host-man-cake.webp). Tapping a host lifts it, shows it in full colour and changes the text card below: Homestay host / City apartment host / Villa host with the exact copy from the file. These are example hosts, never present them as testimonials or quotes.
+- FINAL CTA: show bella-assets/hosted-by-bella.webp (Bella with the two hosts outside a house with a "Hosted by Bella" sign) above "Your guests don't wait. Neither should your bnb."
+- STYLE RULES: no small all-caps labels above headings, no single coloured/italic word inside headlines, no arrows appended to buttons, no fade-in animation on every section.
+- LIVE LANGUAGE DEMO in the languages section: 13 tappable language buttons; tapping one shows a typing indicator, then Bella's reply in that language (Arabic right-to-left). Visitors in India start in Hinglish, everyone else in their browser language or English.
 
 3. PRICING SECTION (most important)
 - Above the plan cards, show two switches: "Monthly / Yearly" and "₹ INR / $ USD".

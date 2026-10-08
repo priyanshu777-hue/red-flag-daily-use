@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
-  /* Layout: one long scroll, alternating black "night" and cream "day" bands, content capped at 1160px. */
+  /* Layout: a pinned sand-coloured story hero (Bella rides a colour-changing chameleon), then alternating paper, sand and black bands, content capped at 1160px. */
   :root {
     --ink: #0B0A0C;
     --ink-2: #16141A;
@@ -22,6 +22,9 @@
     --red-hover: #A50D26;
     --mute-on-ink: #B9B2A8;
     --mute-on-cream: #5C554D;
+    --sand: #D8C2A4;
+    --sand-2: #CDB391;
+    --paper: #FBF8F3;
     --ok: #3FA66B;
 
     --font-display: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
@@ -93,83 +96,88 @@
   /* Header */
   .site-header {
     position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
-    background: rgba(11, 10, 12, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(201,166,107,.14);
+    background: rgba(251, 248, 243, 0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(11,10,12,.08); color: var(--ink);
   }
   .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
   .brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; }
   .brand b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; letter-spacing: 0.01em; }
-  .brand span { font-size: 0.72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+  .brand span { font-size: 0.8rem; color: #6B5A45; white-space: nowrap; }
   .nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 32px); }
-  .nav a.link { text-decoration: none; font-size: 0.95rem; color: var(--mute-on-ink); transition: color .2s; }
-  .nav a.link:hover { color: var(--cream); }
+  .nav a.link { text-decoration: none; font-size: 0.95rem; color: #4A433C; transition: color .2s; }
+  .nav a.link:hover { color: var(--ink); }
   .nav .btn { min-height: 42px; padding: 10px 20px; font-size: 0.95rem; }
   @media (max-width: 720px) { .nav a.link { display: none; } .brand span { display: none; } }
 
-  /* Hero */
-  .hero { position: relative; overflow: hidden; padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px); }
-  .hero::before {
-    content: ""; position: absolute; inset: auto -20% -40% auto; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
-    background: radial-gradient(closest-side, rgba(201,166,107,.18), transparent 70%); pointer-events: none;
+  /* Hero story: Bella rides a chameleon that changes colour with every guest */
+  .story { position: relative; margin-top: -68px; height: 340vh; background-color: var(--sand); color: var(--ink); transition: background-color .9s var(--ease); }
+  .story-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .bigword {
+    position: absolute; left: 50%; top: 52%; z-index: 1; pointer-events: none; user-select: none;
+    transform: translate(-50%, -50%) translateX(var(--bx, 0px));
+    font-family: var(--font-display); font-weight: 600; line-height: .8; letter-spacing: -.02em; white-space: nowrap;
+    font-size: clamp(8rem, 31vw, 36rem); color: rgba(255, 251, 244, .7);
   }
-  .hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
-  .hero-copy { display: grid; gap: 24px; min-width: 0; }
-  .hero h1 { font-size: var(--step-4); font-weight: 600; }
-  .hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
-  .hero .lede { font-size: var(--step-1); color: var(--mute-on-ink); max-width: 46ch; }
-  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-  .fine { font-size: var(--step--1); color: var(--mute-on-ink); display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .story-copy { position: relative; z-index: 3; display: grid; gap: 18px; padding-top: clamp(96px, 15vh, 150px); }
+  .story-copy h1 { font-size: clamp(2.2rem, 1.3rem + 3.6vw, 4.8rem); line-height: 1.02; max-width: 12ch; }
+  .story-copy .lede { max-width: 38ch; font-size: var(--step-1); color: #3E362E; }
+  .story-copy .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .story .btn--ghost { color: var(--ink); border-color: rgba(11,10,12,.3); }
+  .story .btn--ghost:hover { border-color: var(--ink); }
+  .fine { font-size: var(--step--1); color: #4B4239; display: flex; flex-wrap: wrap; gap: 6px 16px; }
   .fine span { display: inline-flex; align-items: center; gap: 6px; }
-  .fine svg { width: 14px; height: 14px; color: var(--gold); }
-  @media (max-width: 880px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } }
-
-  /* Hero stage: 3D Bella + live chat bubbles */
-  .hero-visual { display: grid; gap: 18px; min-width: 0; justify-items: center; }
-  .stage { position: relative; width: 100%; max-width: 540px; aspect-ratio: 4 / 5; max-height: 660px; }
-  .stage-glow {
-    position: absolute; inset: 10% 4% 2%; border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(201,166,107,.34), rgba(201,166,107,.10) 55%, transparent 75%);
-    pointer-events: none;
+  .fine svg { width: 14px; height: 14px; color: #8A6A35; }
+  .rider { position: absolute; z-index: 2; margin: 0; right: 7vw; bottom: 5vh; width: min(52vw, 820px); transform: translateX(var(--rx, 0px)); will-change: transform; }
+  .rider-body { position: relative; }
+  .rider img { display: block; width: 100%; height: auto; }
+  .rider-tint { position: absolute; inset: 0; filter: hue-rotate(var(--hue, 0deg)) saturate(var(--sat, 1)); transition: filter 1s var(--ease); }
+  .rider.walking .rider-body { animation: walk .55s ease-in-out infinite alternate; }
+  @keyframes walk { from { transform: translateY(0) rotate(0); } to { transform: translateY(-7px) rotate(-.6deg); } }
+  .rider-shadow { position: absolute; left: 12%; right: 10%; bottom: -1%; height: 7%; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,40,20,.22), transparent); z-index: -1; }
+  .scene-card {
+    position: absolute; z-index: 4; left: var(--gutter); bottom: 6vh; width: min(380px, calc(100% - 2 * var(--gutter)));
+    display: grid; gap: 12px; padding: 16px; border-radius: 22px;
+    background: rgba(255, 252, 247, .88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 30px 60px -30px rgba(60, 40, 20, .45);
   }
-  .stage-ring { position: absolute; left: 50%; bottom: 6%; width: 64%; aspect-ratio: 4 / 1; transform: translateX(-50%); border-radius: 50%; border: 1px solid rgba(201,166,107,.35); pointer-events: none; }
-  .stage canvas {
-    position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y;
-    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 99%); mask-image: linear-gradient(to bottom, #000 80%, transparent 99%);
+  .scene-where { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: #6B5A45; }
+  .scene-where b { color: var(--ink); font-weight: 700; }
+  .scene-chat { display: grid; gap: 8px; min-height: 108px; align-content: start; }
+  .scene-chat .m { max-width: 88%; padding: 10px 14px; border-radius: 16px; font-size: .95rem; line-height: 1.4; }
+  .scene-chat .g { justify-self: start; background: #EFE8DE; border-bottom-left-radius: 5px; }
+  .scene-chat .b { justify-self: end; background: var(--ink); color: var(--cream); border-bottom-right-radius: 5px; }
+  .scene-chat .b .dots i { background: var(--gold); }
+  .scene-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .scene-tabs button {
+    min-height: 40px; padding: 6px 4px; border-radius: 12px; border: 1px solid rgba(11,10,12,.12); background: transparent;
+    font: 600 .8rem/1.1 var(--font-body); color: #4B4239; cursor: pointer; font-variant-numeric: tabular-nums;
+    transition: background-color .25s var(--ease), color .25s var(--ease);
   }
-  .stage-fallback { position: absolute; inset: 0; display: none; place-items: center; font-family: var(--font-display); font-size: clamp(7rem, 20vw, 12rem); color: var(--gold); }
-  .stage.no-webgl .stage-fallback { display: grid; }
-  .bubble {
-    position: absolute; z-index: 2; max-width: min(64%, 290px); padding: 12px 16px 13px; border-radius: 20px;
-    font-size: .95rem; line-height: 1.4; box-shadow: 0 20px 40px -18px rgba(0,0,0,.75);
-    display: grid; gap: 4px; transition: transform .35s var(--ease), opacity .35s var(--ease);
-  }
-  .bubble .who { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; opacity: .65; }
-  .bubble--guest { top: 5%; left: 0; background: var(--cream); color: var(--ink); border-bottom-left-radius: 6px; }
-  .bubble--bella { max-width: min(54%, 260px); bottom: 15%; right: 0; background: rgba(22,20,26,.92); color: var(--cream); border: 1px solid var(--gold); border-bottom-right-radius: 6px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-  .bubble--bella .who { color: var(--gold); opacity: 1; }
-  .bubble.pop { animation: pop .45s var(--ease); }
-  @keyframes pop { from { transform: translateY(8px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
-  .stage-meta { position: absolute; z-index: 2; bottom: 8%; right: 4px; display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--gold); }
-  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(63,166,107,.18); }
+  .scene-tabs button[aria-selected="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .scene-tabs button i { display: block; width: 10px; height: 10px; border-radius: 50%; margin: 0 auto 4px; background: var(--c); }
+  .scroll-note { position: absolute; z-index: 4; right: var(--gutter); bottom: 2.4vh; font-size: .82rem; color: #4B4239; }
   .dots { display: inline-flex; gap: 4px; padding-block: 6px; }
   .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 1s infinite; }
   .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
   @keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
-  .try { display: grid; gap: 10px; justify-items: center; width: 100%; }
-  .try-label { font-size: .9rem; color: var(--mute-on-ink); }
-  .lang-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-  .lang-btn {
-    min-height: 40px; padding: 8px 15px; border-radius: 999px; cursor: pointer;
-    border: 1px solid rgba(244,239,232,.18); background: transparent; color: var(--cream);
-    font: 500 .9rem/1 var(--font-body); transition: background-color .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+  @media (max-width: 860px) {
+    .story { height: 300vh; }
+    .story-copy { padding-top: 88px; gap: 14px; }
+    .story-copy h1 { font-size: clamp(2rem, 8.4vw, 3rem); max-width: 14ch; }
+    .story-copy .lede { font-size: 1rem; }
+    .story .fine, .scroll-note { display: none; }
+    .rider { width: 108vw; right: -8vw; bottom: 118px; }
+    .bigword { top: 60%; font-size: 40vw; }
+    .scene-card { bottom: 12px; left: 12px; width: calc(100% - 24px); padding: 12px; gap: 10px; }
+    .scene-chat { min-height: 92px; }
+    .scene-chat .m { font-size: .9rem; padding: 8px 12px; }
   }
-  .lang-btn:hover { border-color: var(--gold); }
-  .lang-btn[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--ink); }
-  a.lang-btn { display: inline-flex; align-items: center; text-decoration: none; color: var(--gold); border-style: dashed; }
-  @media (max-width: 880px) {
-    .stage { aspect-ratio: 1 / 1; max-width: 460px; }
-    .bubble { font-size: .88rem; max-width: 68%; }
-  }
+  @media (max-height: 700px) and (max-width: 860px) { .story-copy .lede { display: none; } }
+  @media (max-height: 900px) and (min-width: 861px) { .story .fine { display: none; } .scene-card { bottom: 4vh; } }
+  body.in-story .wa-float { opacity: 0; pointer-events: none; transform: scale(.8); }
+  .wa-float { transition: opacity .25s var(--ease), transform .25s var(--ease); }
+
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(63,166,107,.18); flex: none; }
 
   /* Trust strip */
   .trust { border-block: 1px solid rgba(201,166,107,.16); background: var(--ink-2); }
@@ -220,6 +228,43 @@
     .day time { grid-column: 2; text-align: left; font-size: 1.4rem; }
     .day li > div { grid-column: 2; grid-row: 2; }
   }
+
+  .band--paper { background: var(--paper); color: var(--ink); }
+  .band--sand { background: var(--sand); color: var(--ink); }
+  .band--paper .section-head p, .band--sand .section-head p { color: var(--mute-on-cream); }
+  .band--sand .section-head p { color: #4B4239; }
+  .day-wrap { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+  .day-figure { position: sticky; top: 90px; height: min(72vh, 640px); }
+  .day-figure img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: 100%; object-fit: contain; transform: translate(-50%, 16px); opacity: 0; transition: opacity .45s var(--ease), transform .45s var(--ease); }
+  .day-figure img.on { opacity: 1; transform: translate(-50%, 0); }
+  .day-figure::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: -10px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,40,20,.18), transparent); }
+  .band--paper .day::before { background: linear-gradient(#8A6A35, rgba(138,106,53,.12)); }
+  .band--paper .day time { color: #8A6A35; }
+  .band--paper .day li:nth-child(2n) time { color: var(--ink); }
+  .band--paper .day li::after { background: var(--paper); border-color: #8A6A35; }
+  .band--paper .day p { color: var(--mute-on-cream); }
+  .day li { transition: opacity .35s var(--ease); }
+  .day-wrap.live .day li:not(.active) { opacity: .45; }
+  .day-face { float: right; width: 56px; height: 52px; object-fit: cover; border-radius: 50%; margin: 0 0 6px 12px; background: #F3EFE6; box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px rgba(138,106,53,.35); }
+  @media (max-width: 860px) { .day-wrap { grid-template-columns: minmax(0, 1fr); } .day-figure { display: none; } .day-wrap.live .day li:not(.active) { opacity: 1; } }
+
+  .host-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 28px); align-items: end; max-width: 980px; margin-inline: auto; position: relative; }
+  .host-stage::after { content: ""; position: absolute; left: 4%; right: 4%; bottom: 34px; height: 2px; background: rgba(11,10,12,.12); z-index: 0; }
+  .host { position: relative; z-index: 1; display: grid; justify-items: center; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; color: var(--ink); font: 600 .95rem/1.2 var(--font-body); }
+  .host img { width: 100%; max-width: 260px; height: auto; filter: saturate(.55) brightness(.96); transform-origin: 50% 100%; transition: transform .45s var(--ease), filter .45s var(--ease); }
+  .host:hover img { transform: translateY(-6px) rotate(-1.5deg); filter: none; }
+  .host[aria-selected="true"] img { transform: translateY(-10px) scale(1.04); filter: none; }
+  .host span { min-height: 44px; display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 999px; background: rgba(255,252,247,.6); }
+  .host[aria-selected="true"] span { background: var(--ink); color: var(--cream); }
+  .host-note { max-width: 640px; margin: clamp(20px, 3vw, 32px) auto 0; text-align: center; display: grid; gap: 8px; padding: 22px 24px; border-radius: 20px; background: rgba(255,252,247,.72); }
+  .host-note h3 { font-size: var(--step-2); }
+  .host-note p { color: #4B4239; }
+  .host-note.swap { animation: note .4s var(--ease); }
+  @keyframes note { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 560px) { .host span { font-size: .8rem; padding: 6px 10px; text-align: center; } .host-stage::after { bottom: 30px; } }
+
+  .final-art { width: min(100%, 760px); border-radius: 24px; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
+  .final-art img { display: block; width: 100%; height: auto; }
 
   /* Languages + Co-Host chat */
   .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 32px); }
@@ -430,18 +475,16 @@
 
 <main id="top">
 
-  <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap">
-      <div class="hero-copy">
-        <h1 id="hero-title">Your bnb never sleeps. Now neither does Bella.</h1>
-        <p class="lede">Bella replies to guests, sets your prices, sends check-in details and blocks your calendar. 24/7, in 50+ languages.</p>
+  <!-- Hero story -->
+  <section class="story" id="story" aria-labelledby="hero-title">
+    <div class="story-pin">
+      <div class="bigword" aria-hidden="true">BELLA</div>
+      <div class="wrap story-copy">
+        <h1 id="hero-title">Hi, I'm Bella, your next-gen AI co-host.</h1>
+        <p class="lede">I reply to your guests, set your prices, send check-in details and block your calendar. 24/7, in 50+ languages.</p>
         <div class="ctas">
           <a class="btn btn--red" href="#pricing">Get Bella</a>
-          <a class="btn btn--ghost js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>
-            Chat on WhatsApp
-          </a>
+          <a class="btn btn--ghost js-wa" data-msg="Hi, I want to know more about Bella." href="#contact" target="_blank" rel="noopener">Chat on WhatsApp</a>
         </div>
         <div class="fine">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>Cancel anytime</span>
@@ -449,29 +492,22 @@
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg>60-second setup</span>
         </div>
       </div>
-
-      <div class="hero-visual">
-        <div class="stage" id="stage">
-          <div class="stage-glow" aria-hidden="true"></div>
-          <div class="stage-ring" aria-hidden="true"></div>
-          <canvas id="bella3d" role="img" aria-label="Bella, an animated 3D co-host with a headset, waving hello"></canvas>
-          <div class="stage-fallback" aria-hidden="true">B</div>
-          <div class="bubble bubble--guest" aria-live="polite"><span class="who">Guest · 2:04 AM</span><span data-chat="guest"></span></div>
-          <div class="bubble bubble--bella" aria-live="polite"><span class="who">Bella · 2:04 AM</span><span data-chat="bella"></span></div>
-          <div class="stage-meta"><span class="live-dot" aria-hidden="true"></span><span>Replied in 3 seconds · <b data-chat="name"></b></span></div>
+      <figure class="rider" id="rider">
+        <div class="rider-body">
+          <span class="rider-shadow" aria-hidden="true"></span>
+          <img src="bella-assets/bella-chameleon.webp" width="834" height="683" alt="Bella waving from the back of a friendly chameleon">
+          <img class="rider-tint" src="bella-assets/chameleon-tint.webp" width="834" height="683" alt="" aria-hidden="true">
         </div>
-        <div class="try">
-          <span class="try-label" id="try-label">Try Bella in another language</span>
-          <div class="lang-row" role="group" aria-labelledby="try-label">
-            <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">English</button>
-            <button type="button" class="lang-btn" data-lang="hinglish" aria-pressed="false">Hinglish</button>
-            <button type="button" class="lang-btn" data-lang="ar" aria-pressed="false">العربية</button>
-            <button type="button" class="lang-btn" data-lang="fr" aria-pressed="false">Français</button>
-            <button type="button" class="lang-btn" data-lang="ja" aria-pressed="false">日本語</button>
-            <a class="lang-btn" href="#languages">All 50+</a>
-          </div>
+      </figure>
+      <div class="scene-card">
+        <div class="scene-where"><span class="live-dot" aria-hidden="true"></span><span><b id="scene-time">2:04 AM</b> · <span id="scene-place">Guest from Delhi</span></span></div>
+        <div class="scene-chat" aria-live="polite">
+          <div class="m g" id="scene-guest" dir="auto"></div>
+          <div class="m b" id="scene-bella" dir="auto"></div>
         </div>
+        <div class="scene-tabs" role="tablist" aria-label="Guest moments"></div>
       </div>
+      <p class="scroll-note">Scroll: Bella changes colour for every guest</p>
     </div>
   </section>
 
@@ -502,22 +538,49 @@
     </div>
   </section>
 
-  <!-- Features -->
-  <section class="band" id="features" aria-labelledby="features-title">
+  <!-- Features: a day with Bella -->
+  <section class="band band--paper" id="features" aria-labelledby="features-title">
     <div class="wrap">
       <div class="section-head">
         <h2 id="features-title">Everything your listing needs, handled.</h2>
         <p>Here is one ordinary day for a host with Bella. You keep 100% of every booking.</p>
       </div>
-      <ol class="day">
-        <li><time>2:04 AM</time><div><h3>Guest replies</h3><p>A guest asks for directions in the middle of the night. Bella answers in 3 seconds, in the guest's own language.</p></div></li>
-        <li><time>6:30 AM</time><div><h3>Smart pricing</h3><p>Demand jumps for a festival weekend. Bella raises your nightly rate before the rush.</p></div></li>
-        <li><time>11:00 AM</time><div><h3>Automatic check-in</h3><p>Today's guests get their check-in details, Wi-Fi and directions on time.</p></div></li>
-        <li><time>2:15 PM</time><div><h3>Calendar blocking</h3><p>You need the flat next week. Bella blocks the dates so nobody books them.</p></div></li>
-        <li><time>5:40 PM</time><div><h3>Listing audit</h3><p>Bella spots a dark cover photo and a missing amenity, and fixes the gaps.</p></div></li>
-        <li><time>9:20 PM</time><div><h3>Co-Host chat</h3><p>You type "Raise weekend prices by 10%". It's done before you put your phone down.</p></div></li>
-        <li><time>11:50 PM</time><div><h3>Airbnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts Airbnb support for you.</p></div></li>
-      </ol>
+      <div class="day-wrap">
+        <div class="day-figure" aria-hidden="true">
+          <img data-pose="typing" class="on" src="bella-assets/pose-typing.webp" width="230" height="610" alt="" loading="lazy">
+          <img data-pose="phone" src="bella-assets/bella-phone.webp" width="286" height="688" alt="" loading="lazy">
+          <img data-pose="key" src="bella-assets/pose-key.webp" width="252" height="612" alt="" loading="lazy">
+          <img data-pose="calendar" src="bella-assets/pose-calendar.webp" width="318" height="608" alt="" loading="lazy">
+        </div>
+        <ol class="day">
+        <li data-pose="typing"><time>2:04 AM</time><div><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><h3>Guest replies</h3><p>A guest asks for directions in the middle of the night. Bella answers in 3 seconds, in the guest's own language.</p></div></li>
+        <li data-pose="phone"><time>6:30 AM</time><div><img class="day-face" src="bella-assets/face-thinking.webp" width="300" height="276" alt="" loading="lazy"><h3>Smart pricing</h3><p>Demand jumps for a festival weekend. Bella raises your nightly rate before the rush.</p></div></li>
+        <li data-pose="key"><time>11:00 AM</time><div><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><h3>Automatic check-in</h3><p>Today's guests get their check-in details, Wi-Fi and directions on time.</p></div></li>
+        <li data-pose="calendar"><time>2:15 PM</time><div><img class="day-face" src="bella-assets/face-wink.webp" width="300" height="276" alt="" loading="lazy"><h3>Calendar blocking</h3><p>You need the flat next week. Bella blocks the dates so nobody books them.</p></div></li>
+        <li data-pose="typing"><time>5:40 PM</time><div><img class="day-face" src="bella-assets/face-surprised.webp" width="300" height="276" alt="" loading="lazy"><h3>Listing audit</h3><p>Bella spots a dark cover photo and a missing amenity, and fixes the gaps.</p></div></li>
+        <li data-pose="phone"><time>9:20 PM</time><div><img class="day-face" src="bella-assets/face-happy.webp" width="300" height="276" alt="" loading="lazy"><h3>Co-Host chat</h3><p>You type "Raise weekend prices by 10%". It’s done before you put your phone down.</p></div></li>
+        <li data-pose="typing"><time>11:50 PM</time><div><img class="day-face" src="bella-assets/face-calm.webp" width="300" height="276" alt="" loading="lazy"><h3>Airbnb support</h3><p>A late cancellation comes in. Bella replies on time and contacts Airbnb support for you.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hosts -->
+  <section class="band band--sand" id="hosts" aria-labelledby="hosts-title">
+    <div class="wrap">
+      <div class="section-head center">
+        <h2 id="hosts-title">Bella works for every kind of host.</h2>
+        <p>Tap a host to see what Bella takes off their plate.</p>
+      </div>
+      <div class="host-stage" role="tablist" aria-label="Kinds of hosts">
+        <button type="button" class="host" role="tab" id="host-0" aria-selected="true" aria-controls="host-note" data-host="0"><img src="bella-assets/host-lady-tea.webp" width="619" height="1086" alt="" loading="lazy"><span>Homestay host</span></button>
+        <button type="button" class="host" role="tab" id="host-1" aria-selected="false" aria-controls="host-note" data-host="1"><img src="bella-assets/host-man-key.webp" width="554" height="1097" alt="" loading="lazy"><span>City apartment host</span></button>
+        <button type="button" class="host" role="tab" id="host-2" aria-selected="false" aria-controls="host-note" data-host="2"><img src="bella-assets/host-man-cake.webp" width="616" height="1100" alt="" loading="lazy"><span>Villa host</span></button>
+      </div>
+      <div class="host-note" id="host-note" role="tabpanel" aria-live="polite">
+        <h3 id="host-title">The homestay host</h3>
+        <p id="host-text">Serves chai to every guest and still gets messages at 2 AM. Bella answers them in the guest's language, so the host can sleep.</p>
+      </div>
     </div>
   </section>
 
@@ -716,6 +779,7 @@
   <!-- Final CTA + contact -->
   <section class="band" id="contact" aria-labelledby="final-title">
     <div class="wrap final">
+      <figure class="final-art"><img src="bella-assets/hosted-by-bella.webp" width="1200" height="761" alt="Bella standing outside a cosy house with two hosts, under a sign that reads Hosted by Bella" loading="lazy"></figure>
       <h2 id="final-title">Your guests don't wait. Neither should your bnb.</h2>
       <div class="ctas">
         <a class="btn btn--red" href="#pricing">Get Bella</a>
@@ -769,7 +833,6 @@
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>
 </a>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
 <script>
 (function () {
   /* ===== Edit these before going live ===== */
@@ -1171,7 +1234,6 @@
         el.textContent = L.bella;
         var bubble = el.closest('.bubble'); if (bubble) { bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop'); }
       });
-      if (window.bellaAvatar) window.bellaAvatar.nod();
     };
     if (!animate) { showReply(); return; }
     replies.forEach(function (el) { el.innerHTML = DOTS; });
@@ -1182,196 +1244,120 @@
   });
   setLang(guessLang(), !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches));
 
-  // ===== 3D Bella (three.js, built from primitives, no external model files) =====
-  (function initBella3D() {
-    var stage = document.getElementById('stage');
-    var canvas = document.getElementById('bella3d');
-    var api = { nod: function () {}, wave: function () {} };
-    window.bellaAvatar = api;
-    if (!stage || !canvas) return;
-    if (!window.THREE) { stage.classList.add('no-webgl'); return; }
-    var T = window.THREE, renderer;
-    try {
-      renderer = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
-    } catch (e) { stage.classList.add('no-webgl'); return; }
-    if (T.ColorManagement) T.ColorManagement.legacyMode = false;
-    renderer.outputEncoding = T.sRGBEncoding;
-    renderer.toneMapping = T.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
-    var scene = new T.Scene();
-    var camera = new T.PerspectiveCamera(30, 1, 0.1, 50);
-    // Studio reflections from a tiny generated environment (no HDR file to download).
-    try {
-      var pmrem = new T.PMREMGenerator(renderer), envScene = new T.Scene();
-      envScene.add(new T.Mesh(new T.BoxGeometry(12, 12, 12), new T.MeshBasicMaterial({ color: 0x241d22, side: T.BackSide })));
-      [[0, 5, 5, 6, 4, new T.Color(5, 4.6, 4)], [-5, 2, -2, 3, 6, new T.Color(3.2, 2.4, 1.3)], [5, 1, 1, 2, 5, new T.Color(1.6, 1.5, 1.4)]].forEach(function (q) {
-        var m = new T.Mesh(new T.PlaneGeometry(q[3], q[4]), new T.MeshBasicMaterial({ color: q[5], side: T.DoubleSide }));
-        m.position.set(q[0], q[1], q[2]); m.lookAt(0, 0, 0); envScene.add(m);
-      });
-      scene.environment = pmrem.fromScene(envScene, 0.04).texture;
-    } catch (e) {}
-    scene.add(new T.HemisphereLight(0xfff3e4, 0x1b1519, 0.55));
-    var key = new T.DirectionalLight(0xfff1e0, 1.5); key.position.set(2.5, 4, 5); scene.add(key);
-    var rim = new T.DirectionalLight(0xC9A66B, 1.6); rim.position.set(-3.5, 3, -3); scene.add(rim);
-    var rim2 = new T.DirectionalLight(0xffd9a8, 0.7); rim2.position.set(3.5, 2, -2.5); scene.add(rim2);
-
-    function mat(c, o) { var m = new T.MeshStandardMaterial({ color: c, roughness: 0.6, metalness: 0 }); if (o) Object.keys(o).forEach(function (k) { m[k] = o[k]; }); return m; }
-    function add(geo, m, parent, x, y, z) { var o = new T.Mesh(geo, m); o.position.set(x || 0, y || 0, z || 0); parent.add(o); return o; }
-    var skin = new T.MeshPhysicalMaterial({ color: 0xD7A07C, roughness: 0.5, sheen: 0.4, sheenRoughness: 0.8, sheenColor: new T.Color(0xffc9b0) });
-    var hair = new T.MeshPhysicalMaterial({ color: 0x231715, roughness: 0.38, sheen: 1, sheenRoughness: 0.3, sheenColor: new T.Color(0x7a5a48) });
-    var blazer = new T.MeshPhysicalMaterial({ color: 0x2A2530, roughness: 0.72, sheen: 1, sheenRoughness: 0.45, sheenColor: new T.Color(0x8a7a96) });
-    var cream = mat(0xF4EFE8, { roughness: 0.75 });
-    var gold = mat(0xC9A66B, { metalness: 0.85, roughness: 0.28 });
-    var dark = new T.MeshPhysicalMaterial({ color: 0x110D10, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.08 });
-    var lip = mat(0xB4475A, { roughness: 0.4 });
-    var white = new T.MeshBasicMaterial({ color: 0xffffff });
-    var blush = new T.MeshBasicMaterial({ color: 0xF08A8A, transparent: true, opacity: 0.28, depthWrite: false });
-
-    var root = new T.Group(); root.position.x = -0.14; scene.add(root);
-    var body = new T.Group(); root.add(body);
-
-    // Torso: a lathe profile flattened front-to-back, like a tailored blazer.
-    var prof = [[0, 0], [0.5, 0], [0.56, 0.3], [0.58, 0.62], [0.66, 0.9], [0.68, 1.0], [0.6, 1.1], [0.36, 1.18], [0.18, 1.22], [0, 1.23]]
-      .map(function (p) { return new T.Vector2(p[0], p[1]); });
-    var torso = add(new T.LatheGeometry(prof, 48), blazer, body); torso.scale.z = 0.62;
-    var vShape = new T.Shape(); vShape.moveTo(0, 0); vShape.lineTo(-0.19, 0.46); vShape.lineTo(0.19, 0.46); vShape.lineTo(0, 0);
-    var shirt = add(new T.ShapeGeometry(vShape), cream, body, 0, 0.72, 0.385); shirt.rotation.x = -0.2;
-    add(new T.SphereGeometry(0.035, 16, 16), gold, body, 0.26, 0.86, 0.375);
-    var necklace = add(new T.TorusGeometry(0.19, 0.012, 8, 40), gold, body, 0, 1.2, 0.02); necklace.rotation.x = Math.PI / 2 - 0.25; necklace.scale.set(1, 0.85, 1);
-    add(new T.CylinderGeometry(0.14, 0.16, 0.34, 24), skin, body, 0, 1.33, 0);
-
-    // Head
-    var head = new T.Group(); head.position.set(0, 1.82, 0); body.add(head);
-    var skull = add(new T.SphereGeometry(0.52, 48, 48), skin, head); skull.scale.set(1, 1.06, 0.98);
-    [-1, 1].forEach(function (s) { add(new T.SphereGeometry(0.08, 16, 16), skin, head, s * 0.5, -0.04, 0); });
-    var eyes = [];
-    [-1, 1].forEach(function (s) {
-      var g = new T.Group(); g.position.set(s * 0.18, -0.02, 0.455); head.add(g); eyes.push(g);
-      var e = add(new T.SphereGeometry(0.068, 24, 24), dark, g); e.scale.set(0.9, 1.2, 0.5);
-      add(new T.SphereGeometry(0.02, 12, 12), white, g, 0.022, 0.03, 0.03);
-      var lash = add(new T.BoxGeometry(0.08, 0.022, 0.02), dark, head, s * 0.24, 0.055, 0.44); lash.rotation.z = s * 0.55;
-      var lash2 = add(new T.BoxGeometry(0.06, 0.02, 0.02), dark, head, s * 0.25, 0.02, 0.44); lash2.rotation.z = s * 0.15;
-      var brow = add(new T.TorusGeometry(0.075, 0.014, 8, 20, Math.PI * 0.8), hair, head, s * 0.18, 0.1, 0.465); brow.rotation.set(-0.15, 0, Math.PI * 0.1); brow.scale.set(1, 0.55, 1);
-      var b = add(new T.SphereGeometry(0.075, 16, 16), blush, head, s * 0.29, -0.14, 0.42); b.scale.set(1, 0.6, 0.3);
-      add(new T.SphereGeometry(0.034, 12, 12), gold, head, s * 0.5, -0.19, 0.04);
-    });
-    var nose = add(new T.SphereGeometry(0.032, 16, 16), skin, head, 0, -0.1, 0.505); nose.scale.y = 1.2;
-    var mouth = add(new T.TorusGeometry(0.085, 0.017, 8, 24, Math.PI), lip, head, 0, -0.17, 0.47); mouth.rotation.set(-0.1, 0, Math.PI);
-
-    // Hair: a cap tipped back to show the forehead, a side-swept fringe, long hair behind and two face-framing locks.
-    var cap = add(new T.SphereGeometry(0.555, 48, 32, 0, Math.PI * 2, 0, Math.PI * 0.58), hair, head); cap.rotation.x = -0.75;
-    var fringe = add(new T.SphereGeometry(0.3, 32, 24), hair, head, -0.13, 0.31, 0.3); fringe.scale.set(1.5, 0.55, 0.8); fringe.rotation.set(-0.3, 0, 0.35);
-    var longHair = add(new T.SphereGeometry(0.5, 32, 24), hair, head, 0, -0.5, -0.3); longHair.scale.set(1.18, 1.5, 0.55);
-    [-1, 1].forEach(function (s) {
-      var lock = add(new T.CapsuleGeometry(0.11, 0.42, 8, 16), hair, head, s * 0.48, -0.36, 0.17); lock.rotation.z = s * 0.06;
-    });
-
-    // Headset: she is a co-host on call 24/7.
-    var band = add(new T.TorusGeometry(0.6, 0.028, 12, 64, Math.PI), gold, head); band.rotation.x = -0.2;
-    [-1, 1].forEach(function (s) {
-      var cup = add(new T.CylinderGeometry(0.12, 0.12, 0.09, 32), dark, head, s * 0.6, -0.02, 0); cup.rotation.z = Math.PI / 2;
-      var rimG = add(new T.TorusGeometry(0.12, 0.016, 8, 32), gold, head, s * 0.648, -0.02, 0); rimG.rotation.y = Math.PI / 2;
-    });
-    var micCurve = new T.CatmullRomCurve3([new T.Vector3(-0.62, -0.1, 0.06), new T.Vector3(-0.56, -0.26, 0.3), new T.Vector3(-0.22, -0.3, 0.47)]);
-    add(new T.TubeGeometry(micCurve, 24, 0.014, 8, false), dark, head);
-    add(new T.SphereGeometry(0.042, 16, 16), gold, head, -0.22, -0.3, 0.47);
-
-    // Arms: shoulder and elbow pivots.
-    function arm(s) {
-      var sh = new T.Group(); sh.position.set(s * 0.62, 1.04, 0); body.add(sh);
-      add(new T.CapsuleGeometry(0.12, 0.5, 8, 16), blazer, sh, 0, -0.31, 0);
-      var el = new T.Group(); el.position.set(0, -0.62, 0); sh.add(el);
-      add(new T.CapsuleGeometry(0.105, 0.42, 8, 16), blazer, el, 0, -0.27, 0);
-      add(new T.CylinderGeometry(0.11, 0.11, 0.05, 24), cream, el, 0, -0.48, 0);
-      add(new T.SphereGeometry(0.11, 24, 24), skin, el, 0, -0.56, 0);
-      return { sh: sh, el: el };
-    }
-    var waveArm = arm(1), holdArm = arm(-1);
-    var phone = new T.Group(); phone.position.set(0, -0.62, 0.07); holdArm.el.add(phone);
-    add(new T.BoxGeometry(0.26, 0.46, 0.035), dark, phone);
-    add(new T.PlaneGeometry(0.22, 0.4), cream, phone, 0, 0, 0.019);
-    add(new T.BoxGeometry(0.13, 0.05, 0.01), new T.MeshBasicMaterial({ color: 0xD8D0C4 }), phone, -0.03, 0.09, 0.022);
-    add(new T.BoxGeometry(0.13, 0.05, 0.01), new T.MeshBasicMaterial({ color: 0xC9A66B }), phone, 0.03, -0.02, 0.022);
-    phone.rotation.set(1.35, 0, -0.2);
-    holdArm.sh.rotation.set(-0.45, 0, 0.3);
-    holdArm.el.rotation.set(-1.35, 0, 0);
-
-    // Sizing: keep her whole upper body in frame at any aspect ratio.
-    function size() {
-      var w = stage.clientWidth || 1, h = stage.clientHeight || 1;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      var t = Math.tan(T.MathUtils.degToRad(camera.fov / 2));
-      var dist = Math.max(1.5 / t, 1.5 / (camera.aspect * t));
-      camera.position.set(0, 1.45, dist);
-      camera.lookAt(0, 1.3, 0);
-      camera.updateProjectionMatrix();
-    }
-    size();
-    if ('ResizeObserver' in window) new ResizeObserver(size).observe(stage); else window.addEventListener('resize', size);
-
-    // Interaction state
-    var pointer = { x: 0, y: 0 };
-    window.addEventListener('pointermove', function (e) {
-      var r = stage.getBoundingClientRect();
-      pointer.x = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 1.2)));
-      pointer.y = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height * 0.3)) / (r.height / 1.2)));
-    }, { passive: true });
-    var nodAt = -10, waveAt = 0.5, nextBlink = 2;
-    api.nod = function () { nodAt = clock.getElapsedTime(); };
-    api.wave = function () { waveAt = clock.getElapsedTime(); };
-    canvas.addEventListener('click', function () { api.wave(); });
-
-    function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
-    var clock = new T.Clock();
+  // ===== Hero story: scroll moves Bella's chameleon through four guest moments =====
+  (function initStory() {
+    var story = document.getElementById('story'); if (!story) return;
+    var rider = document.getElementById('rider'), word = story.querySelector('.bigword');
+    var tabs = story.querySelector('.scene-tabs');
+    var elTime = document.getElementById('scene-time'), elPlace = document.getElementById('scene-place');
+    var elGuest = document.getElementById('scene-guest'), elBella = document.getElementById('scene-bella');
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var india = isIndia(), first = guessLang();
+    var firstPlace = india ? 'Guest from Delhi' : ({ fr: 'Guest from Lyon', de: 'Guest from Berlin', es: 'Guest from Madrid', pt: 'Guest from Lisbon', ru: 'Guest from Moscow', ja: 'Guest from Osaka', ko: 'Guest from Seoul', zh: 'Guest from Shanghai', th: 'Guest from Bangkok', ar: 'Guest from Riyadh' }[first] || 'Guest from New York');
+    // hue = how far the green chameleon is turned round the colour wheel; bg = the matching sand tint behind it
+    var SCENES = [
+      { time: '2:04 AM', place: firstPlace, lang: first, hue: 235, sat: 1.05, bg: '#E7C9C1', c: '#D9728F' },
+      { time: '7:30 AM', place: 'Guest from Paris', lang: first === 'fr' ? 'de' : 'fr', hue: 68, sat: 1, bg: '#C3D5CB', c: '#3E9C8C' },
+      { time: '1:15 PM', place: 'Guest from Dubai', lang: 'ar', hue: -72, sat: 1.25, bg: '#EBCD9E', c: '#E09A2D' },
+      { time: '9:40 PM', place: 'Guest from Tokyo', lang: first === 'ja' ? 'ko' : 'ja', hue: 168, sat: .9, bg: '#D4C6D9', c: '#8E6BB5' }
+    ];
+    if (SCENES[1].lang === 'de') SCENES[1].place = 'Guest from Berlin';
+    if (SCENES[3].lang === 'ko') SCENES[3].place = 'Guest from Seoul';
 
-    function pose(t) {
-      // Wave for 2.4s, every 9s, or on demand.
-      if (t - waveAt > 9) waveAt = t;
-      var wt = t - waveAt;
-      var w = reduce ? 1 : smooth(wt / 0.4) * (1 - smooth((wt - 2.0) / 0.4));
-      waveArm.sh.rotation.z = 0.12 + (2.35 - 0.12) * w;
-      waveArm.sh.rotation.x = -0.15 * w;
-      waveArm.el.rotation.z = 0.12 + (0.5 + (reduce ? 0 : Math.sin(t * 9) * 0.35) - 0.12) * w;
+    SCENES.forEach(function (sc, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'tab'); b.id = 'scene-tab-' + i;
+      b.setAttribute('aria-selected', String(i === 0)); b.style.setProperty('--c', sc.c);
+      b.innerHTML = '<i aria-hidden="true"></i>' + sc.time;
+      b.setAttribute('aria-label', sc.time + ', ' + sc.place);
+      b.addEventListener('click', function () { goTo(i); });
+      tabs.appendChild(b);
+    });
 
-      body.position.y = reduce ? 0 : Math.sin(t * 1.3) * 0.025;
-      torso.scale.y = 1 + (reduce ? 0 : Math.sin(t * 2.1) * 0.007);
-      root.rotation.y += ((reduce ? 0 : Math.sin(t * 0.45) * 0.05) + pointer.x * 0.12 - root.rotation.y) * 0.05;
-
-      var nod = t - nodAt < 0.7 ? Math.sin((t - nodAt) / 0.7 * Math.PI * 2) * 0.1 : 0;
-      head.rotation.y += (pointer.x * 0.35 - head.rotation.y) * 0.07;
-      head.rotation.x += (pointer.y * 0.16 + nod - head.rotation.x) * 0.12;
-      head.rotation.z = reduce ? 0.04 : Math.sin(t * 0.9) * 0.035 + 0.03;
-
-      if (t > nextBlink) { nextBlink = t + 2.5 + Math.random() * 3; }
-      var blinkPhase = nextBlink - t > 0 && nextBlink - t < 0.14 ? 1 - Math.abs((nextBlink - t) - 0.07) / 0.07 : 0;
-      var ey = reduce ? 1 : 1 - blinkPhase * 0.9;
-      eyes.forEach(function (g) { g.scale.y = ey; });
+    var current = -1, token = 0;
+    function show(i, animate) {
+      if (i === current) return; current = i;
+      var sc = SCENES[i], L = LANGS[sc.lang] || LANGS.en, t = ++token;
+      story.style.backgroundColor = sc.bg;
+      rider.style.setProperty('--hue', sc.hue + 'deg');
+      rider.style.setProperty('--sat', sc.sat);
+      tabs.querySelectorAll('button').forEach(function (b, k) { b.setAttribute('aria-selected', String(k === i)); });
+      elTime.textContent = sc.time; elPlace.textContent = sc.place + ' · ' + L.name;
+      [elGuest, elBella].forEach(function (el) { el.dir = L.dir || 'auto'; el.lang = sc.lang === 'hinglish' ? 'hi-Latn' : sc.lang; });
+      elGuest.textContent = L.guest;
+      if (!animate || reduce) { elBella.textContent = L.bella; return; }
+      elBella.innerHTML = '<span class="dots" aria-label="Bella is typing"><i></i><i></i><i></i></span>';
+      setTimeout(function () { if (t === token) elBella.textContent = L.bella; }, 800);
     }
 
-    var visible = true;
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible && !reduce) loop(); }).observe(stage);
+    function range() { return Math.max(1, story.offsetHeight - window.innerHeight); }
+    function goTo(i) {
+      var y = story.getBoundingClientRect().top + window.pageYOffset + range() * (i + 0.5) / SCENES.length;
+      window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
     }
-    var running = false;
-    function loop() {
-      if (running) return; running = true;
-      (function frame() {
-        if (!visible || document.hidden) { running = false; return; }
-        pose(clock.getElapsedTime());
-        renderer.render(scene, camera);
-        requestAnimationFrame(frame);
-      })();
+
+    var ticking = false, walkTimer = null, started = false;
+    function update() {
+      ticking = false;
+      var top = story.getBoundingClientRect().top;
+      var p = Math.min(1, Math.max(0, -top / range()));
+      document.body.classList.toggle('in-story', top <= 1 && -top < range() + window.innerHeight * 0.3);
+      var idx = Math.min(SCENES.length - 1, Math.floor(p * SCENES.length));
+      show(idx, started);
+      // Bella walks right-to-left (the way the chameleon faces) as you scroll; the giant name drifts the other way.
+      var w = window.innerWidth;
+      rider.style.setProperty('--rx', ((0.5 - p) * w * 0.12).toFixed(1) + 'px');
+      word.style.setProperty('--bx', ((p - 0.5) * w * 0.12).toFixed(1) + 'px');
     }
-    document.addEventListener('visibilitychange', function () { if (!document.hidden && !reduce) loop(); });
-    if (reduce) { pose(0); renderer.render(scene, camera); window.addEventListener('resize', function () { renderer.render(scene, camera); }); }
-    else loop();
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      var top = story.getBoundingClientRect().top;
+      if (!reduce && top < 0 && -top < range()) {
+        rider.classList.add('walking');
+        clearTimeout(walkTimer); walkTimer = setTimeout(function () { rider.classList.remove('walking'); }, 220);
+      }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+    started = true;
+    // One welcome moment: Bella types her first reply when the page opens.
+    if (!reduce) { var cur = current; current = -1; show(cur, true); }
   })();
 
+  // ===== A day with Bella: the sticky figure switches pose with the time of day you are reading =====
+  (function initDay() {
+    var wrap = document.querySelector('.day-wrap'); if (!wrap || !('IntersectionObserver' in window)) return;
+    var items = wrap.querySelectorAll('.day li'), figs = wrap.querySelectorAll('.day-figure img');
+    function activate(li) {
+      items.forEach(function (x) { x.classList.toggle('active', x === li); });
+      figs.forEach(function (f) { f.classList.toggle('on', f.dataset.pose === li.dataset.pose); });
+    }
+    wrap.classList.add('live'); activate(items[0]);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) activate(en.target); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    items.forEach(function (li) { io.observe(li); });
+  })();
 
+  // ===== Hosts: tap a host to see what Bella does for them =====
+  (function initHosts() {
+    var HOSTS = [
+      { t: 'The homestay host', p: 'Serves chai to every guest and still gets messages at 2 AM. Bella answers them in the guest’s language, so the host can sleep.' },
+      { t: 'The city apartment host', p: 'Hands over keys between a day job and meetings. Bella sends check-in details on time and blocks the calendar when the flat is needed.' },
+      { t: 'The villa host', p: 'Gets a rush every festival weekend. Bella raises the nightly rate before demand peaks and contacts Airbnb support if a booking is cancelled late.' }
+    ];
+    var btns = document.querySelectorAll('.host'), note = document.getElementById('host-note');
+    if (!btns.length || !note) return;
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.dataset.host;
+        btns.forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+        document.getElementById('host-title').textContent = HOSTS[i].t;
+        document.getElementById('host-text').textContent = HOSTS[i].p;
+        note.classList.remove('swap'); void note.offsetWidth; note.classList.add('swap');
+      });
+    });
+  })();
 })();
 </script>
 </body>
