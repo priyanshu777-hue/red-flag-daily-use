@@ -46,6 +46,9 @@ Add a new page to my existing website (redflaghomes.in) called "Bella". Do not c
                Growth https://rzp.io/rzp/O4yuwWqY
                Pro https://rzp.io/rzp/VcOfpiv
 - Below the three plans, add a full-width card "More than 5 listings?" titled "Bella for portfolios and property managers", with two buttons: "WhatsApp us" and "Email us".
+- AIRBNB SUPPORT AND CLAIMS: add a cream section after the features titled "Bella even talks to Airbnb support for you." with two cards: "Airbnb customer support" (emergencies, cancellations and urgent guest issues, so the host is less likely to be penalised for a missed response; all plans) and "Airbnb claims, filed for you" with a red "Yearly plans" tag (included with every yearly plan, up to 5 listings). Small note: "Bella works as your co-host with the access you give her. Airbnb makes the final decision on every claim."
+- Under the pricing switches: "Yearly plans also include Airbnb claims filed on your behalf." In every plan card, list "Talks to Airbnb support for you" and "Airbnb claims for you [Yearly]". When Monthly is selected, the claims line turns grey and reads "Airbnb claims: switch to yearly".
+- Add the two matching FAQ entries from the file, and the extra pain point "Miss an emergency or cancellation and Airbnb can penalise your listing for not responding."
 - Line under pricing: "No free trial. Pay monthly, or pay yearly and save 15%. Cancel anytime, and your access continues until the end of the period you paid for."
 
 4. CONTACT
