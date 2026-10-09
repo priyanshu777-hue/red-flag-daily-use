@@ -1,23 +1,8 @@
-Attach these 3 files: `admin.html`, `journal.js` and `journal-index.html` (the Journal page; it is `journal/index.html` in the repo). Then paste everything below.
+Run `ai-studio/FIX_PAGES_AI_STUDIO_PROMPT.md` first; it already serves the Admin, Journal and Bella pages. Then paste everything below. No files need to be attached.
 
 ---
 
-Update my website with three things: the new admin panel, a Journal for the homepage "Explore" section, and Bella payment tracking. Copy attached files byte for byte. Don't convert them to React, don't wrap them in the site layout and don't change their code. Don't change any other page, form or script unless a step below says so.
-
-## 1. Admin panel
-- Replace `public/admin/index.html` with the attached `admin.html`.
-- `/admin` and `/admin/` must load it as a full standalone page.
-
-## 2. Journal (homepage "Explore" + story pages)
-- Save the attached `journal.js` as `public/journal.js`. It must be served at `/journal.js`.
-- Save the attached `journal-index.html` as `public/journal/index.html`.
-- Routing: `/journal`, `/journal/` and every `/journal/<anything>` must serve `journal/index.html`. That one page shows the story list and each story by reading the URL.
-  - Add these to the server and hosting rewrites before the single-page-app catch-all.
-  - In the React router, `/journal` paths must do a full page load, not client-side routing.
-- On the home page, add exactly one line right before the final closing `</body>` tag at the very end of the file (the file also contains the text "</body>" inside a script earlier; don’t put it there): `<script src="/journal.js" defer></script>`.
-  - Don't change the Explore section's HTML, CSS, `articles` array or `renderArticleCard()`. `journal.js` reuses them.
-  - When stories are published in /admin, the Explore cards show them and link to `/journal/<slug>`. Until then the page looks exactly as it does now.
-- Add `/journal/` to `sitemap.xml` if the site has one.
+Add Bella payment tracking and the Journal AI writer to my server. Don't change any page, form or script except as described.
 
 ## 3. Bella payment webhooks (Razorpay + Stripe → Firestore `bellaPayments`)
 Add two webhook endpoints to the existing Express server. Each one saves every Bella payment (paid, failed or abandoned) to Firestore so the admin panel can show failed payments and resend the payment link.
