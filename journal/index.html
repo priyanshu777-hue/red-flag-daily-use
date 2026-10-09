@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Journal · Red Flag Homes Network</title>
+<meta name="description" content="Stories on design, hosting, AI-run operations and investing from Red Flag Homes Network.">
+<meta property="og:title" content="Journal · Red Flag Homes Network">
+<meta property="og:description" content="Stories on design, hosting, AI-run operations and investing from Red Flag Homes Network.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0505">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Red Flag Journal: one page for the story list (/journal/) and each story (/journal/<slug>). Same palette and type as redflaghomes.in. */
+  :root { --bg: #0A0505; --card: #140B0B; --line: rgba(242,228,225,.1); --text: #F2E4E1; --muted: #B09C97; --red: #FF3B30; --serif: "Instrument Serif", Georgia, serif; --sans: "Inter Tight", system-ui, sans-serif; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 17px/1.7 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  .wrap { width: min(1200px, 100% - 32px); margin-inline: auto; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: .08em; font-size: 14px; white-space: nowrap; }
+  .logo i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 14px var(--red); }
+  .pill { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(242,228,225,.22); text-decoration: none; font-size: 14px; font-weight: 500; transition: border-color .2s; }
+  .pill:hover { border-color: var(--text); }
+  .pill .d { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+  .pill--fill { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* list */
+  .head { text-align: center; padding: clamp(40px, 8vw, 90px) 0 clamp(30px, 5vw, 56px); }
+  .head h1 { font: 400 clamp(48px, 9vw, 104px)/.95 var(--serif); margin: 0; letter-spacing: -.02em; }
+  .head p { color: var(--muted); margin: 14px auto 0; max-width: 52ch; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 32px; }
+  .filters button { min-height: 38px; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); font: 500 14px var(--sans); cursor: pointer; }
+  .filters button[aria-pressed="true"] { background: rgba(242,228,225,.12); color: var(--text); border-color: rgba(242,228,225,.25); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-bottom: 80px; }
+  .card { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 24px; border: 1px solid var(--line); background: var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.45); text-decoration: none; transition: transform .25s ease, border-color .25s ease; }
+  .card:hover { transform: translateY(-4px); border-color: rgba(242,228,225,.22); }
+  .card .cv { height: 224px; border-radius: 16px; overflow: hidden; background: #1E1212; }
+  .card .cv img { width: 100%; height: 100%; object-fit: cover; }
+  .card .ct { padding: 12px; flex: 1; }
+  .meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+  .tag { padding: 4px 12px; border-radius: 999px; background: rgba(242,228,225,.08); }
+  .card h2 { font: 700 24px/1.25 var(--serif); margin: 0 0 8px; letter-spacing: 0; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .ft { display: flex; justify-content: space-between; padding: 12px; font-size: 14px; color: var(--muted); }
+  .card .ft b { display: block; font-weight: 600; }
+  .empty { text-align: center; color: var(--muted); padding: 60px 0 100px; }
+
+  /* story */
+  .story { width: min(760px, 100% - 32px); margin-inline: auto; padding: clamp(30px, 6vw, 70px) 0 40px; }
+  .back { display: inline-flex; gap: 6px; color: var(--muted); text-decoration: none; font-size: 14px; margin-bottom: 26px; }
+  .back:hover { color: var(--text); }
+  .story h1 { font: 400 clamp(40px, 7vw, 76px)/1.02 var(--serif); margin: 10px 0 18px; letter-spacing: -.02em; }
+  .lede { font-size: clamp(18px, 2.2vw, 21px); color: var(--muted); margin: 0 0 26px; }
+  .by { display: flex; gap: 28px; flex-wrap: wrap; font-size: 14px; color: var(--muted); padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .by b { display: block; color: var(--text); font-weight: 600; }
+  .cover { margin: 32px 0; border-radius: 24px; overflow: hidden; aspect-ratio: 16 / 9; background: #1E1212; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; }
+  .body h2 { font: 400 clamp(30px, 4vw, 40px)/1.15 var(--serif); margin: 44px 0 10px; }
+  .body h3 { font: 600 21px/1.35 var(--sans); margin: 32px 0 8px; }
+  .body p, .body li { color: #E6D5D1; }
+  .body a { color: var(--text); text-decoration-color: var(--red); text-underline-offset: 3px; }
+  .body blockquote { margin: 30px 0; padding: 4px 0 4px 22px; border-left: 2px solid var(--red); font: italic 400 clamp(22px, 3vw, 28px)/1.35 var(--serif); color: var(--text); }
+  .body figure { margin: 30px 0; } .body figure img { border-radius: 18px; } .body figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+  .body code { font-size: .9em; padding: 2px 6px; border-radius: 6px; background: rgba(242,228,225,.08); }
+  .body pre { padding: 16px; border-radius: 14px; background: #160D0D; overflow-x: auto; }
+  .body hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  .cta { margin: 56px 0 0; padding: 30px; border-radius: 24px; border: 1px solid var(--line); background: var(--card); display: grid; gap: 14px; justify-items: start; }
+  .cta h2 { font: 400 32px/1.1 var(--serif); margin: 0; }
+  .cta p { margin: 0; color: var(--muted); }
+  .cta .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .more { padding: 40px 0 80px; }
+  .more > h2 { font: 400 40px/1 var(--serif); text-align: center; margin: 0 0 32px; }
+  .foot { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .skel { background: linear-gradient(90deg, #160D0D, #221414, #160D0D); background-size: 200% 100%; animation: sk 1.4s infinite; border-radius: 12px; }
+  @keyframes sk { to { background-position: -200% 0; } }
+  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .top .pill { min-height: 38px; padding: 6px 12px; font-size: 13px; } .grid { grid-template-columns: minmax(0, 1fr); } .card .cv { height: 180px; } .card h2 { font-size: 21px; } body { font-size: 16px; } .cover { border-radius: 16px; } }
+  @media (prefers-reduced-motion: reduce) { .card, .skel { transition: none; animation: none; } .card:hover { transform: none; } }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="/"><i></i>RED FLAG HOMES</a>
+  <nav style="display:flex;gap:8px"><a class="pill" href="/journal/">Journal</a><a class="pill pill--fill" href="/franchise"><span class="d"></span>Franchise</a></nav>
+</header>
+<main id="main"><div class="wrap"><div class="skel" style="height:60vh;margin:40px 0"></div></div></main>
+<footer class="wrap foot"><span>© <span id="yr"></span> Red Flag Homes Network</span><a href="/" style="text-decoration:none">redflaghomes.in</a></footer>
+
+<script src="/journal.js"></script>
+<script>
+(function () {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var main = document.getElementById('main');
+  var WA = '918881306632';
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function date(v) { var t = Date.parse(v); return t ? new Date(t).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''; }
+  function mins(s) { return s && s >= 60 ? Math.ceil(s / 60) + ' min read' : 'Less than 1 min read'; }
+
+  // Small, safe Markdown: everything is escaped first, links must be http(s), /, # or mailto.
+  function md(src) {
+    var lines = esc(src || '').replace(/\r/g, '').split('\n'), out = [], para = [], list = null, quote = [], code = null;
+    function inline(t) {
+      return t.replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/!\[([^\]]*)\]\(((?:https?:\/\/|\/)[^\s)]+)\)/g, '<img src="$2" alt="$1" loading="lazy">')
+        .replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/|#|mailto:)[^\s)]+)\)/g, function (m, txt, url) { return '<a href="' + url + '"' + (/^https?:/.test(url) ? ' target="_blank" rel="noopener"' : '') + '>' + txt + '</a>'; })
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>').replace(/(^|\W)_([^_]+)_(?=\W|$)/g, '$1<em>$2</em>');
+    }
+    function flush() {
+      if (para.length) { out.push('<p>' + inline(para.join(' ')) + '</p>'); para = []; }
+      if (list) { out.push('<' + list.t + '>' + list.items.map(function (i) { return '<li>' + inline(i) + '</li>'; }).join('') + '</' + list.t + '>'); list = null; }
+      if (quote.length) { out.push('<blockquote>' + inline(quote.join(' ')) + '</blockquote>'); quote = []; }
+    }
+    lines.forEach(function (l) {
+      if (code !== null) { if (/^```/.test(l)) { out.push('<pre><code>' + code.join('\n') + '</code></pre>'); code = null; } else code.push(l); return; }
+      var m;
+      if (/^```/.test(l)) { flush(); code = []; }
+      else if ((m = l.match(/^(#{1,3})\s+(.*)$/))) { flush(); var lv = m[1].length === 3 ? 3 : 2; out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>'); }
+      else if (/^(-{3,}|\*{3,})$/.test(l.trim())) { flush(); out.push('<hr>'); }
+      else if ((m = l.match(/^!\[([^\]]*)\]\(((?:https?:\/\/|\/)[^\s)]+)\)$/))) { flush(); out.push('<figure><img src="' + m[2] + '" alt="' + m[1] + '" loading="lazy">' + (m[1] ? '<figcaption>' + m[1] + '</figcaption>' : '') + '</figure>'); }
+      else if ((m = l.match(/^&gt;\s?(.*)$/))) { if (para.length || list) flush(); quote.push(m[1]); }
+      else if ((m = l.match(/^\s*[-*]\s+(.*)$/))) { if (para.length || quote.length || (list && list.t !== 'ul')) flush(); list = list || { t: 'ul', items: [] }; list.items.push(m[1]); }
+      else if ((m = l.match(/^\s*\d+[.)]\s+(.*)$/))) { if (para.length || quote.length || (list && list.t !== 'ol')) flush(); list = list || { t: 'ol', items: [] }; list.items.push(m[1]); }
+      else if (!l.trim()) flush();
+      else { if (list || quote.length) flush(); para.push(l.trim()); }
+    });
+    if (code !== null) out.push('<pre><code>' + code.join('\n') + '</code></pre>');
+    flush();
+    return out.join('\n');
+  }
+  window.rfMarkdown = md;
+
+  function card(p) {
+    return '<a class="card" href="/journal/' + encodeURIComponent(p.slug) + '">' +
+      (p.cover ? '<div class="cv"><img src="' + esc(p.cover) + '" alt="" loading="lazy"></div>' : '') +
+      '<div class="ct"><div class="meta">' + (p.tag ? '<span class="tag">' + esc(p.tag) + '</span><span>•</span>' : '') + '<span>' + mins(p.readSeconds) + '</span></div>' +
+      '<h2>' + esc(p.title) + '</h2><p>' + esc(p.excerpt) + '</p></div>' +
+      '<div class="ft"><span>By<b>' + esc(p.author || 'Red Flag Homes') + '</b></span><span style="text-align:right">Published<b>' + date(p.publishedAt) + '</b></span></div></a>';
+  }
+  function setMeta(title, desc, image) {
+    document.title = title;
+    [['name', 'description', desc], ['property', 'og:title', title], ['property', 'og:description', desc], ['property', 'og:image', image]].forEach(function (m) {
+      if (!m[2]) return;
+      var el = document.querySelector('meta[' + m[0] + '="' + m[1] + '"]');
+      if (!el) { el = document.createElement('meta'); el.setAttribute(m[0], m[1]); document.head.appendChild(el); }
+      el.setAttribute('content', m[2]);
+    });
+  }
+
+  function slugFromUrl() {
+    var q = new URLSearchParams(location.search).get('p');
+    if (q) return q;
+    var m = location.pathname.match(/\/journal\/([^\/?#]+)/);
+    return m && m[1] !== 'index.html' ? decodeURIComponent(m[1]) : '';
+  }
+
+  function list(posts) {
+    var tags = []; posts.forEach(function (p) { if (p.tag && tags.indexOf(p.tag) < 0) tags.push(p.tag); });
+    main.innerHTML = '<section class="wrap"><div class="head"><h1>Journal</h1><p>Design, hosting, AI-run operations and the numbers behind them, from the Red Flag team.</p></div>' +
+      (tags.length > 1 ? '<div class="filters" role="group" aria-label="Filter stories"><button type="button" aria-pressed="true" data-t="">All</button>' + tags.map(function (t) { return '<button type="button" aria-pressed="false" data-t="' + esc(t) + '">' + esc(t) + '</button>'; }).join('') + '</div>' : '') +
+      '<div class="grid" id="grid"></div></section>';
+    function show(t) { var g = document.getElementById('grid'), f = posts.filter(function (p) { return !t || p.tag === t; }); g.innerHTML = f.length ? f.map(card).join('') : '<p class="empty" style="grid-column:1/-1">No stories yet. Check back soon.</p>'; }
+    main.querySelectorAll('[data-t]').forEach(function (b) { b.addEventListener('click', function () { main.querySelectorAll('[data-t]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); show(b.dataset.t); }); });
+    show('');
+  }
+
+  function story(p, posts) {
+    setMeta(p.seoTitle || (p.title + ' · Red Flag Homes'), p.seoDescription || p.excerpt || '', p.cover);
+    var ld = document.createElement('script'); ld.type = 'application/ld+json';
+    ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: p.title, description: p.excerpt, image: p.cover || undefined, datePublished: p.publishedAt, dateModified: p.updatedAt || p.publishedAt, author: { '@type': 'Organization', name: p.author || 'Red Flag Homes' }, publisher: { '@type': 'Organization', name: 'Red Flag Homes Network' } });
+    document.head.appendChild(ld);
+    var others = posts.filter(function (x) { return x.slug !== p.slug; }).slice(0, 3);
+    var wa = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hi Red Flag, I just read "' + p.title + '" and want to know more.');
+    main.innerHTML = '<article class="story"><a class="back" href="/journal/">← All stories</a>' +
+      '<div class="meta">' + (p.tag ? '<span class="tag">' + esc(p.tag) + '</span><span>•</span>' : '') + '<span>' + mins(p.readSeconds) + '</span></div>' +
+      '<h1>' + esc(p.title) + '</h1>' + (p.excerpt ? '<p class="lede">' + esc(p.excerpt) + '</p>' : '') +
+      '<div class="by"><span>By<b>' + esc(p.author || 'Red Flag Homes') + '</b></span><span>Published<b>' + date(p.publishedAt) + '</b></span></div>' +
+      (p.cover ? '<figure class="cover"><img src="' + esc(p.cover) + '" alt=""></figure>' : '<div style="height:30px"></div>') +
+      '<div class="body">' + md(p.body) + '</div>' +
+      '<aside class="cta"><h2>Own an Outpost. We run it.</h2><p>You bring the capital and the location. We bring the blueprint, the brand and the AI system that runs it.</p><div class="row"><a class="pill pill--fill" href="/franchise"><span class="d"></span>Enter the Outpost</a><a class="pill" href="' + wa + '" target="_blank" rel="noopener">Chat on WhatsApp</a></div></aside></article>' +
+      (others.length ? '<section class="wrap more"><h2>More stories</h2><div class="grid">' + others.map(card).join('') + '</div></section>' : '');
+  }
+
+  var slug = slugFromUrl();
+  (window.rfLoadPosts ? window.rfLoadPosts() : Promise.reject(new Error('journal.js missing'))).then(function (posts) {
+    if (!slug) return list(posts);
+    var p = posts.filter(function (x) { return x.slug === slug; })[0];
+    if (p) return story(p, posts);
+    main.innerHTML = '<section class="story"><a class="back" href="/journal/">← All stories</a><h1>Story not found</h1><p class="lede">It may have been moved or unpublished.</p></section>';
+  }).catch(function () {
+    main.innerHTML = '<section class="story"><h1>Journal</h1><p class="lede">Stories could not load right now. Please try again in a moment.</p><a class="pill" href="/">Back to home</a></section>';
+  });
+})();
+</script>
+</body>
+</html>
