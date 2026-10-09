@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Payment · Bella by Red Flag Homes</title>
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  /* Bella checkout return: confirms the payment with the server, then shows the bill (or Try again / WhatsApp). */
+  :root { --ink: #0B0A0C; --paper: #FBF8F3; --sand: #EFE5D6; --card: #FFFFFF; --line: rgba(11,10,12,.1); --mute: #6B635A; --red: #C8102E; --gold: #8A6A35; --ok: #2E8B57;
+    --font-display: "Outfit", system-ui, sans-serif; --font-body: "DM Sans", system-ui, sans-serif; color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { min-height: 100vh; background: radial-gradient(70% 50% at 50% 0%, #F3E6D3, var(--paper) 70%); color: var(--ink); font: 400 16px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+  .wrap { width: min(640px, 100% - 32px); margin: 0 auto; padding: 28px 0 64px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+  .logo { font: 600 1.5rem/1 var(--font-display); letter-spacing: -.04em; text-decoration: none; }
+  .logo i { display: inline-block; width: .3em; height: .3em; margin-left: .04em; border-radius: 50%; background: var(--red); }
+  .logo small { font: 400 .8rem var(--font-body); letter-spacing: 0; color: var(--mute); margin-left: 6px; }
+  h1 { font: 600 clamp(2rem, 1.4rem + 3vw, 2.8rem)/1.05 var(--font-display); letter-spacing: -.03em; margin: 10px 0 10px; }
+  .lede { color: var(--mute); margin: 0 0 24px; font-size: 1.05rem; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font: 600 .82rem var(--font-display); }
+  .badge.ok { background: #E3F2EA; color: #1D6B41; } .badge.bad { background: #FBE4E6; color: #9C0C24; } .badge.wait { background: #F3EBDD; color: var(--gold); }
+  .badge svg { width: 14px; height: 14px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 10px 22px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: 600 .95rem var(--font-display); text-decoration: none; cursor: pointer; }
+  .btn--red { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 12px 24px -12px rgba(200,16,46,.6); }
+  .btn--ink { background: var(--ink); color: #fff; }
+  .btn svg { width: 18px; height: 18px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 22px 0 0; }
+
+  /* the bill */
+  .bill { background: var(--card); border-radius: 24px; padding: clamp(20px, 4vw, 32px); box-shadow: 0 30px 60px -36px rgba(60,40,20,.45); border: 1px solid var(--line); position: relative; overflow: hidden; }
+  .bill::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 12px; background: radial-gradient(circle at 8px 0, transparent 7px, var(--card) 7.5px) repeat-x; background-size: 16px 12px; transform: rotate(180deg); }
+  .bill-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px dashed var(--line); }
+  .bill-head b { display: block; font: 600 1.1rem var(--font-display); }
+  .bill-head small { color: var(--mute); font-size: .85rem; display: block; }
+  .bill-head .r { text-align: right; }
+  .bill-sec { padding: 16px 0; border-bottom: 1px dashed var(--line); }
+  .bill-sec h2 { font: 600 .75rem var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin: 0 0 8px; }
+  .item { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+  .item span { color: var(--mute); font-size: .9rem; display: block; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 0 6px; font: 600 1.35rem var(--font-display); }
+  .kv { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 6px 14px; font-size: .92rem; }
+  .kv dt { color: var(--mute); } .kv dd { margin: 0; word-break: break-all; }
+  .txn { display: inline-flex; align-items: center; gap: 8px; font-family: ui-monospace, Menlo, monospace; font-size: .9rem; }
+  .copy { border: 1px solid var(--line); background: transparent; border-radius: 8px; padding: 2px 8px; font: 500 .75rem var(--font-body); cursor: pointer; }
+  .fine { color: var(--mute); font-size: .8rem; margin: 14px 0 0; }
+
+  /* account + next steps */
+  .panel { margin-top: 18px; padding: 20px; border-radius: 20px; background: var(--ink); color: #F4EFE8; display: grid; gap: 10px; }
+  .panel h2 { margin: 0; font: 600 1.15rem var(--font-display); }
+  .panel p { margin: 0; color: #CFC6BA; font-size: .95rem; }
+  .panel .btn { border-color: rgba(244,239,232,.4); color: #F4EFE8; }
+  .panel .btn--red { border-color: var(--red); }
+  .panel .msg { font-size: .88rem; color: #E9D7A9; min-height: 1.2em; }
+  .steps { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; }
+  .steps li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+  .steps i { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--sand); display: grid; place-items: center; font: 600 .8rem var(--font-display); font-style: normal; }
+
+  .spin { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--sand); border-top-color: var(--red); animation: spin 1s linear infinite; margin: 30px 0 18px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .center { text-align: left; }
+  @media (max-width: 520px) { .kv { grid-template-columns: minmax(0, 1fr); gap: 0; } .kv dd { margin-bottom: 8px; } .bill-head .r { text-align: left; } .actions .btn { flex: 1 1 100%; } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation-duration: 3s; } }
+
+  /* Print / Save as PDF: only the bill */
+  @media print {
+    body { background: #fff; }
+    .top .btn, .actions, .panel, .steps, .no-print, h1, .lede, .badge { display: none !important; }
+    .wrap { width: 100%; padding: 0; }
+    .bill { box-shadow: none; border: 1px solid #ccc; }
+    .bill::after { display: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="logo" href="/bella/">Bella<i></i><small>by Red Flag Homes</small></a><a class="btn no-print" href="/" style="min-height:40px;padding:6px 16px;font-size:.85rem">redflaghomes.in</a></div>
+
+  <!-- checking -->
+  <section id="s-check" class="center" aria-live="polite">
+    <div class="spin" aria-hidden="true"></div>
+    <h1>Confirming your payment…</h1>
+    <p class="lede" id="check-msg">This takes a few seconds. Please don’t close this page.</p>
+  </section>
+
+  <!-- paid -->
+  <section id="s-paid" hidden>
+    <span class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-10"/></svg>Payment successful</span>
+    <h1 id="paid-title">Welcome to Bella.</h1>
+    <p class="lede" id="paid-lede">Your bill is below. Your setup guide is on its way to your email.</p>
+    <article class="bill" id="bill" aria-label="Payment receipt"></article>
+    <div class="actions">
+      <button class="btn btn--ink" type="button" id="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Download / print bill</button>
+      <a class="btn" id="paid-wa" target="_blank" rel="noopener">Questions? WhatsApp us</a>
+    </div>
+    <section class="panel" id="account" hidden>
+      <h2 id="acc-title">Your Red Flag account is ready</h2>
+      <p id="acc-text"></p>
+      <div class="actions" style="margin-top:6px">
+        <button class="btn btn--red" type="button" id="set-pass">Set your password</button>
+        <a class="btn" href="/">Go to Red Flag Homes</a>
+      </div>
+      <p class="msg" id="acc-msg" role="status"></p>
+    </section>
+    <ul class="steps">
+      <li><i>1</i><div><b>Check your inbox</b><br><span style="color:var(--mute)">Your 60-second setup guide arrives at <span id="step-email">your email</span>, usually within minutes and always within 24 hours.</span></div></li>
+      <li><i>2</i><div><b>Finish the single step</b><br><span style="color:var(--mute)">No new app and no new sign-up. Bella works with your existing bnb account.</span></div></li>
+      <li><i>3</i><div><b>Bella goes live</b><br><span style="color:var(--mute)">Guest replies, pricing, check-ins and calendar, 24/7.</span></div></li>
+    </ul>
+  </section>
+
+  <!-- failed / not confirmed -->
+  <section id="s-fail" hidden>
+    <span class="badge bad" id="fail-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Payment not completed</span></span>
+    <h1 id="fail-title">Your payment didn’t go through.</h1>
+    <p class="lede" id="fail-text">No money was taken. You can try again, or message us on WhatsApp and we’ll help you finish.</p>
+    <div class="actions">
+      <a class="btn btn--red" id="retry">Try again</a>
+      <a class="btn" id="fail-wa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3Z"/></svg>Send us a WhatsApp</a>
+      <a class="btn" href="/bella/#pricing">See plans</a>
+    </div>
+    <p class="fine" id="fail-ref"></p>
+  </section>
+</main>
+
+<script type="module">
+/* ===== Settings ===== */
+const WHATSAPP = '918881306632';
+const SUPPORT_EMAIL = 'bella@redflaghomes.in';
+const PLAN_NAMES = { solo: 'Solo', growth: 'Growth', pro: 'Pro' };
+const LISTINGS = { solo: '1 listing', growth: 'Up to 3 listings', pro: 'Up to 5 listings' };
+const LINKS = {
+  USD: { monthly: { solo: 'https://buy.stripe.com/3cI6oJfHdgnt6Qn9yZ6EU0b', growth: 'https://buy.stripe.com/aFacN7gLh1szcaH3aB6EU0d', pro: 'https://buy.stripe.com/6oU28t66Ddbh1w38uV6EU0e' },
+         yearly: { solo: 'https://buy.stripe.com/eVq6oJ1Qn5IPfmT4eF6EU0f', growth: 'https://buy.stripe.com/8x2fZj1Qn9Z5fmT7qR6EU0g', pro: 'https://buy.stripe.com/8x27sN3YvfjpeiP5iJ6EU0h' } },
+  INR: { monthly: { solo: 'https://rzp.io/rzp/3Zsqj85', growth: 'https://rzp.io/rzp/9umNXlPX', pro: 'https://rzp.io/rzp/HEfRz13h' },
+         yearly: { solo: 'https://rzp.io/rzp/fX36cAf', growth: 'https://rzp.io/rzp/O4yuwWqY', pro: 'https://rzp.io/rzp/VcOfpiv' } }
+};
+/* ===================== */
+
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const q = new URLSearchParams(location.search);
+let pending = null; try { pending = JSON.parse(localStorage.getItem('bella_pending') || 'null'); } catch (e) {}
+const wa = text => 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(text);
+const money = (a, c) => (c === 'USD' ? '$' : '₹') + Number(a || 0).toLocaleString(c === 'USD' ? 'en-US' : 'en-IN', { minimumFractionDigits: c === 'USD' ? 2 : 0, maximumFractionDigits: 2 });
+const planLabel = (plan, period) => 'Bella ' + (PLAN_NAMES[plan] || '') + ' · ' + (period === 'yearly' ? 'Yearly' : 'Monthly');
+function retryLink(plan, period, currency, email) {
+  let link = (LINKS[currency] && LINKS[currency][period] && LINKS[currency][period][plan]) || '/bella/#pricing';
+  if (/buy\.stripe\.com/.test(link) && email) link += '?prefilled_email=' + encodeURIComponent(email);
+  return link;
+}
+function show(id) { ['#s-check', '#s-paid', '#s-fail'].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+function failed(r, why) {
+  const plan = (r && r.plan) || (pending && pending.plan) || '', period = (r && r.period) || (pending && pending.period) || 'monthly';
+  const currency = (r && r.currency) || (pending && pending.currency) || 'INR', email = (r && r.email) || (pending && pending.email) || '';
+  const ref = r && (r.txnId || r.paymentId);
+  if (why === 'unknown') {
+    $('#fail-badge span').textContent = 'Couldn’t confirm yet';
+    $('#fail-title').textContent = 'We couldn’t confirm your payment.';
+    $('#fail-text').textContent = 'If money was taken, don’t worry: message us on WhatsApp with your email and we’ll sort it out quickly. Otherwise you can try again.';
+  } else if (r && r.reason) {
+    $('#fail-text').textContent = r.reason + '. No money was taken. You can try again, or message us on WhatsApp and we’ll help you finish.';
+  }
+  $('#retry').href = retryLink(plan, period, currency, email);
+  $('#fail-wa').href = wa('Hi Red Flag, my Bella payment' + (plan ? ' for ' + planLabel(plan, period) : '') + ' did not go through.' + (email ? ' My email: ' + email + '.' : '') + (ref ? ' Reference: ' + ref + '.' : '') + ' Please help.');
+  $('#fail-ref').textContent = ref ? 'Reference: ' + ref : '';
+  show('#s-fail');
+}
+
+function paid(r) {
+  try { localStorage.removeItem('bella_pending'); localStorage.setItem('bella_done', r.paymentId || '1'); } catch (e) {}
+  const first = (r.name || (pending && pending.name) || '').trim().split(/\s+/)[0];
+  $('#paid-title').textContent = first ? 'Welcome to Bella, ' + first + '.' : 'Welcome to Bella.';
+  const plan = r.plan || (pending && pending.plan) || '', period = r.period || (pending && pending.period) || '';
+  const item = plan ? planLabel(plan, period) : 'Bella by Red Flag Homes';
+  const date = new Date(r.paidAt || Date.now()).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+  $('#bill').innerHTML = `
+    <div class="bill-head"><div><b>Red Flag Homes Network</b><small>Bella by Red Flag Homes</small><small>${esc(SUPPORT_EMAIL)}</small></div>
+      <div class="r"><b>Payment receipt</b><small>No. ${esc(r.receiptNo || '')}</small><small>${esc(date)}</small></div></div>
+    <div class="bill-sec"><h2>Billed to</h2><div>${esc(r.name || (pending && pending.name) || '')}</div><div style="color:var(--mute);font-size:.92rem">${esc(r.email || '')}${r.phone ? ' · ' + esc(r.phone) : ''}</div></div>
+    <div class="bill-sec"><h2>Item</h2><div class="item"><div><b>${esc(item)}</b><span>${esc(LISTINGS[plan] || 'AI co-host subscription')}${period ? ' · renews ' + (period === 'yearly' ? 'yearly' : 'monthly') : ''} · cancel anytime</span></div><b>${esc(money(r.amount, r.currency))}</b></div></div>
+    <div class="total"><span>Total paid</span><span>${esc(money(r.amount, r.currency))}</span></div>
+    <div class="bill-sec" style="border-bottom:0"><h2>Payment</h2><dl class="kv">
+      <dt>Transaction ID</dt><dd><span class="txn">${esc(r.txnId || r.paymentId)}<button class="copy" type="button" data-copy="${esc(r.txnId || r.paymentId)}">Copy</button></span></dd>
+      ${r.txnId && r.paymentId && r.txnId !== r.paymentId ? `<dt>Payment ID</dt><dd class="txn">${esc(r.paymentId)}</dd>` : ''}
+      <dt>Paid with</dt><dd>${esc((r.gateway === 'stripe' ? 'Stripe' : 'Razorpay') + (r.method ? ' · ' + r.method : ''))}</dd>
+      <dt>Status</dt><dd style="color:var(--ok);font-weight:700">Paid</dd></dl></div>
+    <p class="fine">This is a payment receipt from Red Flag Homes Network for your Bella subscription. Keep it for your records.</p>`;
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(b.dataset.copy).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1500); }); }));
+  $('#step-email').textContent = r.email || 'your email';
+  $('#paid-wa').href = wa('Hi Red Flag, I just bought ' + item + '. Transaction ID: ' + (r.txnId || r.paymentId) + '.');
+  if (r.account && r.account.email) {
+    $('#account').hidden = false;
+    $('#acc-title').textContent = r.account.created ? 'Your Red Flag account is ready' : 'Added to your Red Flag account';
+    $('#acc-text').textContent = 'We ' + (r.account.created ? 'created an account' : 'linked this purchase to your account') + ' for ' + r.account.email + '. Sign in on redflaghomes.in with Google using this email, or set a password.';
+    $('#set-pass').addEventListener('click', () => sendReset(r.account.email));
+  }
+  show('#s-paid');
+}
+
+async function sendReset(email) {
+  const msg = $('#acc-msg'), b = $('#set-pass'); b.disabled = true; msg.textContent = 'Sending…';
+  try {
+    const cfg = await (await fetch('/firebase-applet-config.json')).json();
+    const [{ initializeApp }, { getAuth, sendPasswordResetEmail }] = await Promise.all([import('https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js'), import('https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js')]);
+    const app = initializeApp({ apiKey: cfg.apiKey, authDomain: cfg.authDomain, projectId: cfg.projectId, appId: cfg.appId }, 'bella-thanks');
+    await sendPasswordResetEmail(getAuth(app), email);
+    msg.textContent = 'Done. Check ' + email + ' for a link to set your password.';
+  } catch (e) {
+    b.disabled = false;
+    msg.textContent = 'Could not send the email right now. You can still sign in with Google using ' + email + '.';
+  }
+}
+
+$('#print').addEventListener('click', () => window.print());
+
+// ===== Confirm the payment with the server =====
+const gw = q.get('gw') || (q.get('session_id') ? 'stripe' : (q.get('razorpay_payment_id') || q.get('razorpay_payment_link_id') ? 'razorpay' : ''));
+const params = new URLSearchParams({ gw });
+['session_id', 'razorpay_payment_id', 'razorpay_payment_link_id'].forEach(k => { if (q.get(k)) params.set(k, q.get(k)); });
+if (q.get('razorpay_payment_link_status') === 'failed' || q.get('status') === 'failed') { failed(null); }
+else if (!gw) { failed(null, 'unknown'); }
+else {
+  if (gw === 'razorpay' && !q.get('razorpay_payment_id') && pending && pending.email) params.set('email', pending.email);
+  let tries = 0;
+  const check = async () => {
+    tries++;
+    try {
+      const res = await fetch('/api/bella/receipt?' + params.toString(), { cache: 'no-store' });
+      const r = await res.json();
+      if (r.ok && r.status === 'paid') return paid(r);
+      if (r.ok && r.status === 'failed') return failed(r);
+      if (tries < 8) { $('#check-msg').textContent = 'Your bank is still confirming the payment. This can take up to a minute…'; return setTimeout(check, 5000); }
+      failed(r.ok ? r : null, 'unknown');
+    } catch (e) {
+      if (tries < 3) return setTimeout(check, 3000);
+      failed(null, 'unknown');
+    }
+  };
+  check();
+}
+</script>
+</body>
+</html>

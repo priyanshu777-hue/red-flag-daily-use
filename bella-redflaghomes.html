@@ -989,6 +989,15 @@
   .qf-done h3 { font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.1rem); }
   .qf-spin { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--ink-3); border-top-color: var(--gold); animation: spin .9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  /* Came back without paying: a small bar with Try again / WhatsApp */
+  .pay-back { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 80; width: min(560px, calc(100% - 24px)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 16px; border-radius: 20px; background: var(--ink); color: var(--cream); box-shadow: 0 24px 60px -20px rgba(0,0,0,.7); animation: payback-in .45s var(--ease); }
+  @keyframes payback-in { from { opacity: 0; transform: translate(-50%, 20px); } }
+  .pay-back p { margin: 0; flex: 1 1 220px; font-size: .92rem; line-height: 1.4; }
+  .pay-back p b { display: block; font-family: var(--font-display); font-size: 1rem; }
+  .pay-back .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pay-back .btn { min-height: 42px; padding: 8px 16px; font-size: .9rem; }
+  .pay-back-x { position: absolute; top: 6px; right: 8px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: var(--mute-on-ink); font-size: 1.2rem; cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) { .pay-back { animation: none; } }
   .qf-fallback { font-size: .95rem; color: var(--cream); }
   .qf-fallback a { color: var(--gold); font-weight: 700; }
   .receipt-slot { position: relative; width: min(280px, 100%); padding: 14px 0 10px; overflow: hidden; }
@@ -2148,6 +2157,8 @@
     function goPay() {
       redirecting = true;
       sendLead(lead('checkout'));
+      // Remember this checkout: the thank-you page uses it for the bill, and the Bella page offers "Try again" if they come back unpaid.
+      try { localStorage.setItem('bella_pending', JSON.stringify({ plan: plan, period: state.period, currency: state.currency, name: (data.name || '').trim(), email: (data.email || '').trim(), phone: (data.phone || '').trim(), listings: data.listings || '', at: Date.now() })); } catch (e) {}
       render();
       clearTimeout(redirectTimer);
       redirectTimer = setTimeout(function () {
@@ -2722,6 +2733,28 @@
       var r = f.getBoundingClientRect();
       f.style.setProperty('--ox', Math.max(6, Math.min(94, (e.clientX - r.left) / r.width * 100)).toFixed(1) + '%');
     });
+  })();
+
+  // ===== Came back from the payment page without paying: offer Try again / WhatsApp =====
+  (function initPayBack() {
+    function pending() { try { var p = JSON.parse(localStorage.getItem('bella_pending') || 'null'); return p && Date.now() - p.at < 3 * 3600 * 1000 ? p : null; } catch (e) { return null; } }
+    function drop() { try { localStorage.removeItem('bella_pending'); } catch (e) {} }
+    function show() {
+      var p = pending(); if (!p || document.getElementById('pay-back')) return;
+      var dlg = document.getElementById('qf'); if (dlg && dlg.open) return;
+      var link = (LINKS[p.currency] && LINKS[p.currency][p.period] && LINKS[p.currency][p.period][p.plan]) || '#pricing';
+      if (/buy\.stripe\.com/.test(link) && p.email) link += '?prefilled_email=' + encodeURIComponent(p.email);
+      var name = 'Bella ' + (PLAN_NAMES[p.plan] || '') + ' (' + (p.period === 'yearly' ? 'Yearly' : 'Monthly') + ')';
+      var bar = document.createElement('div'); bar.className = 'pay-back'; bar.id = 'pay-back'; bar.setAttribute('role', 'status');
+      bar.innerHTML = '<p><b>Your payment wasn’t completed</b></p><div class="row"><a class="btn btn--red" rel="noopener"></a><a class="btn btn--ghost" target="_blank" rel="noopener">WhatsApp us</a></div><button type="button" class="pay-back-x" aria-label="Dismiss">×</button>';
+      bar.querySelector('p').appendChild(document.createTextNode(name + '. Try again, or message us and we’ll help you finish.'));
+      var again = bar.querySelector('.btn--red'); again.textContent = 'Try again'; again.href = link;
+      bar.querySelector('.btn--ghost').href = waUrl('Hi, I tried to buy ' + name + ' but the payment did not go through. My email: ' + (p.email || '') + '. Please help.');
+      bar.querySelector('.pay-back-x').addEventListener('click', function () { drop(); bar.remove(); });
+      document.body.appendChild(bar);
+    }
+    window.addEventListener('pageshow', function () { setTimeout(show, 600); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(show, 600); });
   })();
 
   // ===== Bella says hi in many languages and acts out what she does: waves, winks, laughs, thinks, hops, points =====
