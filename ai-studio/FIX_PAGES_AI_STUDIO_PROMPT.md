@@ -70,7 +70,7 @@ I will put my email in it myself.
 
 ## 5. Check before you finish
 - `/bella/`, `/admin/`, `/journal/` and `/journal.js` all return 200, with no site header or React wrapper.
-- The body sizes must be: `/bella/` 252,338 bytes, `/admin/` 122,622 bytes, `/journal/` 17,178 bytes, `/journal.js` 4,828 bytes. A different size means the content was changed. Fix that.
+- Each response must be exactly the same text as the matching file at `RF_CDN` (compare the response of `/bella/` with `fetch(RF_CDN + 'bella-redflaghomes.html')`, and so on). If anything differs, the code was changed. Fix that.
 - On `/bella/`, all of these work:
   - The hero chameleon walks and Bella greets in different languages.
   - The price route shows 4 stations (Pricing, Check-in, Commission, Emergencies) with a moving pin as you scroll.
