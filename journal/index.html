@@ -174,7 +174,7 @@
     setMeta(p.seoTitle || (p.title + ' · Red Flag Homes'), p.seoDescription || p.excerpt || '', p.cover);
     var ld = document.createElement('script'); ld.type = 'application/ld+json';
     ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: p.title, description: p.excerpt, image: p.cover || undefined, datePublished: p.publishedAt, dateModified: p.updatedAt || p.publishedAt, author: { '@type': 'Organization', name: p.author || 'Red Flag Homes' }, publisher: { '@type': 'Organization', name: 'Red Flag Homes Network' } });
-    document.head.appendChild(ld);
+    if (!document.querySelector('script[type="application/ld+json"]')) document.head.appendChild(ld); // the server already adds it
     var others = posts.filter(function (x) { return x.slug !== p.slug; }).slice(0, 3);
     var wa = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hi Red Flag, I just read "' + p.title + '" and want to know more.');
     main.innerHTML = '<article class="story"><a class="back" href="/journal/">← All stories</a>' +
