@@ -1159,7 +1159,11 @@ $('#signin').addEventListener('click', async () => {
   try { const fb = await loadFirebase(); await fb.authM.signInWithPopup(fb.auth, new fb.authM.GoogleAuthProvider()); }
   catch (e) { gateMsg(e.code === 'auth/popup-closed-by-user' ? 'Sign-in was cancelled.' : 'Sign-in failed: ' + (e.message || e)); }
 });
-startLive();
+// Optional settings file on the site (e.g. public/admin-config.json) so admin emails can change without editing this page:
+// { "adminEmails": ["you@gmail.com"], "sheetsReaderUrl": "https://script.google.com/macros/s/…/exec" }
+fetch('/admin-config.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : {}).catch(() => ({})).then(cfg => {
+  if (cfg && typeof cfg === 'object') ['adminEmails', 'sheetsReaderUrl', 'aiWriterUrl', 'whatsapp'].forEach(k => { if (cfg[k] !== undefined && cfg[k] !== '') CONFIG[k] = cfg[k]; });
+}).finally(startLive);
 </script>
 </body>
 </html>
