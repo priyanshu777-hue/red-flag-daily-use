@@ -4,7 +4,7 @@ Run `ai-studio/FIX_PAGES_AI_STUDIO_PROMPT.md` first; it already serves the Admin
 
 Add Bella payment tracking and the Journal AI writer to my server. Don't change any page, form or script except as described.
 
-## 3. Bella payment webhooks (Razorpay + Stripe → Firestore `bellaPayments`)
+## 1. Bella payment webhooks (Razorpay + Stripe → Firestore `bellaPayments`)
 Add two webhook endpoints to the existing Express server. Each one saves every Bella payment (paid, failed or abandoned) to Firestore so the admin panel can show failed payments and resend the payment link.
 
 General rules:
@@ -43,7 +43,7 @@ General rules:
   - `invoice.payment_failed` (failed subscription renewals) → `failed`. Use `id`, `amount_due/100`, `currency`, `customer_email`, `customer_name`, reason "Renewal payment failed". Document ID `stripe_<invoice id>`.
   - Use the event's `created` (unix seconds) → `createdAt`.
 
-## 4. AI writer for the Journal: `POST /api/admin/write-post`
+## 2. AI writer for the Journal: `POST /api/admin/write-post`
 - **Auth:** read `Authorization: Bearer <Firebase ID token>`.
   - Verify it with `firebase-admin` `auth().verifyIdToken`.
   - Allow only if `email_verified` is true and the email is in `process.env.ADMIN_EMAILS` (comma separated, case-insensitive). Otherwise reply 403 `{ "error": "Not an admin" }`.
@@ -60,11 +60,11 @@ General rules:
   - End with a line linking to `/franchise`.
 - **Response:** reply `{ title, excerpt, tag, body, seoDescription }`. On error, reply `{ "error": "<short message>" }` with a 4xx/5xx status.
 
-## 5. Secrets
+## 3. Secrets
 Add these in AI Studio's secrets / environment settings. I will paste the values myself:
 `RAZORPAY_WEBHOOK_SECRET`, `STRIPE_WEBHOOK_SECRET`, `ADMIN_EMAILS`.
 
-## 6. Check before you finish
+## 4. Check before you finish
 - `/admin/` loads with no console errors, and "Preview with sample data" shows the Bella payments and Journal sections.
 - `/journal/` loads and says "No stories yet" until something is published.
 - The home page Explore section looks exactly as before.
