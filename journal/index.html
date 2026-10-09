@@ -188,12 +188,15 @@
   }
 
   var slug = slugFromUrl();
+  var ssr = main.getAttribute('data-ssr'); // the server already put the real content here
   (window.rfLoadPosts ? window.rfLoadPosts() : Promise.reject(new Error('journal.js missing'))).then(function (posts) {
-    if (!slug) return list(posts);
+    if (!slug) return (posts.length || !ssr) ? list(posts) : undefined;
     var p = posts.filter(function (x) { return x.slug === slug; })[0];
     if (p) return story(p, posts);
+    if (ssr === 'story') return; // keep the server's copy
     main.innerHTML = '<section class="story"><a class="back" href="/journal/">← All stories</a><h1>Story not found</h1><p class="lede">It may have been moved or unpublished.</p></section>';
   }).catch(function () {
+    if (ssr) return; // keep the server's copy
     main.innerHTML = '<section class="story"><h1>Journal</h1><p class="lede">Stories could not load right now. Please try again in a moment.</p><a class="pill" href="/">Back to home</a></section>';
   });
 })();
