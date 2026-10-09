@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Red Flag Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Red Flag Homes admin. Dark by default to match redflaghomes.in; a light theme follows the system or the toggle. */
+  :root {
+    --bg: #0A0505; --surface: #140B0B; --surface-2: #1C1010; --surface-3: #261616;
+    --line: rgba(242, 228, 225, .09); --line-2: rgba(242, 228, 225, .16);
+    --text: #F2E4E1; --text-2: #C9B6B1; --muted: #9A8580;
+    --accent: #FF3B30; --accent-ink: #fff; --cream: #FFEDC3;
+    --s-app: #E8473D; --s-inq: #3E95D0;            /* chart series: applications, inquiries (validated, dark) */
+    --good: #3FB27F; --warn: #E3A33B; --bad: #EF5B52; --info: #8AA6C4;
+    --shadow: 0 30px 80px -30px rgba(0,0,0,.8);
+    --radius: 18px;
+    --serif: "Instrument Serif", Georgia, serif; --sans: "Inter Tight", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F6EFEA; --surface: #FFFBF8; --surface-2: #F3E9E3; --surface-3: #EADDD5;
+      --line: rgba(40, 14, 10, .09); --line-2: rgba(40, 14, 10, .18);
+      --text: #1E0F0C; --text-2: #4A3530; --muted: #7A6560;
+      --accent: #D42A20; --cream: #8A5A00;
+      --s-app: #C8302A; --s-inq: #2F7DB5;
+      --good: #1E7F53; --warn: #A86A00; --bad: #C23A31; --info: #3F6688;
+      --shadow: 0 30px 80px -40px rgba(60,20,10,.35);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F6EFEA; --surface: #FFFBF8; --surface-2: #F3E9E3; --surface-3: #EADDD5;
+    --line: rgba(40, 14, 10, .09); --line-2: rgba(40, 14, 10, .18);
+    --text: #1E0F0C; --text-2: #4A3530; --muted: #7A6560;
+    --accent: #D42A20; --cream: #8A5A00;
+    --s-app: #C8302A; --s-inq: #2F7DB5;
+    --good: #1E7F53; --warn: #A86A00; --bad: #C23A31; --info: #3F6688;
+    --shadow: 0 30px 80px -40px rgba(60,20,10,.35);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  a { color: inherit; }
+  [hidden] { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  .serif { font-family: var(--serif); letter-spacing: -.01em; }
+
+  /* ---------- buttons ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; cursor: pointer; font-weight: 500; font-size: .9rem; text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+  .btn:hover { border-color: var(--text-2); }
+  .btn--red { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn--red:hover { filter: brightness(1.08); border-color: var(--accent); }
+  .btn--sm { min-height: 34px; padding: 6px 12px; font-size: .84rem; }
+  .btn--icon { width: 40px; padding: 0; }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; flex: none; }
+
+  /* ---------- sign-in ---------- */
+  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(60% 50% at 50% 0%, rgba(255,59,48,.14), transparent 70%); }
+  .gate-card { width: min(440px, 100%); padding: 36px 30px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line-2); box-shadow: var(--shadow); text-align: center; display: grid; gap: 18px; }
+  .gate-card h1 { font-family: var(--serif); font-size: 2.6rem; line-height: 1; }
+  .gate-card p { margin: 0; color: var(--text-2); font-size: .93rem; }
+  .gate-msg { font-size: .85rem; color: var(--warn); min-height: 1.2em; }
+  .gate-actions { display: grid; gap: 10px; }
+  .gate-actions .btn { min-height: 46px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: .02em; justify-content: center; }
+  .brand .dot { width: 9px; height: 9px; box-shadow: 0 0 14px var(--accent); }
+
+  /* ---------- shell ---------- */
+  .app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; background: linear-gradient(90deg, var(--surface) 247px, var(--line) 247px 248px, transparent 248px); }
+  .side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 6px; padding: 22px 14px; border-right: 1px solid var(--line); background: var(--surface); }
+  .side .brand { justify-content: flex-start; padding: 4px 10px 18px; }
+  .side .brand small { display: block; font-weight: 400; color: var(--muted); font-size: .76rem; letter-spacing: 0; }
+  .nav { display: grid; gap: 2px; }
+  .nav a { display: flex; align-items: center; gap: 12px; min-height: 42px; padding: 8px 12px; border-radius: 12px; text-decoration: none; color: var(--text-2); font-weight: 500; }
+  .nav a svg { width: 18px; height: 18px; flex: none; }
+  .nav a:hover { background: var(--surface-2); color: var(--text); }
+  .nav a[aria-current="page"] { background: var(--surface-3); color: var(--text); }
+  .nav .count { margin-left: auto; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .72rem; text-align: center; }
+  .side-foot { margin-top: auto; display: grid; gap: 10px; padding: 12px; border-radius: 14px; background: var(--surface-2); font-size: .82rem; }
+  .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .who img, .who .av { width: 30px; height: 30px; border-radius: 50%; flex: none; }
+  .who span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); }
+  .mode { display: inline-flex; align-items: center; gap: 6px; font-size: .74rem; color: var(--muted); }
+  .mode i { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  .mode.demo i { background: var(--warn); }
+
+  .main { min-width: 0; padding: 26px clamp(16px, 3vw, 40px) 60px; }
+  .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .top h1 { font-family: var(--serif); font-size: clamp(2rem, 1.4rem + 2vw, 2.8rem); line-height: 1; }
+  .top p { margin: 6px 0 0; color: var(--muted); font-size: .9rem; }
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .demo-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 18px; border-radius: 14px; border: 1px dashed var(--line-2); color: var(--text-2); font-size: .86rem; }
+
+  /* ---------- cards & KPIs ---------- */
+  .grid { display: grid; gap: 16px; }
+  .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; min-width: 0; }
+  .card h2 { font-size: 1rem; font-weight: 600; font-family: var(--sans); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .card-head p { margin: 2px 0 0; color: var(--muted); font-size: .82rem; }
+  .kpi { display: grid; gap: 6px; }
+  .kpi small { color: var(--muted); font-size: .8rem; }
+  .kpi b { font-family: var(--serif); font-weight: 400; font-size: 2.6rem; line-height: 1; letter-spacing: -.02em; }
+  .kpi span { font-size: .8rem; color: var(--text-2); }
+  .two { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+
+  /* ---------- chart ---------- */
+  .legend { display: flex; gap: 16px; font-size: .8rem; color: var(--text-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 3px; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 220px; overflow: visible; }
+  .chart .grid-line { stroke: var(--line); }
+  .chart .axis-t { fill: var(--muted); font-size: 11px; font-family: var(--sans); }
+  .tip { position: absolute; pointer-events: none; z-index: 5; padding: 8px 10px; border-radius: 10px; background: var(--surface-3); border: 1px solid var(--line-2); box-shadow: var(--shadow); font-size: .8rem; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); }
+  .tip b { display: block; font-weight: 600; margin-bottom: 2px; }
+  .tip i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+
+  /* ---------- lists ---------- */
+  .mini { list-style: none; margin: 0; padding: 0; display: grid; }
+  .mini li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .mini li:first-child { border-top: 0; }
+  .mini .t { min-width: 0; flex: 1; }
+  .mini .t b { display: block; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mini .t small { color: var(--muted); font-size: .8rem; }
+  .bars { display: grid; gap: 10px; }
+  .bar-row { display: grid; grid-template-columns: minmax(0, 120px) minmax(0, 1fr) 34px; gap: 10px; align-items: center; font-size: .85rem; }
+  .bar-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); }
+  .bar-row i { display: block; height: 10px; border-radius: 0 4px 4px 0; background: var(--s-app); min-width: 2px; }
+  .bar-row b { font-weight: 500; text-align: right; }
+
+  /* ---------- status pill (icon + label, never colour alone) ---------- */
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 500; border: 1px solid var(--line-2); white-space: nowrap; color: var(--text); }
+  .pill svg { width: 12px; height: 12px; }
+  .pill.good svg { color: var(--good); } .pill.warn svg { color: var(--warn); } .pill.bad svg { color: var(--bad); } .pill.info svg { color: var(--info); }
+  .pill.new { border-color: var(--accent); }
+
+  /* ---------- table ---------- */
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .search { flex: 1 1 240px; display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); }
+  .search svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
+  .search input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; padding: 8px 0; }
+  .select { min-height: 42px; padding: 0 36px 0 14px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23998' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; appearance: none; -webkit-appearance: none; cursor: pointer; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { min-height: 34px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; cursor: pointer; font-size: .82rem; }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .chip small { opacity: .7; margin-left: 4px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th { text-align: left; font-weight: 500; color: var(--muted); font-size: .78rem; padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+  th button:focus-visible { outline: 2px solid var(--accent); border-radius: 4px; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: var(--surface-2); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td .sub { display: block; color: var(--muted); font-size: .78rem; }
+  .empty { padding: 40px 20px; text-align: center; color: var(--muted); }
+  .count-line { color: var(--muted); font-size: .82rem; margin: 10px 4px 0; }
+  @media (max-width: 720px) {
+    .table-wrap { border: 0; background: transparent; overflow: visible; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    tbody tr { margin-bottom: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    td { border: 0; padding: 3px 0; max-width: none; white-space: normal; }
+    td[data-l]::before { content: attr(data-l); display: inline-block; min-width: 92px; color: var(--muted); font-size: .76rem; }
+    td.lead-cell { font-size: 1rem; }
+  }
+
+  /* ---------- drawer ---------- */
+  .drawer { position: fixed; inset: 0; z-index: 40; display: flex; justify-content: flex-end; background: rgba(5,2,2,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .drawer-panel { width: min(520px, 100%); height: 100%; overflow-y: auto; background: var(--surface); border-left: 1px solid var(--line-2); padding: 22px 24px 40px; display: grid; gap: 18px; align-content: start; animation: slide .28s cubic-bezier(.2,.8,.2,1); }
+  @keyframes slide { from { transform: translateX(30px); opacity: 0; } }
+  .drawer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .drawer-top h2 { font-family: var(--serif); font-size: 2rem; line-height: 1.05; word-break: break-word; }
+  .drawer-top p { margin: 4px 0 0; color: var(--muted); font-size: .85rem; }
+  .facts { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 8px 14px; margin: 0; font-size: .9rem; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; word-break: break-word; }
+  .quick { display: flex; gap: 8px; flex-wrap: wrap; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: .8rem; color: var(--muted); }
+  .field select, .field textarea, .field input { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--surface-2); }
+  .field textarea { min-height: 110px; resize: vertical; }
+  .drawer-actions { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+  .history { font-size: .8rem; color: var(--muted); }
+
+  /* ---------- health & setup ---------- */
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; }
+  .checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--line); }
+  .checks li:first-child { border-top: 0; }
+  .checks svg { width: 18px; height: 18px; margin-top: 2px; }
+  .checks .ok svg { color: var(--good); } .checks .warn svg { color: var(--warn); } .checks .fail svg { color: var(--bad); } .checks .wait svg { color: var(--muted); }
+  .checks b { font-weight: 500; display: block; }
+  .checks small { color: var(--muted); font-size: .8rem; word-break: break-word; }
+  .checks .meta { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+  pre.code { margin: 0; padding: 14px 16px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-2); }
+  .steps { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--text-2); font-size: .9rem; }
+  .steps code, p code { font-size: .85em; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+
+  /* ---------- toast ---------- */
+  .toasts { position: fixed; right: 16px; bottom: 16px; z-index: 60; display: grid; gap: 8px; max-width: min(360px, calc(100vw - 32px)); }
+  .toast { padding: 12px 14px; border-radius: 14px; background: var(--surface-3); border: 1px solid var(--line-2); box-shadow: var(--shadow); font-size: .86rem; display: flex; gap: 10px; align-items: flex-start; animation: slide .3s ease; }
+  .toast b { display: block; }
+
+  /* ---------- responsive shell ---------- */
+  @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .two { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: minmax(0, 1fr); background: none; }
+    .side { position: fixed; z-index: 30; top: auto; bottom: 0; left: 0; right: 0; height: auto; flex-direction: row; padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); border-right: 0; border-top: 1px solid var(--line); }
+    .side .brand, .side-foot { display: none; }
+    .nav { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: 100%; overflow-x: auto; }
+    .nav a { flex-direction: column; gap: 2px; min-height: 52px; padding: 6px 4px; font-size: .66rem; justify-content: center; position: relative; }
+    .nav .count { position: absolute; top: 2px; right: 8px; margin: 0; min-width: 16px; padding: 0 5px; font-size: .62rem; }
+    .main { padding-bottom: 100px; }
+    .mobile-top { display: flex !important; }
+  }
+  .mobile-top { display: none; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+  @media (max-width: 520px) { .kpi b { font-size: 2.1rem; } .facts { grid-template-columns: minmax(0, 1fr); gap: 2px; } .facts dd { margin-bottom: 8px; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ============ Sign-in ============ -->
+<section class="gate" id="gate">
+  <div class="gate-card">
+    <span class="brand"><i class="dot"></i>RED FLAG HOMES</span>
+    <h1>Admin</h1>
+    <p>Applications, bookings, leads and site health for redflaghomes.in in one place.</p>
+    <div class="gate-actions">
+      <button class="btn btn--red" id="signin" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z"/><path fill="currentColor" opacity=".8" d="M12 22c2.7 0 5-.9 6.6-2.5l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="currentColor" opacity=".6" d="M6.4 13.9a6 6 0 0 1 0-3.8V7.5H3.1a10 10 0 0 0 0 9Z"/><path fill="currentColor" opacity=".9" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.8 9.4 6 12 6Z"/></svg>
+        Sign in with Google
+      </button>
+      <button class="btn" id="demo" type="button">Preview with sample data</button>
+    </div>
+    <p class="gate-msg" id="gate-msg" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ App ============ -->
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <span class="brand"><i class="dot"></i><span>RED FLAG<small>Admin panel</small></span></span>
+    <nav class="nav" aria-label="Admin sections">
+      <a href="#/overview" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Overview</a>
+      <a href="#/applications" data-view="applications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Franchise<span class="count" id="c-applications" hidden></span></a>
+      <a href="#/inquiries" data-view="inquiries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Bookings<span class="count" id="c-inquiries" hidden></span></a>
+      <a href="#/leads" data-view="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h16M4 14h16M10 4v16"/></svg>Form leads</a>
+      <a href="#/users" data-view="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Users</a>
+      <a href="#/health" data-view="health"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Site health</a>
+      <a href="#/setup" data-view="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>Setup</a>
+    </nav>
+    <div class="side-foot">
+      <div class="who" id="who"></div>
+      <span class="mode" id="mode"><i></i><span></span></span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn--sm" id="theme" type="button" aria-label="Switch light or dark theme">Theme</button>
+        <button class="btn btn--sm" id="signout" type="button">Sign out</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="mobile-top"><span class="brand"><i class="dot"></i>RED FLAG</span><span style="display:flex;gap:6px"><button class="btn btn--sm" id="theme-m" type="button">Theme</button><button class="btn btn--sm" id="signout-m" type="button">Sign out</button></span></div>
+    <div class="demo-bar" id="demo-bar" hidden><span class="dot" style="background:var(--warn)"></span>Sample data. Nothing here is real and changes are not saved. Sign in with Google on redflaghomes.in/admin to see live data.</div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<div class="drawer" id="drawer" hidden><div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="d-title" id="drawer-panel"></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script type="module">
+/* ===================== Edit these ===================== */
+const CONFIG = {
+  // Google accounts allowed in. Must match the emails in your Firestore rules (Setup page shows the rules).
+  adminEmails: [],
+  // The site's own Firebase config file (same one the website uses).
+  firebaseConfigUrl: '/firebase-applet-config.json',
+  // Web app URL of admin-sheets-reader.gs (ends with /exec). Shows your Google Sheet leads. Empty = off.
+  sheetsReaderUrl: '',
+  // The website, for the Site health page.
+  site: 'https://redflaghomes.in',
+  // Your WhatsApp number (digits only), used for "Message on WhatsApp" when a lead has no phone.
+  whatsapp: '918881306632'
+};
+/* ===================================================== */
+
+const FB = 'https://www.gstatic.com/firebasejs/10.13.0/';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+
+// Statuses: tone drives the icon, the label always shows.
+const STATUS = {
+  applications: [['Under Review', 'warn'], ['Contacted', 'info'], ['Call Scheduled', 'info'], ['Shortlisted', 'info'], ['Approved', 'good'], ['Rejected', 'bad']],
+  inquiries: [['Inquiry Received', 'warn'], ['Contacted', 'info'], ['Confirmed', 'good'], ['Completed', 'good'], ['Cancelled', 'bad']]
+};
+const OPEN = { applications: ['Under Review'], inquiries: ['Inquiry Received'] };
+const ICON = {
+  good: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="7"/></svg>',
+  info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  bad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+};
+const CHECK = {
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m7.5 12 3 3 6-6"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18v.5"/></svg>',
+  fail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m8 8 8 8M16 8l-8 8"/></svg>',
+  wait: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"/></svg>'
+};
+function tone(kind, status) { const s = (STATUS[kind] || []).find(x => x[0] === status); return s ? s[1] : 'info'; }
+function pill(kind, status) { const t = tone(kind, status); return `<span class="pill ${t}">${ICON[t]}${esc(status || '—')}</span>`; }
+
+const S = {
+  mode: 'none', user: null, fb: null,
+  data: { applications: [], inquiries: [], users: [] },
+  loaded: { applications: false, inquiries: false, users: false },
+  errors: {}, leads: null, leadsErr: '', health: null,
+  ui: { applications: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, inquiries: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, users: { q: '', sort: 'lastLoginAt', dir: -1 }, leads: { q: '', tab: 0 } }
+};
+
+/* ---------------- time helpers ---------------- */
+const ts = v => { if (!v) return 0; if (typeof v === 'object' && v.seconds) return v.seconds * 1000; const t = Date.parse(v); return isNaN(t) ? 0 : t; };
+function ago(v) {
+  const t = ts(v); if (!t) return '—';
+  const s = (Date.now() - t) / 1000;
+  if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + ' min ago'; if (s < 86400) return Math.floor(s / 3600) + ' h ago';
+  if (s < 86400 * 7) return Math.floor(s / 86400) + ' d ago';
+  return new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : 'numeric' });
+}
+const full = v => { const t = ts(v); return t ? new Date(t).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '—'; };
+
+/* ---------------- toast ---------------- */
+function toast(title, msg) {
+  const el = document.createElement('div'); el.className = 'toast';
+  el.innerHTML = `<span class="dot" style="margin-top:6px"></span><div><b>${esc(title)}</b>${esc(msg || '')}</div>`;
+  $('#toasts').appendChild(el); setTimeout(() => el.remove(), 5000);
+}
+
+/* ===================== Live mode: Firebase ===================== */
+async function loadFirebase() {
+  if (S.fb) return S.fb;
+  const res = await fetch(CONFIG.firebaseConfigUrl, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Firebase config not found');
+  const cfg = await res.json();
+  const [appM, authM, fsM] = await Promise.all([import(FB + 'firebase-app.js'), import(FB + 'firebase-auth.js'), import(FB + 'firebase-firestore.js')]);
+  const app = appM.initializeApp({ apiKey: cfg.apiKey, authDomain: cfg.authDomain, projectId: cfg.projectId, storageBucket: cfg.storageBucket, messagingSenderId: cfg.messagingSenderId, appId: cfg.appId }, 'rf-admin');
+  const auth = authM.getAuth(app);
+  const db = fsM.getFirestore(app, cfg.firestoreDatabaseId || '(default)');
+  S.fb = { authM, fsM, auth, db, cfg };
+  return S.fb;
+}
+const isAdmin = u => !!u && !!u.email && u.emailVerified !== false && CONFIG.adminEmails.map(e => e.toLowerCase()).includes(u.email.toLowerCase());
+
+async function startLive() {
+  let fb;
+  try { fb = await loadFirebase(); } catch (e) { gateMsg('Live sign-in works on redflaghomes.in/admin. Here you can preview with sample data.'); $('#signin').disabled = true; return; }
+  fb.authM.onAuthStateChanged(fb.auth, user => {
+    if (!user) { if (S.mode === 'live') location.reload(); return; }
+    if (!CONFIG.adminEmails.length) { gateMsg('Add your Google email to adminEmails in the admin page config, then reload.'); return; }
+    if (!isAdmin(user)) { gateMsg(user.email + ' is not an admin account.'); fb.authM.signOut(fb.auth); return; }
+    S.user = { name: user.displayName || user.email, email: user.email, photo: user.photoURL };
+    S.mode = 'live'; enterApp(); subscribe();
+  });
+}
+function subscribe() {
+  const { fsM, db } = S.fb;
+  ['applications', 'inquiries', 'users'].forEach(name => {
+    let first = true;
+    fsM.onSnapshot(fsM.collection(db, name), snap => {
+      if (!first && name !== 'users') snap.docChanges().forEach(ch => { if (ch.type === 'added') { const d = ch.doc.data(); toast(name === 'applications' ? 'New franchise application' : 'New booking inquiry', (d.userName || 'Someone') + (d.city || d.destination ? ' · ' + (d.city || d.destination) : '')); } });
+      first = false;
+      S.data[name] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      S.loaded[name] = true; delete S.errors[name]; render();
+    }, err => { S.errors[name] = err.code === 'permission-denied' ? 'Firestore rules block admin access. Add the admin rules from the Setup page.' : (err.message || String(err)); S.loaded[name] = true; render(); });
+  });
+}
+async function saveDoc(kind, id, patch) {
+  if (S.mode === 'demo') { Object.assign(S.data[kind].find(x => x.id === id), patch); render(); return; }
+  const { fsM, db } = S.fb; await fsM.updateDoc(fsM.doc(db, kind, id), patch);
+}
+async function removeDoc(kind, id) {
+  if (S.mode === 'demo') { S.data[kind] = S.data[kind].filter(x => x.id !== id); render(); return; }
+  const { fsM, db } = S.fb; await fsM.deleteDoc(fsM.doc(db, kind, id));
+}
+async function idToken() { return S.fb && S.fb.auth.currentUser ? S.fb.auth.currentUser.getIdToken() : ''; }
+
+/* ===================== Demo mode: sample data ===================== */
+function demoData() {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const pick = a => a[Math.floor(rnd() * a.length)];
+  const names = ['Aarav Mehta', 'Priya Sharma', 'Rohan Kapoor', 'Ananya Iyer', 'Vikram Singh', 'Neha Gupta', 'Kabir Malhotra', 'Isha Reddy', 'Arjun Nair', 'Sara Khan', 'Dev Patel', 'Meera Joshi', 'Tara Bose', 'Kunal Shah', 'Ritika Verma', 'James Carter', 'Olivia Brown', 'Liam Wilson'];
+  const cities = ['Goa', 'Rishikesh', 'Manali', 'Jaipur', 'Udaipur', 'Coorg', 'Alibaug', 'Kasauli', 'Mussoorie', 'London'];
+  const caps = ['₹10–25 L', '₹25–50 L', '₹50 L–1 Cr', '₹1 Cr+'];
+  const tiers = ['Red Flag Homes Starter', 'Red Flag Outpost Classic', 'Red Flag — The Drop'];
+  const day = 86400000, now = Date.now();
+  const at = n => new Date(now - n).toISOString();
+  const apps = Array.from({ length: 34 }, (_, i) => {
+    const n = pick(names), age = Math.floor(rnd() * 29 * day + rnd() * day);
+    const st = age < 3 * day ? 'Under Review' : pick(['Under Review', 'Contacted', 'Call Scheduled', 'Shortlisted', 'Approved', 'Rejected', 'Contacted']);
+    return { id: 'a' + i, userName: n, userEmail: n.toLowerCase().replace(/ /g, '.') + '@gmail.com', phone: '+91 9' + String(Math.floor(rnd() * 1e9)).padStart(9, '0'), city: pick(cities), capital: pick(caps), propertyIntent: pick(['Looking', 'Own property', 'Leased']), existingClient: pick(['No', 'No', 'Yes']), tier: pick(tiers), status: st, createdAt: at(age) };
+  });
+  const inqs = Array.from({ length: 41 }, (_, i) => {
+    const n = pick(names), age = Math.floor(rnd() * 29 * day + rnd() * day), ci = new Date(now + rnd() * 40 * day);
+    const co = new Date(ci.getTime() + (2 + Math.floor(rnd() * 4)) * day);
+    return { id: 'i' + i, userName: n, userEmail: n.toLowerCase().replace(/ /g, '.') + '@gmail.com', phone: '+91 8' + String(Math.floor(rnd() * 1e9)).padStart(9, '0'), destination: pick(cities.slice(0, 9)) + ' Outpost', checkin: ci.toISOString().slice(0, 10), checkout: co.toISOString().slice(0, 10), guests: String(1 + Math.floor(rnd() * 6)), intent: pick(['book', 'book', 'event']), status: age < 2 * day ? 'Inquiry Received' : pick(['Inquiry Received', 'Contacted', 'Confirmed', 'Completed', 'Cancelled', 'Confirmed']), createdAt: at(age) };
+  });
+  const users = names.map((n, i) => ({ id: 'u' + i, uid: 'u' + i, displayName: n, email: n.toLowerCase().replace(/ /g, '.') + '@gmail.com', lastLoginAt: at(Math.floor(rnd() * 25 * day)) }));
+  apps.forEach(a => { const u = users.find(x => x.displayName === a.userName); a.userId = u.uid; });
+  inqs.forEach(a => { const u = users.find(x => x.displayName === a.userName); a.userId = u.uid; });
+  const leads = { ok: true, sources: [
+    { book: 'Red Flag website forms', sheet: 'Contact', headers: ['Timestamp', 'Name', 'Email', 'Phone', 'Intent', 'Message', 'Page'], total: 6, rows: Array.from({ length: 6 }, (_, i) => [new Date(now - i * day * 1.7).toLocaleString(), pick(names), 'lead' + i + '@gmail.com', '+91 98' + String(Math.floor(rnd() * 1e8)).padStart(8, '0'), pick(['Book a stay', 'Franchise', 'Partnership']), pick(['Looking for a group stay in Goa', 'Want to list my villa', 'Is the Outpost pet friendly?']), '/']) },
+    { book: 'Red Flag website forms', sheet: 'Newsletter', headers: ['Timestamp', 'Email', 'Source', 'Page'], total: 9, rows: Array.from({ length: 9 }, (_, i) => [new Date(now - i * day * 1.1).toLocaleString(), 'reader' + i + '@gmail.com', pick(['footer', 'popup']), '/']) },
+    { book: 'Bella leads', sheet: 'Leads', headers: ['Time', 'Name', 'Email', 'City', 'Phone', 'Listings', 'Plan', 'Period', 'Currency', 'Outcome'], total: 5, rows: Array.from({ length: 5 }, (_, i) => [new Date(now - i * day * 2.3).toLocaleString(), pick(names), 'host' + i + '@gmail.com', pick(cities), '+91 97' + String(Math.floor(rnd() * 1e8)).padStart(8, '0'), pick(['1', '2–3', '4–5']), pick(['Solo', 'Growth', 'Pro']), pick(['monthly', 'yearly']), pick(['INR', 'USD']), 'checkout']) }
+  ] };
+  return { apps, inqs, users, leads };
+}
+function startDemo() {
+  const d = demoData();
+  S.mode = 'demo'; S.user = { name: 'Demo admin', email: 'admin@redflaghomes.in' };
+  S.data = { applications: d.apps, inquiries: d.inqs, users: d.users };
+  S.loaded = { applications: true, inquiries: true, users: true }; S.leads = d.leads;
+  enterApp();
+}
+
+/* ===================== Shell ===================== */
+function gateMsg(m) { $('#gate-msg').textContent = m; }
+function enterApp() {
+  $('#gate').hidden = true; $('#app').hidden = false; $('#demo-bar').hidden = S.mode !== 'demo';
+  const u = S.user;
+  $('#who').innerHTML = (u.photo ? `<img src="${esc(u.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="av" style="background:var(--surface-3);display:grid;place-items:center;font-size:.8rem">${esc((u.name || '?')[0])}</span>`) + `<span title="${esc(u.email)}">${esc(u.email)}</span>`;
+  const m = $('#mode'); m.classList.toggle('demo', S.mode === 'demo'); m.querySelector('span').textContent = S.mode === 'demo' ? 'Sample data' : 'Live · updates in real time';
+  if (!location.hash || location.hash === '#') location.hash = '#/overview'; else render();
+}
+function seenKey(kind) { return 'rf-admin-seen-' + kind; }
+function newCount(kind) { const seen = +(store(seenKey(kind)) || 0); return S.data[kind].filter(x => ts(x.createdAt) > seen && OPEN[kind].includes(x.status)).length; }
+function counts() {
+  ['applications', 'inquiries'].forEach(k => { const n = S.data[k].filter(x => OPEN[k].includes(x.status)).length; const el = $('#c-' + k); el.hidden = !n; el.textContent = n; el.setAttribute('aria-label', n + ' waiting'); });
+}
+function view() { return (location.hash.match(/^#\/(\w+)/) || [, 'overview'])[1]; }
+function render() {
+  if ($('#app').hidden) return;
+  const v = view();
+  $$('.nav a').forEach(a => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  counts();
+  const keep = document.activeElement && document.activeElement.id; const pos = keep && document.activeElement.selectionStart;
+  ({ overview, applications: () => records('applications'), inquiries: () => records('inquiries'), users, leads, health, setup }[v] || overview)();
+  if (keep && $('#' + keep)) { const el = $('#' + keep); el.focus(); if (pos != null && el.setSelectionRange) try { el.setSelectionRange(pos, pos); } catch (e) {} }
+}
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
+/* ===================== Overview ===================== */
+function overview() {
+  const A = S.data.applications, I = S.data.inquiries, U = S.data.users, week = Date.now() - 7 * 86400000;
+  const aw = A.filter(x => ts(x.createdAt) > week).length, iw = I.filter(x => ts(x.createdAt) > week).length;
+  const openA = A.filter(x => OPEN.applications.includes(x.status)).length, openI = I.filter(x => OPEN.inquiries.includes(x.status)).length;
+  const approved = A.filter(x => x.status === 'Approved').length;
+  const waiting = [...A.map(x => ({ ...x, kind: 'applications' })), ...I.map(x => ({ ...x, kind: 'inquiries' }))].filter(x => OPEN[x.kind].includes(x.status)).sort((a, b) => ts(a.createdAt) - ts(b.createdAt)).slice(0, 6);
+  const cities = {}; A.forEach(x => { const c = (x.city || 'Unknown').trim(); cities[c] = (cities[c] || 0) + 1; });
+  const top = Object.entries(cities).sort((a, b) => b[1] - a[1]).slice(0, 6), max = top.length ? top[0][1] : 1;
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Good ${greeting()}, ${esc((S.user.name || '').split(' ')[0])}</h1><p>What needs you on redflaghomes.in today.</p></div></div>
+    ${errBox()}
+    <div class="grid kpis">
+      ${kpi('Franchise applications', A.length, aw + ' new this week')}
+      ${kpi('Waiting for review', openA + openI, openA + ' franchise · ' + openI + ' bookings')}
+      ${kpi('Booking inquiries', I.length, iw + ' new this week')}
+      ${kpi('Signed-in users', U.length, approved + ' approved franchise partners')}
+    </div>
+    <div class="grid two" style="margin-top:16px">
+      <section class="card"><div class="card-head"><div><h2>Last 30 days</h2><p>New submissions per day</p></div>
+        <div class="legend"><span><i style="background:var(--s-app)"></i>Franchise</span><span><i style="background:var(--s-inq)"></i>Bookings</span></div></div>
+        <div class="chart" id="chart"></div>
+        <details style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted);font-size:.82rem">Show as table</summary><div id="chart-table"></div></details>
+      </section>
+      <section class="card"><div class="card-head"><div><h2>Waiting longest</h2><p>Oldest items still not answered</p></div></div>
+        ${waiting.length ? `<ul class="mini">${waiting.map(x => `<li data-open="${x.kind}:${esc(x.id)}" tabindex="0"><div class="t"><b>${esc(x.userName || x.userEmail || 'Unknown')}</b><small>${x.kind === 'applications' ? 'Franchise · ' + esc(x.city || '') : 'Booking · ' + esc(x.destination || '')} · ${ago(x.createdAt)}</small></div>${pill(x.kind, x.status)}</li>`).join('')}</ul>` : `<p class="empty">Nothing waiting. Everything has been answered.</p>`}
+      </section>
+    </div>
+    <div class="grid two" style="margin-top:16px">
+      <section class="card"><div class="card-head"><div><h2>Franchise demand by city</h2><p>Where applicants want an Outpost</p></div></div>
+        ${top.length ? `<div class="bars">${top.map(([c, n]) => `<div class="bar-row"><span title="${esc(c)}">${esc(c)}</span><i style="width:${(n / max * 100).toFixed(1)}%"></i><b>${n}</b></div>`).join('')}</div>` : '<p class="empty">No applications yet.</p>'}
+      </section>
+      <section class="card"><div class="card-head"><div><h2>Pipeline</h2><p>Franchise applications by status</p></div></div>
+        <ul class="mini">${STATUS.applications.map(([s]) => `<li data-filter="applications:${esc(s)}" tabindex="0"><div class="t"><b>${esc(s)}</b></div><span>${A.filter(x => x.status === s).length}</span></li>`).join('')}</ul>
+      </section>
+    </div>`;
+  drawChart();
+  bindOpeners();
+  $$('[data-filter]').forEach(li => { const go = () => { const [k, s] = li.dataset.filter.split(':'); S.ui[k].status = s; location.hash = '#/' + k; }; li.addEventListener('click', go); li.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); });
+}
+function greeting() { const h = new Date().getHours(); return h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening'; }
+function kpi(label, n, sub) { return `<section class="card kpi"><small>${esc(label)}</small><b>${n}</b><span>${esc(sub)}</span></section>`; }
+function errBox() { const e = Object.values(S.errors); return e.length ? `<div class="demo-bar" style="border-color:var(--bad);margin-bottom:16px">${CHECK.fail.replace('<svg', '<svg style="width:18px;height:18px;color:var(--bad)"')} ${esc(e[0])} <a class="btn btn--sm" href="#/setup">Open setup</a></div>` : ''; }
+
+function drawChart() {
+  const box = $('#chart'); if (!box) return;
+  const days = 30, d0 = new Date(); d0.setHours(0, 0, 0, 0);
+  const start = d0.getTime() - (days - 1) * 86400000;
+  const rows = Array.from({ length: days }, (_, i) => ({ t: start + i * 86400000, a: 0, b: 0 }));
+  const put = (list, key) => list.forEach(x => { const i = Math.floor((ts(x.createdAt) - start) / 86400000); if (i >= 0 && i < days) rows[i][key]++; });
+  put(S.data.applications, 'a'); put(S.data.inquiries, 'b');
+  const W = Math.max(300, box.clientWidth), H = 220, L = 28, B = 22, T = 8;
+  const max = Math.max(4, ...rows.map(r => r.a + r.b)), nice = Math.ceil(max / 4) * 4;
+  const bw = (W - L) / days, barW = Math.max(3, bw - 3), y = v => T + (H - T - B) * (1 - v / nice);
+  const fmt = t => new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  let g = '';
+  for (let k = 0; k <= 4; k++) { const v = nice / 4 * k; g += `<line class="grid-line" x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}"/><text class="axis-t" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`; }
+  rows.forEach((r, i) => {
+    const x = L + i * bw + (bw - barW) / 2, ya = y(r.a), yb = y(r.a + r.b);
+    // stacked: franchise at the base, bookings on top, 2px surface gap between, rounded data-end
+    if (r.a) g += `<rect x="${x}" y="${ya}" width="${barW}" height="${y(0) - ya}" rx="${r.b ? 0 : 3}" fill="var(--s-app)"/>`;
+    if (r.b) g += `<rect x="${x}" y="${yb}" width="${barW}" height="${Math.max(0, ya - yb - (r.a ? 2 : 0))}" rx="3" fill="var(--s-inq)"/>`;
+    g += `<rect class="hit" data-i="${i}" x="${L + i * bw}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent"/>`;
+    if (i % 7 === 0 || (i === days - 1 && (days - 1) % 7 >= 3)) g += `<text class="axis-t" x="${x + barW / 2}" y="${H - 4}" text-anchor="middle">${fmt(r.t)}</text>`;
+  });
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="New franchise applications and booking inquiries per day for the last 30 days">${g}</svg><div class="tip" hidden></div>`;
+  const tip = box.querySelector('.tip');
+  box.querySelectorAll('.hit').forEach(h => {
+    const show = () => { const r = rows[+h.dataset.i]; tip.hidden = false; tip.innerHTML = `<b>${fmt(r.t)}</b><span><i style="background:var(--s-app)"></i>Franchise ${r.a}</span><br><span><i style="background:var(--s-inq)"></i>Bookings ${r.b}</span>`; const bx = h.getBBox(); tip.style.left = ((bx.x + bx.width / 2) / W * 100) + '%'; tip.style.top = (y(r.a + r.b) / H * 220) + 'px'; h.setAttribute('fill', 'rgba(127,127,127,.08)'); };
+    const hide = () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); };
+    h.addEventListener('pointerenter', show); h.addEventListener('pointerleave', hide);
+  });
+  $('#chart-table').innerHTML = `<div class="table-wrap" style="margin-top:8px"><table><thead><tr><th>Day</th><th>Franchise</th><th>Bookings</th></tr></thead><tbody>${rows.slice().reverse().filter(r => r.a || r.b).map(r => `<tr><td>${fmt(r.t)}</td><td>${r.a}</td><td>${r.b}</td></tr>`).join('') || '<tr><td colspan="3">No submissions.</td></tr>'}</tbody></table></div>`;
+}
+let resizeT; window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (view() === 'overview') drawChart(); }, 150); });
+
+/* ===================== Franchise & bookings tables ===================== */
+const COLS = {
+  applications: [['userName', 'Applicant'], ['city', 'City'], ['capital', 'Capital'], ['tier', 'Programme'], ['status', 'Status'], ['createdAt', 'Received']],
+  inquiries: [['userName', 'Guest'], ['destination', 'Stay'], ['checkin', 'Dates'], ['guests', 'Guests'], ['status', 'Status'], ['createdAt', 'Received']]
+};
+function filtered(kind) {
+  const u = S.ui[kind], q = u.q.trim().toLowerCase();
+  return S.data[kind].filter(x => (u.status === 'all' || x.status === u.status) && (!q || JSON.stringify(x).toLowerCase().includes(q)))
+    .sort((a, b) => { const k = u.sort; const va = k === 'createdAt' || k === 'lastLoginAt' ? ts(a[k]) : String(a[k] || '').toLowerCase(); const vb = k === 'createdAt' || k === 'lastLoginAt' ? ts(b[k]) : String(b[k] || '').toLowerCase(); return (va > vb ? 1 : va < vb ? -1 : 0) * u.dir; });
+}
+function records(kind) {
+  const isA = kind === 'applications', u = S.ui[kind], list = filtered(kind), all = S.data[kind];
+  store(seenKey(kind), Date.now());
+  const cell = (x, k) => {
+    if (k === 'userName') return `<td class="lead-cell"><b style="font-weight:500">${esc(x.userName || 'Unknown')}</b><span class="sub">${esc(x.userEmail || '')}</span></td>`;
+    if (k === 'status') return `<td data-l="Status">${pill(kind, x.status)}</td>`;
+    if (k === 'createdAt') return `<td data-l="Received" title="${esc(full(x.createdAt))}">${ago(x.createdAt)}</td>`;
+    if (k === 'checkin') return `<td data-l="Dates">${esc(x.checkin || '—')}${x.checkout ? ' → ' + esc(x.checkout) : ''}</td>`;
+    return `<td data-l="${esc(COLS[kind].find(c => c[0] === k)[1])}">${esc(x[k] || '—')}</td>`;
+  };
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>${isA ? 'Franchise applications' : 'Booking inquiries'}</h1><p>${isA ? 'From the Deploy your capital form on /franchise.' : 'From the Book a stay form on the home page.'} Click a row to open it.</p></div>
+      <div class="top-actions"><button class="btn" id="csv" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>Export CSV</button></div></div>
+    ${errBox()}
+    <div class="toolbar">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">Search</span><input id="q-${kind}" type="search" placeholder="Search name, email, phone, city…" value="${esc(u.q)}" autocomplete="off"></label>
+    </div>
+    <div class="chips" role="group" aria-label="Filter by status" style="margin-bottom:14px">
+      <button class="chip" type="button" data-st="all" aria-pressed="${u.status === 'all'}">All<small>${all.length}</small></button>
+      ${STATUS[kind].map(([s]) => `<button class="chip" type="button" data-st="${esc(s)}" aria-pressed="${u.status === s}">${esc(s)}<small>${all.filter(x => x.status === s).length}</small></button>`).join('')}
+    </div>
+    ${!S.loaded[kind] ? '<p class="empty">Loading…</p>' : list.length ? `<div class="table-wrap"><table><thead><tr>${COLS[kind].map(([k, l]) => `<th scope="col" aria-sort="${u.sort === k ? (u.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button type="button" data-sort="${k}">${esc(l)}${u.sort === k ? (u.dir > 0 ? ' ↑' : ' ↓') : ''}</button></th>`).join('')}</tr></thead>
+      <tbody>${list.map(x => `<tr data-open="${kind}:${esc(x.id)}" tabindex="0">${COLS[kind].map(([k]) => cell(x, k)).join('')}</tr>`).join('')}</tbody></table></div>
+      <p class="count-line">${list.length} of ${all.length}</p>` : `<div class="card empty">${all.length ? 'No matches. Try another search or filter.' : (isA ? 'No franchise applications yet.' : 'No booking inquiries yet.')}</div>`}`;
+  $('#q-' + kind).addEventListener('input', e => { u.q = e.target.value; render(); });
+  $$('[data-st]').forEach(b => b.addEventListener('click', () => { u.status = b.dataset.st; render(); }));
+  $$('[data-sort]').forEach(b => b.addEventListener('click', () => { const k = b.dataset.sort; if (u.sort === k) u.dir *= -1; else { u.sort = k; u.dir = k === 'createdAt' ? -1 : 1; } render(); }));
+  $('#csv').addEventListener('click', () => csv(kind + '-' + new Date().toISOString().slice(0, 10) + '.csv', list, isA
+    ? [['createdAt', 'Received'], ['userName', 'Name'], ['userEmail', 'Email'], ['phone', 'Phone'], ['city', 'City'], ['capital', 'Capital'], ['propertyIntent', 'Property'], ['existingClient', 'Existing client'], ['tier', 'Programme'], ['status', 'Status'], ['adminNotes', 'Notes']]
+    : [['createdAt', 'Received'], ['userName', 'Name'], ['userEmail', 'Email'], ['phone', 'Phone'], ['destination', 'Stay'], ['checkin', 'Check-in'], ['checkout', 'Check-out'], ['guests', 'Guests'], ['intent', 'Intent'], ['status', 'Status'], ['adminNotes', 'Notes']]));
+  bindOpeners();
+}
+function bindOpeners() {
+  $$('[data-open]').forEach(el => { const go = () => { const [k, id] = el.dataset.open.split(':'); openDrawer(k, id); }; el.addEventListener('click', go); el.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); });
+}
+function csv(name, rows, cols) {
+  const cellv = v => { let s = String(v ?? ''); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+  const text = [cols.map(c => cellv(c[1])).join(','), ...rows.map(r => cols.map(c => cellv(c[0] === 'createdAt' ? full(r[c[0]]) : r[c[0]])).join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + text], { type: 'text/csv' })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ---------------- drawer ---------------- */
+let lastFocus = null;
+function openDrawer(kind, id) {
+  const x = S.data[kind].find(r => r.id === id); if (!x) return;
+  lastFocus = document.activeElement;
+  const isA = kind === 'applications', phone = String(x.phone || '').replace(/\D/g, '');
+  const first = (x.userName || '').split(' ')[0] || 'there';
+  const waMsg = isA ? `Hi ${first}, this is Red Flag Homes about your franchise application for ${x.city || 'your city'}.` : `Hi ${first}, this is Red Flag Homes about your stay at ${x.destination || 'Red Flag'}${x.checkin ? ' on ' + x.checkin : ''}.`;
+  const facts = isA
+    ? [['Email', x.userEmail], ['Phone', x.phone], ['City', x.city], ['Capital', x.capital], ['Property', x.propertyIntent], ['Existing client', x.existingClient], ['Programme', x.tier], ['Received', full(x.createdAt)]]
+    : [['Email', x.userEmail], ['Phone', x.phone], ['Stay', x.destination], ['Check-in', x.checkin], ['Check-out', x.checkout], ['Guests', x.guests], ['Intent', x.intent], ['Received', full(x.createdAt)]];
+  const p = $('#drawer-panel');
+  p.innerHTML = `
+    <div class="drawer-top"><div><h2 id="d-title">${esc(x.userName || 'Unknown')}</h2><p>${isA ? 'Franchise application' : 'Booking inquiry'} · ${pill(kind, x.status)}</p></div>
+      <button class="btn btn--icon" type="button" id="d-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="quick">
+      ${phone ? `<a class="btn btn--sm" target="_blank" rel="noopener" href="https://wa.me/${esc(phone)}?text=${encodeURIComponent(waMsg)}">WhatsApp</a><a class="btn btn--sm" href="tel:+${esc(phone)}">Call</a>` : ''}
+      ${x.userEmail ? `<a class="btn btn--sm" href="mailto:${esc(x.userEmail)}?subject=${encodeURIComponent(isA ? 'Your Red Flag franchise application' : 'Your Red Flag stay')}">Email</a>` : ''}
+    </div>
+    <dl class="facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v || '—')}</dd>`).join('')}</dl>
+    <div class="field"><label for="d-status">Status</label><select id="d-status">${STATUS[kind].map(([s]) => `<option ${s === x.status ? 'selected' : ''}>${esc(s)}</option>`).join('')}${STATUS[kind].some(s => s[0] === x.status) ? '' : `<option selected>${esc(x.status || '')}</option>`}</select></div>
+    <div class="field"><label for="d-notes">Team notes (only admins see these)</label><textarea id="d-notes" placeholder="Call notes, next steps…">${esc(x.adminNotes || '')}</textarea></div>
+    ${x.updatedBy ? `<p class="history">Last updated by ${esc(x.updatedBy)} · ${esc(full(x.updatedAt))}</p>` : ''}
+    <div class="drawer-actions"><button class="btn btn--red" type="button" id="d-save">Save changes</button><button class="btn" type="button" id="d-del" style="color:var(--bad)">Delete</button></div>`;
+  $('#drawer').hidden = false; document.body.style.overflow = 'hidden'; $('#d-close').focus();
+  $('#d-close').addEventListener('click', closeDrawer);
+  $('#d-save').addEventListener('click', async e => {
+    const b = e.currentTarget; b.disabled = true; b.textContent = 'Saving…';
+    try { await saveDoc(kind, id, { status: $('#d-status').value, adminNotes: $('#d-notes').value, updatedAt: new Date().toISOString(), updatedBy: S.user.email }); toast('Saved', (x.userName || '') + ' · ' + $('#d-status').value); closeDrawer(); }
+    catch (err) { b.disabled = false; b.textContent = 'Save changes'; toast('Could not save', err.code === 'permission-denied' ? 'Your Firestore rules do not allow admin updates yet (see Setup).' : err.message); }
+  });
+  $('#d-del').addEventListener('click', async () => {
+    if (!confirm('Delete this ' + (isA ? 'application' : 'inquiry') + ' from ' + (x.userName || 'this person') + '? This cannot be undone.')) return;
+    try { await removeDoc(kind, id); toast('Deleted', x.userName || ''); closeDrawer(); } catch (err) { toast('Could not delete', err.message); }
+  });
+}
+function closeDrawer() { $('#drawer').hidden = true; document.body.style.overflow = ''; if (lastFocus && document.contains(lastFocus)) lastFocus.focus(); render(); }
+$('#drawer').addEventListener('click', e => { if (e.target.id === 'drawer') closeDrawer(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#drawer').hidden) closeDrawer(); });
+
+/* ===================== Users ===================== */
+function users() {
+  const u = S.ui.users, q = u.q.trim().toLowerCase();
+  const cnt = (k, uid) => S.data[k].filter(x => x.userId === uid).length;
+  const list = S.data.users.filter(x => !q || JSON.stringify(x).toLowerCase().includes(q)).sort((a, b) => (ts(a.lastLoginAt) - ts(b.lastLoginAt)) * u.dir);
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Users</h1><p>Everyone who signed in with Google on the site.</p></div></div>
+    ${errBox()}
+    <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">Search users</span><input id="q-users" type="search" placeholder="Search name or email…" value="${esc(u.q)}" autocomplete="off"></label></div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>User</th><th>Franchise</th><th>Bookings</th><th><button type="button" id="sort-login">Last sign-in ${u.dir > 0 ? '↑' : '↓'}</button></th></tr></thead><tbody>
+      ${list.map(x => `<tr tabindex="0" data-user="${esc(x.email || '')}"><td class="lead-cell"><b style="font-weight:500">${esc(x.displayName || 'Guest')}</b><span class="sub">${esc(x.email || '')}</span></td><td data-l="Franchise">${cnt('applications', x.uid || x.id)}</td><td data-l="Bookings">${cnt('inquiries', x.uid || x.id)}</td><td data-l="Last sign-in" title="${esc(full(x.lastLoginAt))}">${ago(x.lastLoginAt)}</td></tr>`).join('')}
+    </tbody></table></div><p class="count-line">${list.length} of ${S.data.users.length}</p>` : `<div class="card empty">${S.loaded.users ? 'No users yet.' : 'Loading…'}</div>`}`;
+  $('#q-users').addEventListener('input', e => { u.q = e.target.value; render(); });
+  const sl = $('#sort-login'); if (sl) sl.addEventListener('click', () => { u.dir *= -1; render(); });
+  $$('[data-user]').forEach(tr => tr.addEventListener('click', () => { S.ui.applications.q = tr.dataset.user; location.hash = '#/applications'; }));
+}
+
+/* ===================== Form leads (Google Sheets) ===================== */
+async function fetchLeads() {
+  S.leadsErr = ''; S.leads = null; render();
+  try {
+    const res = await fetch(CONFIG.sheetsReaderUrl + (CONFIG.sheetsReaderUrl.includes('?') ? '&' : '?') + 'idToken=' + encodeURIComponent(await idToken()));
+    const j = await res.json(); if (!j.ok) throw new Error(j.error || 'The sheet reader refused the request');
+    S.leads = j;
+  } catch (e) { S.leadsErr = e.message || String(e); }
+  render();
+}
+function leads() {
+  if (S.mode === 'live' && !CONFIG.sheetsReaderUrl) {
+    $('#view').innerHTML = `<div class="top"><div><h1>Form leads</h1><p>Contact, newsletter and Bella leads from your Google Sheets.</p></div></div>
+      <section class="card"><div class="card-head"><h2>Connect your Google Sheets</h2></div>
+      <ol class="steps"><li>Open <code>admin-sheets-reader.gs</code> (in the GitHub repo) and follow the 5 steps at the top. It takes about 5 minutes.</li><li>Paste the web app URL into <code>sheetsReaderUrl</code> in this page's config.</li><li>Reload. Every tab of your lead sheets shows up here, newest first, for admins only.</li></ol></section>`;
+    return;
+  }
+  if (S.mode === 'live' && !S.leads && !S.leadsErr) { $('#view').innerHTML = '<div class="top"><div><h1>Form leads</h1></div></div><p class="empty">Loading sheets…</p>'; fetchLeads(); return; }
+  if (S.leadsErr) { $('#view').innerHTML = `<div class="top"><div><h1>Form leads</h1></div></div><div class="card"><p>${CHECK.fail.replace('<svg', '<svg style="width:18px;height:18px;color:var(--bad);vertical-align:-3px"')} ${esc(S.leadsErr)}</p><button class="btn" id="retry" type="button">Try again</button></div>`; $('#retry').addEventListener('click', fetchLeads); return; }
+  const src = S.leads.sources || [], u = S.ui.leads; if (u.tab >= src.length) u.tab = 0;
+  const cur = src[u.tab], q = u.q.trim().toLowerCase();
+  const rows = cur ? cur.rows.filter(r => !q || r.join(' ').toLowerCase().includes(q)) : [];
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Form leads</h1><p>Rows from your Google Sheets, newest first.${S.leads.at ? ' Updated ' + ago(S.leads.at) + '.' : ''}</p></div>
+      <div class="top-actions">${S.mode === 'live' ? '<button class="btn" id="reload" type="button">Refresh</button>' : ''}<button class="btn" id="csv" type="button" ${cur ? '' : 'disabled'}>Export CSV</button></div></div>
+    <div class="tabs chips" role="group" aria-label="Sheets">${src.map((s, i) => `<button class="chip" type="button" data-tab="${i}" aria-pressed="${i === u.tab}">${esc(s.book)} · ${esc(s.sheet)}<small>${s.total}</small></button>`).join('')}</div>
+    ${cur ? `<div class="toolbar"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">Search leads</span><input id="q-leads" type="search" placeholder="Search this sheet…" value="${esc(u.q)}" autocomplete="off"></label></div>
+      ${rows.length ? `<div class="table-wrap"><table><thead><tr>${cur.headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr style="cursor:default">${r.map((c, i) => `<td data-l="${esc(cur.headers[i])}" title="${esc(c)}">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="count-line">${rows.length} of ${cur.total}${cur.total > cur.rows.length ? ' (newest ' + cur.rows.length + ' shown)' : ''}</p>` : '<div class="card empty">No rows.</div>'}` : '<div class="card empty">No sheets found. Check SHEET_IDS in the reader script.</div>'}`;
+  $$('[data-tab]').forEach(b => b.addEventListener('click', () => { u.tab = +b.dataset.tab; render(); }));
+  const qi = $('#q-leads'); if (qi) qi.addEventListener('input', e => { u.q = e.target.value; render(); });
+  const rl = $('#reload'); if (rl) rl.addEventListener('click', fetchLeads);
+  const c = $('#csv'); if (c && cur) c.addEventListener('click', () => csv((cur.book + '-' + cur.sheet).replace(/\W+/g, '-') + '.csv', rows.map(r => Object.fromEntries(r.map((v, i) => [i, v]))), cur.headers.map((h, i) => [i, h])));
+}
+
+/* ===================== Site health ===================== */
+const PAGES = [['/', 'Home page'], ['/franchise', 'Franchise page'], ['/bella/', 'Bella page'], ['/form-handler.js', 'Form handler script'], ['/firebase-client.js', 'Sign-in script'], ['/firebase-applet-config.json', 'Firebase config'], ['/manifest.json', 'App manifest'], ['/transitions.js', 'Page transitions']];
+async function runHealth() {
+  const base = S.fb || location.hostname.endsWith('redflaghomes.in') ? '' : CONFIG.site; // same site when the admin is served from it
+  S.health = { running: true, items: PAGES.map(([p, n]) => ({ p, n, st: 'wait' })), scan: [] }; render();
+  const texts = {};
+  await Promise.all(S.health.items.map(async it => {
+    const t0 = performance.now();
+    try {
+      const r = await fetch(base + it.p, { cache: 'no-store' }); const txt = await r.text(); texts[it.p] = txt;
+      const ms = Math.round(performance.now() - t0), kb = Math.round(txt.length / 1024);
+      it.st = !r.ok ? 'fail' : ms > 2500 ? 'warn' : 'ok'; it.meta = r.status + ' · ' + ms + ' ms · ' + kb + ' KB';
+      if (it.p === '/bella/' && r.ok && !/Bella by Red Flag/i.test(txt)) { it.st = 'fail'; it.note = 'Loads, but it is not the Bella page (the site is showing another page at /bella/).'; }
+      if (it.p === '/franchise' && r.ok && !/franchise|outpost/i.test(txt)) { it.st = 'warn'; it.note = 'Loads, but does not look like the franchise page.'; }
+    } catch (e) { it.st = 'wait'; it.meta = 'not checked'; it.note = 'Your browser blocked this check here. Open the admin on redflaghomes.in/admin to check it.'; }
+    render();
+  }));
+  const home = texts['/'] || '', fr = texts['/franchise'] || '', all = home + fr, scan = [];
+  if (home || fr) {
+    const ph = all.match(/wa\.me\/(1234567890|0+|91?0{6,})\b/g);
+    scan.push(ph ? ['fail', 'Placeholder WhatsApp link', 'Found ' + [...new Set(ph)].join(', ') + '. Visitors who tap it reach a wrong number. Replace it with wa.me/' + CONFIG.whatsapp + '.'] : ['ok', 'WhatsApp links', 'No placeholder numbers found.']);
+    const mixed = (all.match(/(?:src|href)=["']http:\/\/[^"']+/g) || []).filter(x => !/localhost/.test(x));
+    scan.push(mixed.length ? ['warn', 'Insecure http:// links', mixed.slice(0, 3).join(', ')] : ['ok', 'Secure links', 'All links and media use https.']);
+    const imgs = home.match(/<img\b[^>]*>/g) || [], noAlt = imgs.filter(t => !/\balt=/.test(t)).length;
+    scan.push(noAlt ? ['warn', 'Images without alt text', noAlt + ' of ' + imgs.length + ' images on the home page have no alt text (hurts SEO and screen readers).'] : ['ok', 'Image alt text', 'Every home page image has alt text.']);
+    scan.push(/<meta[^>]+name=["']description/i.test(home) ? ['ok', 'Search description', 'The home page has a meta description.'] : ['warn', 'Search description', 'The home page has no meta description.']);
+    scan.push(/<link[^>]+rel=["']canonical/i.test(home) ? ['ok', 'Canonical URL', 'Set on the home page.'] : ['warn', 'Canonical URL', 'Missing on the home page.']);
+    const legal = ['#terms', '#privacy', '#cancellation'].filter(h => home.includes('href="' + h + '"'));
+    if (legal.length) scan.push(['warn', 'Legal links on the home page', legal.join(', ') + ' point to sections on the same page. Check that they open real Terms, Privacy and Cancellation text (payment gateways check this).']);
+    const big = ['/', '/franchise'].filter(p => (texts[p] || '').length > 400 * 1024);
+    if (big.length) scan.push(['warn', 'Heavy pages', big.join(', ') + ' are over 400 KB of HTML before images and video. Consider moving inline code into cached files.']);
+  }
+  const ep = (texts['/form-handler.js'] || '').match(/https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec/);
+  scan.push(ep ? ['ok', 'Form endpoint configured', 'Website forms post to your Google Apps Script, with a WhatsApp fallback.'] : ['wait', 'Form endpoint', 'Could not read /form-handler.js from here.']);
+  S.health.scan = scan; S.health.running = false; S.health.at = new Date().toISOString(); render();
+}
+function health() {
+  const h = S.health;
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Site health</h1><p>Live checks of redflaghomes.in: pages, scripts and common problems.${h && h.at ? ' Last run ' + ago(h.at) + '.' : ''}</p></div>
+      <div class="top-actions"><button class="btn btn--red" id="run" type="button" ${h && h.running ? 'disabled' : ''}>${h && h.running ? 'Checking…' : h ? 'Run again' : 'Run checks'}</button></div></div>
+    ${h ? `<div class="grid two">
+      <section class="card"><div class="card-head"><h2>Pages and files</h2></div><ul class="checks">${h.items.map(it => `<li class="${it.st}">${CHECK[it.st]}<div><b>${esc(it.n)}</b><small>${esc(it.p)}${it.note ? ' · ' + esc(it.note) : ''}</small></div><span class="meta">${esc(it.meta || '…')}</span></li>`).join('')}</ul></section>
+      <section class="card"><div class="card-head"><h2>Content checks</h2></div>${h.scan.length ? `<ul class="checks">${h.scan.map(([st, t, d]) => `<li class="${st}">${CHECK[st]}<div><b>${esc(t)}</b><small>${esc(d)}</small></div><span></span></li>`).join('')}</ul>` : '<p class="empty">Waiting for pages…</p>'}</section>
+    </div>` : `<section class="card empty">Checks the home, franchise and Bella pages, the scripts the forms depend on, and scans for placeholder links, missing alt text and SEO basics.</section>`}`;
+  $('#run').addEventListener('click', runHealth);
+}
+
+/* ===================== Setup ===================== */
+function setup() {
+  const emails = CONFIG.adminEmails.length ? CONFIG.adminEmails : ['you@gmail.com'];
+  const rules = `// Firestore → Rules. Paste inside: match /databases/{database}/documents { ... }
+// Keep your existing rules; these only ADD admin access.
+function isRfAdmin() {
+  return request.auth != null
+    && request.auth.token.email_verified == true
+    && request.auth.token.email in [${emails.map(e => "'" + e + "'").join(', ')}];
+}
+match /applications/{id} { allow read, update, delete: if isRfAdmin(); }
+match /inquiries/{id}    { allow read, update, delete: if isRfAdmin(); }
+match /users/{id}        { allow read: if isRfAdmin(); }`;
+  const item = (ok, t, d) => `<li class="${ok === true ? 'ok' : ok === false ? 'fail' : 'warn'}">${CHECK[ok === true ? 'ok' : ok === false ? 'fail' : 'warn']}<div><b>${esc(t)}</b><small>${d}</small></div><span></span></li>`;
+  const live = S.mode === 'live';
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Setup</h1><p>Three things connect this panel to your live data.</p></div></div>
+    <div class="grid two">
+      <section class="card"><div class="card-head"><h2>Status</h2></div><ul class="checks">
+        ${item(CONFIG.adminEmails.length ? true : false, 'Admin accounts', CONFIG.adminEmails.length ? esc(CONFIG.adminEmails.join(', ')) : 'Add your Google email to <code>adminEmails</code> in this page’s config.')}
+        ${item(live ? true : null, 'Firebase sign-in', live ? 'Signed in as ' + esc(S.user.email) + '.' : 'Sample data mode. Live sign-in works on redflaghomes.in/admin.')}
+        ${item(live ? (Object.keys(S.errors).length ? false : true) : null, 'Firestore admin rules', live ? (Object.keys(S.errors).length ? esc(Object.values(S.errors)[0]) : 'Applications, bookings and users are readable.') : 'Add the rules on the right in the Firebase console.')}
+        ${item(CONFIG.sheetsReaderUrl ? true : null, 'Google Sheets leads', CONFIG.sheetsReaderUrl ? 'Sheet reader connected.' : 'Optional. Deploy <code>admin-sheets-reader.gs</code> and set <code>sheetsReaderUrl</code>.')}
+      </ul></section>
+      <section class="card"><div class="card-head"><div><h2>Firestore rules</h2><p>Firebase console → Firestore Database → Rules → Publish</p></div><button class="btn btn--sm" id="copy" type="button">Copy</button></div><pre class="code" id="rules">${esc(rules)}</pre>
+        <p style="color:var(--muted);font-size:.82rem;margin:10px 0 0">Firestore rules add up, so these only give the listed admin emails access. Visitors keep only the access your current rules give them.</p></section>
+    </div>`;
+  $('#copy').addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(rules).then(() => toast('Copied', 'Paste it in Firebase → Firestore → Rules.')); });
+}
+
+/* ===================== Theme & boot ===================== */
+function theme() {
+  const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  const next = cur === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = next; store('rf-admin-theme', next); if (view() === 'overview') drawChart();
+}
+const savedTheme = store('rf-admin-theme'); if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+$('#theme').addEventListener('click', theme); $('#theme-m').addEventListener('click', theme);
+const out = () => { if (S.mode === 'live') S.fb.authM.signOut(S.fb.auth); else location.reload(); };
+$('#signout').addEventListener('click', out); $('#signout-m').addEventListener('click', out);
+$('#demo').addEventListener('click', startDemo);
+$('#signin').addEventListener('click', async () => {
+  try { const fb = await loadFirebase(); await fb.authM.signInWithPopup(fb.auth, new fb.authM.GoogleAuthProvider()); }
+  catch (e) { gateMsg(e.code === 'auth/popup-closed-by-user' ? 'Sign-in was cancelled.' : 'Sign-in failed: ' + (e.message || e)); }
+});
+startLive();
+</script>
+</body>
+</html>
