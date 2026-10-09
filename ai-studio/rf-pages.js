@@ -1,7 +1,7 @@
 // Red Flag Homes: serve the Bella, Admin and Journal pages byte for byte from GitHub (via the jsDelivr CDN).
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit the files' code; to update the pages, only change RF_VERSION.
-const RF_VERSION = 'ad111c201c132ffe20106c1293fa19bb9571bbf4';
+const RF_VERSION = 'abc7ff507e4b80eb47d2a807988510fd48bee9d5';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_PAGES = [
   { match: (p) => p === '/bella' || p === '/bella/' || p === '/bella/index.html', file: 'bella-redflaghomes.html', type: 'text/html; charset=utf-8' },
