@@ -73,6 +73,12 @@
   .gate-msg { font-size: .85rem; color: var(--warn); min-height: 1.2em; }
   .gate-actions { display: grid; gap: 10px; }
   .gate-actions .btn { min-height: 46px; }
+  .gate-input { width: 100%; min-height: 48px; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--surface-2); font-size: 1rem; }
+  .gate-input:focus { outline: none; border-color: var(--accent); }
+  .pass-wrap { position: relative; } .pass-wrap .gate-input { padding-right: 70px; }
+  .pass-eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); min-height: 34px; padding: 4px 10px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer; font-size: .82rem; }
+  .link-btn { justify-self: center; border: 0; background: none; color: var(--muted); font-size: .85rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 4px; }
+  .gate-card .gate-actions { text-align: left; }
   .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: .02em; justify-content: center; }
   .brand .dot { width: 9px; height: 9px; box-shadow: 0 0 14px var(--accent); }
 
@@ -283,13 +289,15 @@
     <span class="brand"><i class="dot"></i>RED FLAG HOMES</span>
     <h1>Admin</h1>
     <p>Applications, bookings, leads and site health for redflaghomes.in in one place.</p>
-    <div class="gate-actions">
-      <button class="btn btn--red" id="signin" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z"/><path fill="currentColor" opacity=".8" d="M12 22c2.7 0 5-.9 6.6-2.5l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="currentColor" opacity=".6" d="M6.4 13.9a6 6 0 0 1 0-3.8V7.5H3.1a10 10 0 0 0 0 9Z"/><path fill="currentColor" opacity=".9" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.8 9.4 6 12 6Z"/></svg>
-        Sign in with Google
-      </button>
+    <form class="gate-actions" id="login" novalidate>
+      <label class="sr-only" for="l-email">Email</label>
+      <input class="gate-input" id="l-email" type="email" autocomplete="username" placeholder="Email" required>
+      <label class="sr-only" for="l-pass">Password</label>
+      <div class="pass-wrap"><input class="gate-input" id="l-pass" type="password" autocomplete="current-password" placeholder="Password" required><button type="button" class="pass-eye" id="l-eye" aria-label="Show password">Show</button></div>
+      <button class="btn btn--red" id="signin" type="submit">Sign in</button>
+      <button class="link-btn" id="forgot" type="button">Forgot password?</button>
       <button class="btn" id="demo" type="button">Preview with sample data</button>
-    </div>
+    </form>
     <p class="gate-msg" id="gate-msg" role="status"></p>
   </div>
 </section>
@@ -321,7 +329,7 @@
 
   <main class="main" id="main">
     <div class="mobile-top"><span class="brand"><i class="dot"></i>RED FLAG</span><span style="display:flex;gap:6px"><button class="btn btn--sm" id="theme-m" type="button">Theme</button><button class="btn btn--sm" id="signout-m" type="button">Sign out</button></span></div>
-    <div class="demo-bar" id="demo-bar" hidden><span class="dot" style="background:var(--warn)"></span>Sample data. Nothing here is real and changes are not saved. Sign in with Google on redflaghomes.in/admin to see live data.</div>
+    <div class="demo-bar" id="demo-bar" hidden><span class="dot" style="background:var(--warn)"></span>Sample data. Nothing here is real and changes are not saved. Sign in on redflaghomes.in/admin to see live data.</div>
     <div id="view"></div>
   </main>
 </div>
@@ -332,8 +340,8 @@
 <script type="module">
 /* ===================== Edit these ===================== */
 const CONFIG = {
-  // Google accounts allowed in. Must match the emails in your Firestore rules (Setup page shows the rules).
-  adminEmails: [],
+  // Emails allowed in (Firebase email/password accounts). Must match the Firestore rules on the Setup page. /admin-config.json can override.
+  adminEmails: ['priyanshu@redflaghomes.in'],
   // The site's own Firebase config file (same one the website uses).
   firebaseConfigUrl: '/firebase-applet-config.json',
   // Web app URL of admin-sheets-reader.gs (ends with /exec). Shows your Google Sheet leads. Empty = off.
@@ -413,14 +421,15 @@ async function loadFirebase() {
   S.fb = { authM, fsM, auth, db, cfg };
   return S.fb;
 }
-const isAdmin = u => !!u && !!u.email && u.emailVerified !== false && CONFIG.adminEmails.map(e => e.toLowerCase()).includes(u.email.toLowerCase());
+// Admin = an email on the list that is either verified (Google) or an email/password account created in Firebase.
+const isAdmin = u => !!u && !!u.email && (u.emailVerified || (u.providerData || []).some(p => p.providerId === 'password')) && CONFIG.adminEmails.map(e => e.toLowerCase()).includes(u.email.toLowerCase());
 
 async function startLive() {
   let fb;
-  try { fb = await loadFirebase(); } catch (e) { gateMsg('Live sign-in works on redflaghomes.in/admin. Here you can preview with sample data.'); $('#signin').disabled = true; return; }
+  try { fb = await loadFirebase(); } catch (e) { gateMsg('Sign-in works on redflaghomes.in/admin. Here you can preview with sample data.'); $('#signin').disabled = true; $('#forgot').disabled = true; return; }
   fb.authM.onAuthStateChanged(fb.auth, user => {
     if (!user) { if (S.mode === 'live') location.reload(); return; }
-    if (!CONFIG.adminEmails.length) { gateMsg('Add your Google email to adminEmails in the admin page config, then reload.'); return; }
+    if (!CONFIG.adminEmails.length) { gateMsg('No admin emails are set. Add yours to /admin-config.json, then reload.'); fb.authM.signOut(fb.auth); return; }
     if (!isAdmin(user)) { gateMsg(user.email + ' is not an admin account.'); fb.authM.signOut(fb.auth); return; }
     S.user = { name: user.displayName || user.email, email: user.email, photo: user.photoURL };
     S.mode = 'live'; enterApp(); subscribe();
@@ -1114,7 +1123,7 @@ function setup() {
 // Keep your existing rules; these only ADD admin access.
 function isRfAdmin() {
   return request.auth != null
-    && request.auth.token.email_verified == true
+    && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'password')
     && request.auth.token.email in [${emails.map(e => "'" + e + "'").join(', ')}];
 }
 match /applications/{id} { allow read, update, delete: if isRfAdmin(); }
@@ -1131,7 +1140,7 @@ match /bellaPayments/{id} { allow read, update: if isRfAdmin(); }`;
     <div class="top"><div><h1>Setup</h1><p>What connects this panel to your live data.</p></div></div>
     <div class="grid two">
       <section class="card"><div class="card-head"><h2>Status</h2></div><ul class="checks">
-        ${item(CONFIG.adminEmails.length ? true : false, 'Admin accounts', CONFIG.adminEmails.length ? esc(CONFIG.adminEmails.join(', ')) : 'Add your Google email to <code>adminEmails</code> in this page’s config.')}
+        ${item(CONFIG.adminEmails.length ? true : false, 'Admin accounts', CONFIG.adminEmails.length ? esc(CONFIG.adminEmails.join(', ')) : 'Add your email to <code>/admin-config.json</code>.')}
         ${item(live ? true : null, 'Firebase sign-in', live ? 'Signed in as ' + esc(S.user.email) + '.' : 'Sample data mode. Live sign-in works on redflaghomes.in/admin.')}
         ${item(live ? (Object.keys(S.errors).length ? false : true) : null, 'Firestore admin rules', live ? (Object.keys(S.errors).length ? esc(Object.values(S.errors)[0]) : 'Applications, bookings and users are readable.') : 'Add the rules on the right in the Firebase console.')}
         ${item(live ? (S.errors.posts ? false : true) : null, 'Journal', live ? (S.errors.posts ? esc(S.errors.posts) : S.data.posts.length + ' stories. Add <code>/journal.js</code> to the home page so they show in Explore.') : 'Stories save to Firestore <code>posts</code>. The AI Studio prompt adds <code>/journal.js</code> and the <code>/journal</code> pages.')}
@@ -1155,14 +1164,34 @@ $('#theme').addEventListener('click', theme); $('#theme-m').addEventListener('cl
 const out = () => { if (S.mode === 'live') S.fb.authM.signOut(S.fb.auth); else location.reload(); };
 $('#signout').addEventListener('click', out); $('#signout-m').addEventListener('click', out);
 $('#demo').addEventListener('click', startDemo);
-$('#signin').addEventListener('click', async () => {
-  try { const fb = await loadFirebase(); await fb.authM.signInWithPopup(fb.auth, new fb.authM.GoogleAuthProvider()); }
-  catch (e) { gateMsg(e.code === 'auth/popup-closed-by-user' ? 'Sign-in was cancelled.' : 'Sign-in failed: ' + (e.message || e)); }
+const AUTH_MSG = {
+  'auth/invalid-credential': 'Wrong email or password.', 'auth/wrong-password': 'Wrong email or password.', 'auth/user-not-found': 'Wrong email or password.',
+  'auth/invalid-email': 'Enter a valid email address.', 'auth/missing-password': 'Enter your password.',
+  'auth/too-many-requests': 'Too many attempts. Wait a few minutes or reset your password.',
+  'auth/operation-not-allowed': 'Email/password sign-in is turned off in Firebase (Authentication → Sign-in method).',
+  'auth/network-request-failed': 'No connection. Check your internet and try again.'
+};
+$('#l-eye').addEventListener('click', () => { const i = $('#l-pass'), show = i.type === 'password'; i.type = show ? 'text' : 'password'; $('#l-eye').textContent = show ? 'Hide' : 'Show'; $('#l-eye').setAttribute('aria-label', show ? 'Hide password' : 'Show password'); });
+$('#login').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#l-email').value.trim(), pass = $('#l-pass').value, btn = $('#signin');
+  if (!email || !pass) { gateMsg(!email ? 'Enter your email.' : 'Enter your password.'); (!email ? $('#l-email') : $('#l-pass')).focus(); return; }
+  if (CONFIG.adminEmails.length && !CONFIG.adminEmails.map(x => x.toLowerCase()).includes(email.toLowerCase())) { gateMsg('This email does not have admin access.'); return; }
+  btn.disabled = true; btn.textContent = 'Signing in…'; gateMsg('');
+  try { const fb = await loadFirebase(); await fb.authM.signInWithEmailAndPassword(fb.auth, email, pass); $('#l-pass').value = ''; }
+  catch (err) { gateMsg(AUTH_MSG[err.code] || 'Sign-in failed: ' + (err.message || err)); }
+  btn.disabled = false; btn.textContent = 'Sign in';
+});
+$('#forgot').addEventListener('click', async () => {
+  const email = $('#l-email').value.trim();
+  if (!email) { gateMsg('Type your email above first, then tap “Forgot password?”.'); $('#l-email').focus(); return; }
+  try { const fb = await loadFirebase(); await fb.authM.sendPasswordResetEmail(fb.auth, email); gateMsg('If ' + email + ' is an admin account, a reset link is on its way. Check your inbox.'); }
+  catch (err) { gateMsg(AUTH_MSG[err.code] || 'Could not send the reset email: ' + (err.message || err)); }
 });
 // Optional settings file on the site (e.g. public/admin-config.json) so admin emails can change without editing this page:
 // { "adminEmails": ["you@gmail.com"], "sheetsReaderUrl": "https://script.google.com/macros/s/…/exec" }
 fetch('/admin-config.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : {}).catch(() => ({})).then(cfg => {
-  if (cfg && typeof cfg === 'object') ['adminEmails', 'sheetsReaderUrl', 'aiWriterUrl', 'whatsapp'].forEach(k => { if (cfg[k] !== undefined && cfg[k] !== '') CONFIG[k] = cfg[k]; });
+  if (cfg && typeof cfg === 'object') ['adminEmails', 'sheetsReaderUrl', 'aiWriterUrl', 'whatsapp'].forEach(k => { if (cfg[k] !== undefined && cfg[k] !== '' && !(Array.isArray(cfg[k]) && !cfg[k].length)) CONFIG[k] = cfg[k]; });
 }).finally(startLive);
 </script>
 </body>

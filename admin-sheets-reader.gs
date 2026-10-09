@@ -10,7 +10,7 @@
  *  3. Project Settings (gear) → Script properties → add:
  *       SHEET_IDS        the IDs of the spreadsheets to show, comma separated
  *                        (the long part of each sheet URL: docs.google.com/spreadsheets/d/<THIS PART>/edit)
- *       ADMIN_EMAILS     the Google emails allowed to read, comma separated
+ *       ADMIN_EMAILS     the admin emails allowed to read, comma separated (e.g. priyanshu@redflaghomes.in)
  *       FIREBASE_API_KEY the "apiKey" value from https://redflaghomes.in/firebase-applet-config.json
  *  4. Deploy → New deployment → type "Web app" → Execute as: Me → Who has access: Anyone → Deploy.
  *     Approve the permissions it asks for (it only reads your sheets).
@@ -59,7 +59,8 @@ function verifyAdmin_(idToken, props) {
   var user = (JSON.parse(res.getContentText()).users || [])[0] || {};
   var email = String(user.email || '').toLowerCase();
   var allowed = String(props.getProperty('ADMIN_EMAILS') || '').toLowerCase().split(',').map(trim_);
-  if (!email || !user.emailVerified || allowed.indexOf(email) === -1) throw new Error('This Google account is not an admin');
+  var isPassword = (user.providerUserInfo || []).some(function (p) { return p.providerId === 'password'; });
+  if (!email || !(user.emailVerified || isPassword) || allowed.indexOf(email) === -1) throw new Error('This account is not an admin');
   return email;
 }
 
