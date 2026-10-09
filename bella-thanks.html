@@ -198,7 +198,7 @@ function paid(r) {
   document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(b.dataset.copy).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1500); }); }));
   $('#step-email').textContent = r.email || 'your email';
   $('#paid-wa').href = wa('Hi Red Flag, I just bought ' + item + '. Transaction ID: ' + (r.txnId || r.paymentId) + '.');
-  if (r.account && r.account.email) {
+  if (r.account && r.account.email && !r.account.error) {
     $('#account').hidden = false;
     $('#acc-title').textContent = r.account.created ? 'Your Red Flag account is ready' : 'Added to your Red Flag account';
     $('#acc-text').textContent = 'We ' + (r.account.created ? 'created an account' : 'linked this purchase to your account') + ' for ' + r.account.email + '. Sign in on redflaghomes.in with Google using this email, or set a password.';

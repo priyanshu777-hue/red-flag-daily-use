@@ -93,7 +93,7 @@ app.get('/api/bella/receipt', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'Missing payment reference' });
     }
     Object.assign(rec, rfBellaPlan(rec.amount, rec.currency));
-    rec.receiptNo = 'RF-BELLA-' + rec.paidAt.slice(0, 10).replace(/-/g, '') + '-' + String(rec.paymentId).slice(-6).toUpperCase();
+    rec.receiptNo = 'RF-BELLA-' + rec.paidAt.slice(0, 10).replace(/-/g, '') + '-' + String(rec.paymentId).replace(/[^A-Za-z0-9]/g, '').slice(-6).toUpperCase();
     if (rec.status === 'paid' && rec.email) rec.account = await rfBellaAccount(rec);
     return res.json({ ok: true, ...rec });
   } catch (err) {
