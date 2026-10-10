@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
 <style>
 /* Layout: one pinned screen. Scrolling first drives a real-time 3D bottle (turn, unscrew, lift, spray, close),
-   then hands over to the bottle film, played frame by frame with its copy; then the reserve close.
+   then the frame animation (cap, spray, the notes, the pour, The 22), then the bottle film with its copy; then the reserve close.
    Phones: the 3D fills the screen; the film sits in a band near the top with its copy below. */
 :root {
   --stage: #1C0C0C;      /* oxblood black */
@@ -49,7 +49,7 @@ img { display: block; }
 .layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .three .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .three::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(130% 100% at 50% 50%, transparent 58%, rgba(28,12,12,.7) 100%); }
-.film { opacity: 0; }
+.film, .anim { opacity: 0; }
 .shade { position: absolute; inset: 0; pointer-events: none; opacity: 0;
   background: linear-gradient(90deg, rgba(28,12,12,.86) 0%, rgba(28,12,12,.45) 32%, rgba(28,12,12,0) 58%), linear-gradient(0deg, rgba(28,12,12,.7) 0%, rgba(28,12,12,0) 34%); }
 .copy { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px); width: min(440px, calc(100% - 2 * var(--gutter))); opacity: 0; }
@@ -67,6 +67,11 @@ img { display: block; }
 @media (max-aspect-ratio: 1/1) {
   .film {
     inset: auto 0 auto 0; top: calc(env(safe-area-inset-top, 0px) + 84px); aspect-ratio: 1 / 1.04; max-height: 60svh; width: 100%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
+            mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
+  }
+  .anim {
+    inset: auto 0 auto 0; top: 50%; transform: translateY(-46%); aspect-ratio: 1 / 1.1; max-height: 66svh; width: 100%;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
   }
@@ -138,6 +143,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     <h1 class="sr-only">Caldoir Elixir</h1>
     <div class="pin">
       <div class="layer three" aria-hidden="true"><canvas id="gl"></canvas></div>
+      <div class="layer anim" aria-hidden="true"><canvas id="anim-canvas"></canvas></div>
       <div class="layer film" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
       <div class="shade" id="shade"></div>
       <div class="copy" id="copy" aria-live="polite">
@@ -207,9 +213,10 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   const lerp = (a, b, t) => a + (b - a) * t;
 
   /* The show: 3D bottle first, then the film. Scroll lengths in screen heights. */
-  const SCREENS_3D = 5, SCREENS_FILM = 5.5, BLEND = 0.5;
-  const TOTAL = SCREENS_3D + BLEND + SCREENS_FILM;
-  const END_3D = SCREENS_3D / TOTAL, START_FILM = (SCREENS_3D + BLEND) / TOTAL;
+  const SCREENS_3D = 5, SCREENS_ANIM = 7, SCREENS_FILM = 5.5, BLEND = 0.5;
+  const TOTAL = SCREENS_3D + BLEND + SCREENS_ANIM + BLEND + SCREENS_FILM;
+  const END_3D = SCREENS_3D / TOTAL, START_ANIM = (SCREENS_3D + BLEND) / TOTAL;
+  const END_ANIM = START_ANIM + SCREENS_ANIM / TOTAL, START_FILM = END_ANIM + BLEND / TOTAL;
   const show = $('story');
   let lastW = 0;
   function sizeShow() { if (innerWidth !== lastW) { lastW = innerWidth; show.style.height = (innerHeight * (1 + TOTAL)) + 'px'; } }
@@ -429,41 +436,56 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     const img = new Image(); img.src = 'img/final-bottle.jpg'; img.className = 'fallback'; img.alt = ''; $('gl').replaceWith(img);
   }
 
-  /* ================= the film, frame by frame ================= */
-  const film = (() => {
-    const COUNT = 150, CUTS = [0, 0.24, 0.62];
-    const canvas = $('film-canvas'), ctx = canvas.getContext('2d');
-    const frames = new Array(COUNT), loaded = new Array(COUNT).fill(false);
-    const chapters = [...document.querySelectorAll('#copy .chapter')];
-    let drawn = -1, need = 0, started = false, shown = 0;
+  /* ================= frame players: the frame animation and the film ================= */
+  function player({ canvasId, path, count, focusPortrait = 0.5, onPaint }) {
+    const canvas = $(canvasId), ctx = canvas.getContext('2d');
+    const frames = new Array(count), loaded = new Array(count).fill(false);
+    let drawnKey = '', need = 0, started = false;
     function load(i) {
       if (frames[i]) return;
       const im = new Image(); im.decoding = 'async';
-      im.onload = () => { loaded[i] = true; if (Math.abs(i - need) < 3 || drawn < 0) draw(need, true); };
-      im.src = `seq/f${String(i + 1).padStart(3, '0')}.jpg`; frames[i] = im;
+      im.onload = () => { loaded[i] = true; if (Math.abs(i - need) < 3) draw(need, true); };
+      im.src = path(i); frames[i] = im;
     }
-    function start() { if (started) return; started = true; load(0); for (let i = 8; i < COUNT; i += 8) load(i); for (let i = 1; i < COUNT; i++) load(i); }
-    function draw(i, force) {
-      let k = i; while (k > 0 && !loaded[k]) k--;
-      if (!loaded[k] || (k === drawn && !force)) return;
-      const im = frames[k], cw = canvas.width, ch = canvas.height;
+    function start() { if (started) return; started = true; load(0); for (let i = 8; i < count; i += 8) load(i); for (let i = 1; i < count; i++) load(i); }
+    function blit(im, alpha) {
+      const cw = canvas.width, ch = canvas.height;
       const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
-      ctx.drawImage(im, (cw - w) * (portrait.matches ? 0.54 : 0.5), (ch - h) / 2, w, h); drawn = k;
+      ctx.globalAlpha = alpha; ctx.drawImage(im, (cw - w) * (portrait.matches ? focusPortrait : 0.5), (ch - h) / 2, w, h); ctx.globalAlpha = 1;
     }
-    function resize() { const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); drawn = -1; draw(need, true); }
-    function paint(f) {
-      need = Math.round(clamp((f - 0.04) / 0.86) * (COUNT - 1)); draw(need);
-      let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
-      if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
-      $('rail').style.transform = portrait.matches ? `scaleX(${f.toFixed(4)})` : `scaleY(${f.toFixed(4)})`;
+    function draw(f, force) {
+      let k = Math.floor(f); while (k > 0 && !loaded[k]) k--;
+      if (!loaded[k]) return;
+      const n = k + 1 < count && loaded[k + 1] && Math.floor(f) === k ? k + 1 : -1, t = n > 0 ? f - k : 0;
+      const key = k + ':' + t.toFixed(2);
+      if (key === drawnKey && !force) return;
+      blit(frames[k], 1); if (n > 0 && t > 0.01) blit(frames[n], t);
+      drawnKey = key;
     }
+    function resize() { const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); drawnKey = ''; draw(need, true); }
+    function paint(p) { need = clamp((p - 0.03) / 0.9) * (count - 1); draw(need); onPaint && onPaint(p); }
     resize();
     return { start, paint, resize };
+  }
+
+  // the frame animation: the earlier stills joined with generated in-between frames
+  const anim = player({ canvasId: 'anim-canvas', count: 156, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.jpg` });
+
+  // the bottle film, with its three lines of copy
+  const film = (() => {
+    const CUTS = [0, 0.24, 0.62], chapters = [...document.querySelectorAll('#copy .chapter')];
+    let shown = 0;
+    return player({ canvasId: 'film-canvas', count: 150, focusPortrait: 0.54, path: i => `seq/f${String(i + 1).padStart(3, '0')}.jpg`,
+      onPaint: f => {
+        let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
+        if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
+        $('rail').style.transform = portrait.matches ? `scaleX(${f.toFixed(4)})` : `scaleY(${f.toFixed(4)})`;
+      } });
   })();
-  setTimeout(film.start, 1200);   // the 3D comes first; the film frames load in the background
+  setTimeout(anim.start, 900);    // the 3D comes first; the frames load behind it, the film once the reader gets near it
 
   /* ================= drive both from scroll ================= */
-  const filmLayer = document.querySelector('.film'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue'), threeLayer = document.querySelector('.three');
+  const filmLayer = document.querySelector('.film'), animLayer = document.querySelector('.anim'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue'), threeLayer = document.querySelector('.three');
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(show);
   function frame() {
@@ -471,19 +493,22 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     if (Math.abs(target - current) < 0.00005) current = target;
     if (visible) {
       const p = current;
-      const mix = ease(span(p, END_3D, START_FILM));          // 0 = 3D, 1 = film
-      threeLayer.style.opacity = (1 - mix).toFixed(3);
-      filmLayer.style.opacity = shade.style.opacity = mix.toFixed(3);
+      const toAnim = ease(span(p, END_3D, START_ANIM)), toFilm = ease(span(p, END_ANIM, START_FILM));
+      threeLayer.style.opacity = (1 - toAnim).toFixed(3);
+      animLayer.style.opacity = (toAnim * (1 - toFilm)).toFixed(3);
+      filmLayer.style.opacity = shade.style.opacity = toFilm.toFixed(3);
       copy.style.opacity = railWrap.style.opacity = span(p, START_FILM - 0.01, START_FILM + 0.02).toFixed(3);
       cue.classList.toggle('gone', p > 0.01);
-      if (three && mix < 1) three.render(span(p, 0, END_3D));
-      if (mix > 0) film.paint(span(p, START_FILM, 1));
+      if (p > END_3D * 0.6) film.start();
+      if (three && toAnim < 1) three.render(span(p, 0, END_3D));
+      if (toAnim > 0 && toFilm < 1) anim.paint(span(p, START_ANIM, END_ANIM));
+      if (toFilm > 0) film.paint(span(p, START_FILM, 1));
     }
     requestAnimationFrame(frame);
   }
   addEventListener('scroll', read, { passive: true });
-  addEventListener('resize', () => { sizeShow(); read(); three && three.resize(); film.resize(); });
-  portrait.addEventListener('change', () => { three && three.resize(); film.resize(); });
+  addEventListener('resize', () => { sizeShow(); read(); three && three.resize(); anim.resize(); film.resize(); });
+  portrait.addEventListener('change', () => { three && three.resize(); anim.resize(); film.resize(); });
   read(); current = target; frame();
 
   /* ================= menu ================= */
