@@ -231,6 +231,24 @@ body.rv-open { overflow: hidden; }
 .engrave-name:empty { opacity: 0; }
 .engrave.done { margin-top: 22px; }
 
+/* ---------- terms and privacy ---------- */
+.rv.legal { z-index: 40; }
+.legal-body { max-width: 720px; }
+.legal-tabs { display: flex; gap: 8px; margin-bottom: clamp(28px, 5vh, 44px); }
+.legal-tabs button { font: inherit; font-size: 15px; color: var(--steel); background: rgba(236,237,239,.06); border: 1px solid rgba(236,237,239,.16); border-radius: 999px; min-height: 44px; padding: 0 20px; cursor: pointer; }
+.legal-tabs button[aria-selected="true"] { color: var(--stage); background: var(--bone); border-color: var(--bone); }
+.doc h2 { font-size: clamp(44px, 8vw, 72px); margin-bottom: 10px; }
+.doc .meta { margin: 0 0 32px; font-size: 14px; letter-spacing: .04em; color: var(--slate); }
+.doc h3 { margin: 34px 0 10px; font-family: var(--serif); font-weight: 500; font-size: 24px; color: var(--bone); }
+.doc p, .doc li { margin: 0 0 12px; font-size: 16px; line-height: 1.7; color: var(--body); }
+.doc ul { margin: 0 0 12px; padding-left: 20px; }
+.doc strong { color: var(--bone); font-weight: 500; }
+.doc .key { margin: 0 0 8px; padding: 20px 22px; border-radius: 14px; background: rgba(102,36,36,.35); border: 1px solid rgba(212,106,106,.35); }
+.doc .key h3 { margin-top: 0; }
+.doc .key p { margin: 0; }
+.deposit-note { margin: 18px 0 0; font-size: 15px; line-height: 1.6; color: var(--body); }
+.deposit-note a, .hint a { color: var(--bone); }
+
 @media (prefers-reduced-motion: reduce) { .rv { transition: opacity .2s ease; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -311,10 +329,153 @@ body.rv-open { overflow: hidden; }
     <a href="#story">The elixir</a>
     <a href="#reserve" data-open-reserve>Reserve</a>
     <a href="#story">Instagram</a>
-    <a href="#story">Privacy</a>
+    <a href="#terms" data-legal="terms">Terms of Use</a>
+    <a href="#privacy" data-legal="privacy">Privacy</a>
   </nav>
-  <span>© 2026 [Company name]</span>
+  <span>© 2026 Caldoir Luxe De Niche LLC, Florida</span>
 </footer>
+
+<div class="rv legal" id="legal" role="dialog" aria-modal="true" aria-labelledby="legal-title" hidden>
+  <div class="rv-top">
+    <span class="rv-mark" aria-hidden="true"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="60 -714 7165 728"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292ZM1539.0 -714 1835.0 -6H1750.0L1519.0 -619ZM1324.0 -73Q1317.0 -53 1322.0 -39.0Q1327.0 -25 1338.5 -17.5Q1350.0 -10 1362.0 -10H1371.0V0H1170.0V-10Q1170.0 -10 1174.5 -10.0Q1179.0 -10 1179.0 -10Q1202.0 -10 1226.5 -24.5Q1251.0 -39 1267.0 -73ZM1539.0 -714 1548.0 -644 1297.0 -3H1237.0L1493.0 -611Q1493.0 -611 1498.5 -623.5Q1504.0 -636 1511.5 -654.0Q1519.0 -672 1524.5 -689.0Q1530.0 -706 1530.0 -714ZM1680.0 -273V-243H1367.0V-273ZM1725.0 -73H1807.0Q1822.0 -39 1847.0 -24.5Q1872.0 -10 1895.0 -10Q1895.0 -10 1899.0 -10.0Q1903.0 -10 1903.0 -10V0H1678.0V-10H1687.0Q1706.0 -10 1721.0 -26.5Q1736.0 -43 1725.0 -73ZM2514.0 -700V0H2449.0V-700ZM2784.0 -31V0H2511.0V-31ZM2845.0 -162 2787.0 0H2621.0L2657.0 -31Q2710.0 -31 2743.5 -47.5Q2777.0 -64 2798.0 -94.0Q2819.0 -124 2835.0 -162ZM2452.0 -73V0H2372.0V-10Q2372.0 -10 2378.5 -10.0Q2385.0 -10 2385.0 -10Q2411.0 -10 2429.5 -28.5Q2448.0 -47 2449.0 -73ZM2452.0 -627H2449.0Q2448.0 -653 2429.5 -671.5Q2411.0 -690 2385.0 -690Q2385.0 -690 2378.5 -690.0Q2372.0 -690 2372.0 -690V-700H2452.0ZM2511.0 -627V-700H2591.0V-690Q2590.0 -690 2584.0 -690.0Q2578.0 -690 2578.0 -690Q2552.0 -690 2533.5 -671.5Q2515.0 -653 2514.0 -627ZM3693.0 -700Q3800.0 -700 3880.5 -656.5Q3961.0 -613 4006.5 -534.0Q4052.0 -455 4052.0 -350Q4052.0 -245 4006.5 -166.5Q3961.0 -88 3880.5 -44.0Q3800.0 0 3693.0 0H3479.0L3478.0 -30Q3478.0 -30 3499.5 -30.0Q3521.0 -30 3553.5 -30.0Q3586.0 -30 3618.0 -30.0Q3650.0 -30 3671.5 -30.0Q3693.0 -30 3693.0 -30Q3779.0 -30 3842.5 -70.0Q3906.0 -110 3941.5 -182.0Q3977.0 -254 3977.0 -350Q3977.0 -446 3941.5 -518.0Q3906.0 -590 3842.0 -630.0Q3778.0 -670 3693.0 -670Q3693.0 -670 3670.5 -670.0Q3648.0 -670 3614.5 -670.0Q3581.0 -670 3547.5 -670.0Q3514.0 -670 3491.0 -670.0Q3468.0 -670 3468.0 -670V-700ZM3496.0 -700V0H3431.0V-700ZM3434.0 -73V0H3354.0V-10Q3354.0 -10 3360.5 -10.0Q3367.0 -10 3367.0 -10Q3393.0 -10 3411.5 -28.5Q3430.0 -47 3431.0 -73ZM3434.0 -627H3431.0Q3431.0 -653 3412.0 -671.5Q3393.0 -690 3367.0 -690Q3367.0 -690 3361.0 -690.0Q3355.0 -690 3355.0 -690L3354.0 -700H3434.0ZM4950.0 -714Q5057.0 -714 5138.0 -668.5Q5219.0 -623 5264.5 -541.0Q5310.0 -459 5310.0 -350Q5310.0 -241 5264.5 -159.0Q5219.0 -77 5138.0 -31.5Q5057.0 14 4950.0 14Q4844.0 14 4763.0 -31.5Q4682.0 -77 4636.5 -159.0Q4591.0 -241 4591.0 -350Q4591.0 -459 4636.5 -541.0Q4682.0 -623 4763.0 -668.5Q4844.0 -714 4950.0 -714ZM4950.0 -16Q5035.0 -16 5098.5 -58.0Q5162.0 -100 5197.5 -175.0Q5233.0 -250 5233.0 -350Q5233.0 -450 5197.5 -525.0Q5162.0 -600 5098.5 -642.0Q5035.0 -684 4950.0 -684Q4866.0 -684 4802.5 -642.0Q4739.0 -600 4703.5 -525.0Q4668.0 -450 4668.0 -350Q4668.0 -250 4703.5 -175.0Q4739.0 -100 4802.5 -58.0Q4866.0 -16 4950.0 -16ZM5981.0 -700V0H5916.0V-700ZM5919.0 -73V0H5839.0V-10Q5839.0 -10 5845.5 -10.0Q5852.0 -10 5852.0 -10Q5878.0 -10 5896.5 -28.5Q5915.0 -47 5916.0 -73ZM5919.0 -627H5916.0Q5915.0 -653 5896.5 -671.5Q5878.0 -690 5852.0 -690Q5852.0 -690 5845.5 -690.0Q5839.0 -690 5839.0 -690V-700H5919.0ZM5978.0 -73H5981.0Q5982.0 -47 6000.5 -28.5Q6019.0 -10 6045.0 -10Q6045.0 -10 6051.0 -10.0Q6057.0 -10 6058.0 -10V0H5978.0ZM5978.0 -627V-700H6058.0V-690Q6057.0 -690 6051.0 -690.0Q6045.0 -690 6045.0 -690Q6019.0 -690 6000.5 -671.5Q5982.0 -653 5981.0 -627ZM6726.0 -700H6867.0Q6912.0 -700 6948.5 -687.0Q6985.0 -674 7010.0 -649.5Q7035.0 -625 7048.5 -590.5Q7062.0 -556 7062.0 -512Q7062.0 -464 7039.5 -420.0Q7017.0 -376 6978.5 -348.5Q6940.0 -321 6892.0 -321Q6909.0 -314 6929.0 -292.5Q6949.0 -271 6964.0 -251Q6964.0 -251 6977.5 -231.5Q6991.0 -212 7011.5 -184.0Q7032.0 -156 7053.0 -129.0Q7074.0 -102 7089.0 -86Q7109.0 -64 7129.0 -47.0Q7149.0 -30 7172.5 -20.0Q7196.0 -10 7225.0 -10V0H7170.0Q7124.0 0 7090.5 -14.0Q7057.0 -28 7034.0 -48.5Q7011.0 -69 6995.0 -88Q6992.0 -92 6978.5 -111.0Q6965.0 -130 6946.5 -156.5Q6928.0 -183 6910.0 -209.0Q6892.0 -235 6879.0 -253.5Q6866.0 -272 6864.0 -275Q6845.0 -300 6822.0 -321.0Q6799.0 -342 6772.0 -342V-352Q6772.0 -352 6787.5 -351.5Q6803.0 -351 6825.0 -352Q6851.0 -353 6882.0 -360.0Q6913.0 -367 6940.0 -389.0Q6967.0 -411 6981.0 -456Q6984.0 -467 6986.0 -483.5Q6988.0 -500 6987.0 -516Q6986.0 -584 6952.5 -624.5Q6919.0 -665 6863.0 -668Q6835.0 -670 6805.5 -669.5Q6776.0 -669 6756.0 -669.0Q6736.0 -669 6736.0 -669Q6736.0 -670 6733.5 -677.5Q6731.0 -685 6728.5 -692.5Q6726.0 -700 6726.0 -700ZM6739.0 -700V0H6674.0V-700ZM6677.0 -73V0H6597.0V-10Q6597.0 -10 6603.5 -10.0Q6610.0 -10 6610.0 -10Q6636.0 -10 6654.5 -28.5Q6673.0 -47 6674.0 -73ZM6677.0 -627H6674.0Q6673.0 -653 6654.5 -671.5Q6636.0 -690 6610.0 -690Q6610.0 -690 6603.5 -690.0Q6597.0 -690 6597.0 -690V-700H6677.0ZM6736.0 -73H6739.0Q6739.0 -47 6758.0 -28.5Q6777.0 -10 6803.0 -10Q6803.0 -10 6809.0 -10.0Q6815.0 -10 6815.0 -10V0H6736.0Z"/></svg></span>
+    <button class="rv-close" id="legal-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4.5 4.5l11 11M15.5 4.5l-11 11"/></svg>
+    </button>
+  </div>
+  <div class="rv-body legal-body">
+    <div class="legal-tabs" role="tablist" aria-label="Legal">
+      <button type="button" role="tab" id="tab-terms" aria-controls="doc-terms" aria-selected="true" data-doc="terms">Terms of Use</button>
+      <button type="button" role="tab" id="tab-privacy" aria-controls="doc-privacy" aria-selected="false" data-doc="privacy">Privacy Policy</button>
+    </div>
+
+    <article class="doc" id="doc-terms" role="tabpanel" aria-labelledby="tab-terms">
+      <h2 id="legal-title">Terms of Use</h2>
+      <p class="meta">Caldoir Luxe De Niche LLC · Effective October 10, 2026</p>
+
+      <div class="key">
+        <h3>The deposit is non-refundable</h3>
+        <p>The $34.99 reservation deposit is <strong>non-refundable</strong>. Once paid, it will not be returned if you change your mind, do not complete your purchase, or miss the purchase window. The only exception is set out in section 5.4.</p>
+      </div>
+
+      <h3>1. Who we are</h3>
+      <p>This website and the Caldoir Elixir allocation are operated by Caldoir Luxe De Niche LLC, a Florida limited liability company (“Caldoir”, “we”, “us”). These Terms of Use (“Terms”) govern your use of this website, the allocation list, the reservation deposit and any purchase you make from us.</p>
+
+      <h3>2. Accepting these Terms</h3>
+      <p>By using this website, joining the allocation list or paying a deposit, you agree to these Terms and to our Privacy Policy. If you do not agree, please do not use the website or reserve a bottle.</p>
+
+      <h3>3. Eligibility</h3>
+      <p>You must be at least 18 years old and able to enter into a binding contract to join the allocation list, pay a deposit or make a purchase.</p>
+
+      <h3>4. The allocation list</h3>
+      <p>4.1 Caldoir Elixir is a limited edition of 333 individually numbered bottles.</p>
+      <p>4.2 Joining the allocation list is free and does not by itself guarantee a bottle. A bottle is held for you only once your deposit has been paid and confirmed.</p>
+      <p>4.3 Bottle numbers are assigned in the order deposits are confirmed. We cannot guarantee a particular number.</p>
+      <p>4.4 We may decline or cancel a reservation if the information you give is false or incomplete, if we suspect fraud or resale abuse, or if a person tries to hold more than one bottle in breach of any limit we set. Where we cancel for these reasons, section 5.4 does not apply.</p>
+
+      <h3>5. Reservation deposit</h3>
+      <p>5.1 The reservation deposit is US $34.99, paid through our third-party payment provider.</p>
+      <p>5.2 The deposit holds your place in the allocation and is applied toward the purchase price of your bottle when you complete your purchase.</p>
+      <p>5.3 <strong>The deposit is non-refundable.</strong> It will not be refunded, in whole or in part, if you change your mind, if you do not complete your purchase within the time we give you, if you cannot be reached using the contact details you gave us, or if your order cannot be delivered because of incorrect information you supplied. If you do not complete your purchase in time, your bottle may be offered to the next person on the list and your deposit is forfeited.</p>
+      <p>5.4 If Caldoir cancels the release of Caldoir Elixir, or is unable to supply you a bottle for reasons within our control after your deposit has been confirmed, we will refund your deposit in full to the original payment method.</p>
+      <p>5.5 By paying the deposit you confirm that you have read and agree to this section, and you agree not to dispute a valid deposit charge with your card issuer on the ground that it was not refunded.</p>
+
+      <h3>6. Personalised engraving</h3>
+      <p>6.1 Each bottle can be engraved with the name you give us, up to 14 letters. Names are engraved in lowercase letters in the style shown on the website. The preview is an illustration; the finished engraving may differ slightly in size, position and appearance.</p>
+      <p>6.2 Please check the spelling carefully. We engrave exactly what you submit and are not responsible for errors in the name you provide. Changes may be possible until engraving begins, at our discretion.</p>
+      <p>6.3 We may refuse a name that is offensive, unlawful, or that uses someone else’s trademark or the name of a person you are not authorised to use.</p>
+      <p>6.4 Because engraved bottles are made for you, they are final sale and cannot be returned or exchanged, except where the bottle arrives damaged or defective as described in section 8.</p>
+
+      <h3>7. Price, payment and taxes</h3>
+      <p>The final price of the bottle, shipping costs and any applicable sales tax will be shown before you complete your purchase. Payments are processed by our payment provider; we do not store your full card details. Prices are in US dollars unless stated otherwise. If you buy from outside the United States, import duties and local taxes may apply and are your responsibility.</p>
+
+      <h3>8. Shipping, damage and defects</h3>
+      <p>Delivery dates we give are estimates. Risk of loss passes to you on delivery to the address you provided. If your bottle arrives damaged or defective, contact us within 7 days of delivery with photographs, and we will repair, replace or refund the affected item at our option.</p>
+
+      <h3>9. Using our fragrance safely</h3>
+      <p>Caldoir Elixir is for external use only. It contains alcohol and is flammable; keep it away from heat, flame, children and pets. Do not apply to broken or irritated skin. Patch test before first use and stop using it if irritation occurs. Ingredient information is available on request.</p>
+
+      <h3>10. Our content</h3>
+      <p>The Caldoir name, logo, bottle design, images, film, text and all other content on this website belong to Caldoir Luxe De Niche LLC or its licensors and are protected by intellectual property laws. You may view them for personal, non-commercial use only. You may not copy, reproduce or use them without our written permission.</p>
+
+      <h3>11. Using the website</h3>
+      <p>You agree not to misuse the website, including by submitting false information, reserving on behalf of others without their permission, using automated means to join the list, interfering with the site’s security or operation, or reselling reservations.</p>
+
+      <h3>12. Disclaimers</h3>
+      <p>The website is provided “as is” and “as available”. To the fullest extent permitted by law, we disclaim all warranties not expressly stated in these Terms, including implied warranties of merchantability and fitness for a particular purpose. Nothing in these Terms limits rights you have under law that cannot be excluded.</p>
+
+      <h3>13. Limitation of liability</h3>
+      <p>To the fullest extent permitted by law, Caldoir will not be liable for any indirect, incidental, special or consequential loss, and our total liability to you for any claim relating to the website, a reservation or a purchase will not exceed the amount you paid us for that reservation or purchase.</p>
+
+      <h3>14. Indemnity</h3>
+      <p>You agree to indemnify Caldoir against claims, losses and costs arising from your breach of these Terms or your misuse of the website, including a name you ask us to engrave.</p>
+
+      <h3>15. Governing law</h3>
+      <p>These Terms are governed by the laws of the State of Florida, without regard to its conflict of law rules. Any dispute will be resolved in the state or federal courts located in Florida, and you consent to their jurisdiction.</p>
+
+      <h3>16. Changes</h3>
+      <p>We may update these Terms from time to time. The version on this page, with its effective date, applies. Changes will not affect a deposit already paid unless you agree.</p>
+
+      <h3>17. Contact</h3>
+      <p>Caldoir Luxe De Niche LLC, Florida, United States.<br>Email: [contact email]</p>
+    </article>
+
+    <article class="doc" id="doc-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
+      <h2>Privacy Policy</h2>
+      <p class="meta">Caldoir Luxe De Niche LLC · Effective October 10, 2026</p>
+
+      <p>This policy explains how Caldoir Luxe De Niche LLC, a Florida limited liability company (“Caldoir”, “we”, “us”), collects and uses your personal information when you visit this website, join the allocation list or reserve a bottle.</p>
+
+      <h3>1. What we collect</h3>
+      <p><strong>Information you give us:</strong> your name, the name you want engraved on your bottle, your email address, your phone number and country code, and, if you buy, your shipping and billing address.</p>
+      <p><strong>Payment information:</strong> deposits and purchases are processed by our third-party payment provider. We receive confirmation of payment and limited details such as the last four digits of your card, but we do not receive or store your full card number.</p>
+      <p><strong>Information collected automatically:</strong> basic technical data such as your browser type, device, IP address and pages viewed, which our hosting and service providers may log. This website stores your reservation name and engraving on your own device (local storage) so it can show your reservation when you return; this stays in your browser and you can clear it at any time. We do not use advertising cookies.</p>
+
+      <h3>2. How we use it</h3>
+      <ul>
+        <li>To manage the allocation list, take your deposit and hold your bottle.</li>
+        <li>To engrave your bottle and deliver your order.</li>
+        <li>To contact you about your reservation, payment and delivery.</li>
+        <li>With your consent, to send you updates about Caldoir by email and WhatsApp.</li>
+        <li>To prevent fraud, keep the website secure and meet our legal obligations.</li>
+      </ul>
+
+      <h3>3. Who we share it with</h3>
+      <p>We do not sell your personal information, and we do not share it for cross-context behavioural advertising. We share it only with:</p>
+      <ul>
+        <li>Service providers who help us run Caldoir, such as our payment provider, website host, email and messaging providers, engraving partner and shipping carriers, and only for that purpose.</li>
+        <li>Authorities or others where required by law, or to protect our rights, our customers or the public.</li>
+        <li>A buyer or successor if our business is sold or reorganised, under the same protections.</li>
+      </ul>
+
+      <h3>4. Marketing messages</h3>
+      <p>We send marketing updates only if you have agreed to receive them. You can opt out at any time by using the unsubscribe link in any email, replying STOP to a WhatsApp message, or contacting us. We will still send messages about a reservation or order you have made.</p>
+
+      <h3>5. How long we keep it</h3>
+      <p>We keep your information for as long as your reservation or order is active and for as long as needed afterwards for warranty, tax, accounting and legal purposes, usually no longer than 7 years. If you join the list but never reserve, we delete your details within 24 months of the release closing, unless you ask us to keep you informed.</p>
+
+      <h3>6. Security</h3>
+      <p>We use reasonable technical and organisational measures to protect your information. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
+
+      <h3>7. Your choices and rights</h3>
+      <p>You can ask us to access, correct or delete your personal information, or to stop sending you marketing, by contacting us. Depending on where you live, you may have additional rights under local law, including the right to appeal a decision we make about your request. We will not treat you differently for exercising your rights.</p>
+
+      <h3>8. Children</h3>
+      <p>This website is not intended for anyone under 18, and we do not knowingly collect information from children. If you believe a child has given us information, contact us and we will delete it.</p>
+
+      <h3>9. International visitors</h3>
+      <p>Caldoir is based in the United States. If you use the website from another country, your information will be transferred to and processed in the United States, where data protection laws may differ from those in your country.</p>
+
+      <h3>10. Third-party services</h3>
+      <p>This website loads fonts from Google Fonts, which means your browser connects to Google’s servers. Our payment checkout opens on our payment provider’s website and is governed by their privacy policy.</p>
+
+      <h3>11. Changes</h3>
+      <p>We may update this policy from time to time. The version on this page, with its effective date, applies.</p>
+
+      <h3>12. Contact</h3>
+      <p>Caldoir Luxe De Niche LLC, Florida, United States.<br>Email: [contact email]</p>
+    </article>
+  </div>
+</div>
 
 <div class="rv" id="rv" role="dialog" aria-modal="true" aria-labelledby="rv-title" hidden>
   <div class="rv-top">
@@ -372,11 +533,11 @@ body.rv-open { overflow: hidden; }
           </div>
           <p class="err" id="e-phone" aria-live="polite"></p>
         </div>
-        <p class="hint">We will never spam or share your information with third parties.</p>
+        <p class="hint">We will never spam you or sell your information.</p>
         <label class="consent" for="rv-ok">
           <input id="rv-ok" type="checkbox" name="consent" required aria-describedby="e-ok">
           <span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg></span>
-          <span>I agree to Caldoir’s <a href="#contact">Terms of Use</a> and acknowledge the <a href="#contact">Privacy Policy</a>. I’d like to receive updates from Caldoir via WhatsApp and email.<span class="req" aria-hidden="true">*</span></span>
+          <span>I agree to Caldoir’s <a href="#terms" data-legal="terms">Terms of Use</a> and acknowledge the <a href="#privacy" data-legal="privacy">Privacy Policy</a>. I’d like to receive updates from Caldoir via WhatsApp and email.<span class="req" aria-hidden="true">*</span></span>
         </label>
         <p class="err" id="e-ok" aria-live="polite"></p>
         <button class="submit" type="submit">Submit</button>
@@ -393,6 +554,7 @@ body.rv-open { overflow: hidden; }
       <p class="rv-lede small">Pay it now to hold your bottle. Your number is assigned when your deposit is paid, and your name is engraved before it ships.</p>
       <a class="submit pay" id="rv-pay" href="#" target="_blank" rel="noopener">Pay deposit</a>
       <p class="hint" id="pay-note">Payment opens in a secure checkout in a new tab.</p>
+      <p class="deposit-note">The deposit is non-refundable, as set out in our <a href="#terms" data-legal="terms">Terms of Use</a>.</p>
     </section>
   </div>
   <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
@@ -679,7 +841,33 @@ body.rv-open { overflow: hidden; }
   }
   document.querySelectorAll('[data-open-reserve]').forEach(el => el.addEventListener('click', openRv));
   $('rv-close').onclick = closeRv;
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !rv.hidden) closeRv(); });
+
+  // terms and privacy
+  const legal = $('legal');
+  let legalOpener = null;
+  function showDoc(doc) {
+    legal.querySelectorAll('[role="tab"]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.doc === doc)));
+    $('doc-terms').hidden = doc !== 'terms'; $('doc-privacy').hidden = doc !== 'privacy';
+    legal.scrollTop = 0;
+  }
+  function openLegal(e) {
+    e.preventDefault(); e.stopPropagation();
+    legalOpener = document.activeElement;
+    showDoc(e.currentTarget.dataset.legal);
+    legal.hidden = false; document.body.classList.add('rv-open');
+    requestAnimationFrame(() => legal.classList.add('open'));
+    setTimeout(() => $('legal-close').focus({ preventScroll: true }), 300);
+  }
+  function closeLegal() {
+    legal.classList.remove('open');
+    if (rv.hidden) document.body.classList.remove('rv-open');
+    setTimeout(() => { legal.hidden = true; }, reduce ? 0 : 400);
+    if (legalOpener) legalOpener.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-legal]').forEach(el => el.addEventListener('click', openLegal));
+  legal.querySelectorAll('[role="tab"]').forEach(b => b.addEventListener('click', () => showDoc(b.dataset.doc)));
+  $('legal-close').onclick = closeLegal;
+  addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!legal.hidden) closeLegal(); else if (!rv.hidden) closeRv(); });
 
   form.addEventListener('input', e => {                 // an error clears as soon as its field is edited
     const map = { 'rv-name': 'e-name', 'rv-engrave': 'e-engrave', 'rv-email': 'e-email', 'rv-phone': 'e-phone', 'rv-ok': 'e-ok' };
