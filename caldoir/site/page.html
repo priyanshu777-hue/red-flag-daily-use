@@ -95,6 +95,12 @@ img { display: block; }
 .story:not(.ready) .stage img:first-child { opacity: 0 !important; }
 .story.ready .stage img:first-child { transition: opacity 1.4s var(--ease-out); }
 
+.film .pin::after {
+  background:
+    linear-gradient(90deg, rgba(10,9,8,.86) 0%, rgba(10,9,8,.45) 32%, rgba(10,9,8,0) 58%),
+    linear-gradient(0deg, rgba(10,9,8,.7) 0%, rgba(10,9,8,0) 34%);
+}
+
 /* phones and portrait screens: image band on top, copy below */
 @media (max-aspect-ratio: 1/1) {
   .stage {
@@ -104,6 +110,7 @@ img { display: block; }
             mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
   }
   .pin::after { display: none; }
+  .film .stage { top: calc(env(safe-area-inset-top, 0px) + 84px); transform: none; aspect-ratio: 1 / 1.04; max-height: 60svh; }
   .copy { bottom: calc(env(safe-area-inset-bottom, 0px) + 72px); }
   .chapter h1, .chapter h2 { font-size: clamp(40px, 11vw, 56px); }
   .chapter p { font-size: 16px; }
@@ -179,6 +186,12 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   <section class="story film" id="film" aria-label="The final bottle">
     <div class="pin">
       <div class="stage" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
+      <div class="copy" aria-live="polite">
+        <div class="chapter on"><h2>Caldoir Elixir</h2><p>The finished bottle: a round amber flask in clear glass, under a ribbed gold cap.</p></div>
+        <div class="chapter"><h2>All of it, at once.</h2><p>Tobacco leaf, vanilla and cured leather gather around the bottle.</p></div>
+        <div class="chapter"><h2>Then, smoke.</h2><p>A dry, smoky finish that stays into the night. 333 numbered bottles, poured once.</p></div>
+      </div>
+      <div class="rail" aria-hidden="true"><i id="film-rail"></i></div>
     </div>
   </section>
 
