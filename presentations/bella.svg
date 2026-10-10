@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 780 800" width="780" height="800">
+  <defs>
+    <filter id="sticker" x="-20%" y="-20%" width="140%" height="140%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="12" result="fat"/>
+      <feFlood flood-color="#F4EFE8"/>
+      <feComposite in2="fat" operator="in" result="rim"/>
+      <feMerge><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- sparkles -->
+  <g fill="#C9A66B">
+    <path d="M60 120 L72 150 L102 162 L72 174 L60 204 L48 174 L18 162 L48 150 Z"/>
+    <path d="M590 560 L598 580 L618 588 L598 596 L590 616 L582 596 L562 588 L582 580 Z"/>
+    <path d="M40 520 L46 535 L61 541 L46 547 L40 562 L34 547 L19 541 L34 535 Z"/>
+  </g>
+
+  <g filter="url(#sticker)" stroke="#0B0A0C" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <!-- body / blazer -->
+    <path d="M190 520 Q300 480 410 520 L470 740 L130 740 Z" fill="#2A2630"/>
+    <path d="M300 505 L250 600 L300 740 L350 600 Z" fill="#F4EFE8"/>
+    <path d="M255 512 L300 600 L270 640 L225 545 Z" fill="#C9A66B"/>
+    <path d="M345 512 L300 600 L330 640 L375 545 Z" fill="#C9A66B"/>
+    <circle cx="395" cy="640" r="30" fill="#C8102E"/>
+    <!-- neck -->
+    <rect x="268" y="430" width="64" height="80" fill="#F2C29A"/>
+    <!-- wild hair (behind head) -->
+    <path fill="#C8102E" d="M300 70 L330 20 L360 85 L420 30 L425 110 L500 80 L470 160 L550 165 L480 220 L540 270 L465 280 L480 345 L430 320 L170 320 L120 345 L135 280 L60 270 L120 220 L50 165 L130 160 L100 80 L175 110 L180 30 L240 85 L270 20 Z"/>
+    <!-- head -->
+    <circle cx="300" cy="300" r="148" fill="#F2C29A"/>
+    <!-- bangs -->
+    <path fill="#C8102E" d="M158 250 Q170 150 300 140 Q430 150 442 250 L410 205 L385 250 L355 195 L320 245 L295 190 L265 245 L235 195 L210 250 L190 210 Z"/>
+    <!-- headset -->
+    <path d="M150 300 Q150 110 300 105 Q450 110 450 300" fill="none" stroke="#C9A66B" stroke-width="18"/>
+    <rect x="128" y="270" width="44" height="76" rx="18" fill="#C9A66B"/>
+    <rect x="428" y="270" width="44" height="76" rx="18" fill="#C9A66B"/>
+    <path d="M440 340 Q430 420 370 425" fill="none" stroke="#C9A66B" stroke-width="12"/>
+    <circle cx="365" cy="425" r="14" fill="#0B0A0C"/>
+
+    <!-- eyebrows (one sky-high) -->
+    <path d="M200 225 Q240 195 280 222" fill="none" stroke-width="13"/>
+    <path d="M318 196 Q365 160 410 200" fill="none" stroke-width="13"/>
+    <!-- googly eyes, mismatched -->
+    <ellipse cx="243" cy="285" rx="44" ry="54" fill="#FFFFFF"/>
+    <ellipse cx="362" cy="272" rx="56" ry="68" fill="#FFFFFF"/>
+    <circle cx="258" cy="300" r="20" fill="#0B0A0C" stroke="none"/>
+    <circle cx="345" cy="255" r="26" fill="#0B0A0C" stroke="none"/>
+    <circle cx="265" cy="292" r="7" fill="#FFFFFF" stroke="none"/>
+    <circle cx="354" cy="245" r="9" fill="#FFFFFF" stroke="none"/>
+    <!-- cheeks -->
+    <ellipse cx="190" cy="360" rx="26" ry="16" fill="#E8828A" stroke="none" opacity="0.8"/>
+    <ellipse cx="420" cy="350" rx="26" ry="16" fill="#E8828A" stroke="none" opacity="0.8"/>
+    <!-- huge grin -->
+    <path d="M205 355 Q300 345 395 345 Q385 455 300 460 Q215 455 205 355 Z" fill="#5A0612"/>
+    <path d="M214 360 Q300 352 388 352 L384 378 Q300 384 218 386 Z" fill="#FFFFFF" stroke-width="6"/>
+    <path d="M250 440 Q300 400 350 438 Q300 465 250 440 Z" fill="#F07A86" stroke-width="6"/>
+    <!-- waving arm -->
+    <path d="M405 530 Q560 520 590 450" fill="none" stroke-width="58"/>
+    <path d="M405 530 Q560 520 590 450" fill="none" stroke="#2A2630" stroke-width="40"/>
+    <!-- giant hand -->
+    <g fill="#F2C29A" transform="translate(75 60)">
+      <rect x="540" y="230" width="34" height="100" rx="17" transform="rotate(18 557 330)"/>
+      <rect x="505" y="210" width="34" height="115" rx="17" transform="rotate(4 522 325)"/>
+      <rect x="470" y="220" width="34" height="110" rx="17" transform="rotate(-10 487 330)"/>
+      <rect x="440" y="275" width="32" height="80" rx="16" transform="rotate(-48 456 355)"/>
+      <ellipse cx="515" cy="350" rx="62" ry="56"/>
+    </g>
+    <!-- motion lines -->
+    <g fill="none" stroke="#C9A66B" stroke-width="10" transform="translate(75 60)">
+      <path d="M600 200 Q640 260 615 330"/>
+      <path d="M440 180 Q470 150 520 150"/>
+    </g>
+
+  </g>
+</svg>
