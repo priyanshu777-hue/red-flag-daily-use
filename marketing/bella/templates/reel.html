@@ -1,0 +1,83 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif}
+#stage{position:relative;width:1080px;height:1920px;background:#120f14;overflow:hidden}
+.abs{position:absolute;left:0;right:0}
+.hook{top:330px;padding:0 80px;color:#fff;font-weight:800;font-size:112px;line-height:1.02;letter-spacing:-4px}
+.hook em{font-style:normal;color:#ff4d6a}
+.clock{top:200px;padding:0 80px;color:#b9aab3;font-size:44px;font-weight:600}
+.inbox{top:760px;margin:0 70px;background:#1f1a22;border-radius:48px;padding:40px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.ih{display:flex;justify-content:space-between;color:#8d8191;font-size:34px;font-weight:600;margin-bottom:24px}
+.row{background:#2a242e;border-radius:32px;padding:26px 30px;margin:18px 0;color:#fff}
+.who{display:flex;justify-content:space-between;font-size:30px;color:#a698ab;font-weight:600}
+.who b{color:#fff}
+.msg{font-size:42px;margin-top:10px;font-weight:500}
+.rep{margin-top:16px;margin-left:auto;width:fit-content;max-width:85%;background:#E7C9C1;color:#141414;border-radius:26px;padding:18px 26px;font-size:36px;font-weight:600}
+.rep small{display:block;font-size:24px;color:#7a625c;font-weight:600;margin-top:4px}
+.wait{color:#ff8a9c}
+.status{top:1560px;text-align:center;color:#fff;font-size:52px;font-weight:800}
+.toggle{display:inline-flex;align-items:center;gap:24px;background:#2a242e;border-radius:80px;padding:20px 40px}
+.sw{width:120px;height:64px;border-radius:40px;background:#555;position:relative}
+.sw i{position:absolute;top:6px;left:6px;width:52px;height:52px;border-radius:50%;background:#fff}
+#end{position:absolute;inset:0;background:#E7C9C1;opacity:0}
+#end .t{position:absolute;top:240px;left:80px;right:80px;font-size:104px;font-weight:800;letter-spacing:-4px;line-height:1.02;color:#141414}
+#end .t em{font-style:normal;color:#C8102E}
+#end .s{position:absolute;top:640px;left:80px;font-size:46px;font-weight:600;color:#3d302d;line-height:1.35}
+#end img{position:absolute;bottom:-60px;left:0;width:1080px}
+#end .cta{position:absolute;top:880px;left:80px;background:#C8102E;color:#fff;font-weight:800;font-size:52px;padding:30px 54px;border-radius:60px}
+#end .logo{position:absolute;top:110px;left:80px;font-weight:800;font-size:52px;background:#FBF4F1;padding:14px 30px;border-radius:40px}
+#end .logo i{color:#C8102E;font-style:normal}
+.sleepy{position:absolute;right:70px;top:150px;width:200px;height:200px;border-radius:50%;object-fit:cover;border:6px solid #2a242e}
+</style></head><body>
+<div id="stage">
+  <div class="abs clock" id="clock">🌙 2:04 AM</div>
+  <img class="sleepy" id="sleepy" src="sleepy.png">
+  <div class="abs hook" id="hook">3 guests are<br>texting you.<br><em>You're asleep.</em></div>
+  <div class="inbox abs" id="inbox">
+    <div class="ih"><span>Guest inbox</span><span id="cnt">0 waiting</span></div>
+    <div class="row" id="r1"><div class="who"><b>Rahul · Delhi</b><span class="wait" id="w1">waiting</span></div><div class="msg">What is the Wi-Fi password?</div><div class="rep" id="a1">Sent it! Network: Bella_Guest 📶<small>Bella · 3s</small></div></div>
+    <div class="row" id="r2"><div class="who"><b>Emma · London</b><span class="wait" id="w2">waiting</span></div><div class="msg">Can we check in early, around 10 AM?</div><div class="rep" id="a2">Yes! Room's ready by 10. See you then ☀️<small>Bella · 3s</small></div></div>
+    <div class="row" id="r3"><div class="who"><b>Hiro · Tokyo</b><span class="wait" id="w3">waiting</span></div><div class="msg">駅からの道を教えてください</div><div class="rep" id="a3">駅から徒歩5分です。地図を送りますね 🗺️<small>Bella · 3s · 日本語</small></div></div>
+  </div>
+  <div class="abs status" id="status"><span class="toggle"><span class="sw" id="sw"><i id="knob"></i></span><span id="stxt">Bella is off</span></span></div>
+  <div id="end">
+    <div class="logo">Bella<i>.</i></div>
+    <div class="t">You host.<br><em>Bella</em> takes the<br>night shift.</div>
+    <div class="s">24/7 · 50+ languages · 0% commission</div>
+    <div class="cta">Comment “BELLA”</div>
+    <img src="mascot.png">
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x)=>Math.max(0,Math.min(1,x));
+const ease=x=>1-Math.pow(1-cl(x),3);
+function show(el,t0,t,dy=40){const k=ease((t-t0)/0.35);el.style.opacity=k;el.style.transform=`translateY(${(1-k)*dy}px)`;}
+window.render=function(t){
+  // hook
+  show($('hook'),0,t,60); show($('clock'),0,t,0); show($('sleepy'),0.2,t,0);
+  // inbox + messages arrive 1.2,2.0,2.8
+  show($('inbox'),0.3,t,80);
+  [0.6,1.2,1.8].forEach((t0,i)=>show($('r'+(i+1)),t0,t,40));
+  const waiting=[0.6,1.2,1.8].filter(x=>t>=x).length - [4.4,5.0,5.6].filter(x=>t>=x).length;
+  $('cnt').textContent=waiting+' waiting';
+  // toggle on at 5.2
+  const on=t>=3.6; const k=ease((t-3.6)/0.3);
+  $('knob').style.left=(6+k*56)+'px'; $('sw').style.background=on?'#22a06b':'#555';
+  $('stxt').textContent=on?'Bella is on':'Bella is off';
+  show($('status'),2.6,t,30); if(t>=4.2){$('status').style.opacity=1-ease((t-4.2)/0.3);}
+  [4.4,5.0,5.6].forEach((t0,i)=>{const a=$('a'+(i+1));a.style.display=t>=t0?'block':'none';show(a,t0,t,20);
+     const w=$('w'+(i+1));w.textContent=t>=t0?'replied ✓':'waiting '+Math.max(1,Math.floor((t-[0.6,1.2,1.8][i])*2))+' min';w.style.color=t>=t0?'#5fd39b':'#ff8a9c';});
+  // hook fades out when replies start
+  const hf=1-ease((t-3.2)/0.3); $('hook').style.opacity=Math.min(parseFloat($('hook').style.opacity),hf);
+  if(t>=3.5){$('hook').innerHTML='Bella replies in<br><em style="color:#5fd39b">3 seconds.</em><br>In their language.';$('hook').style.opacity=ease((t-3.6)/0.4);}
+  else {$('hook').innerHTML='3 guests are<br>texting you.<br><em>You\'re asleep.</em>';}
+  $('sleepy').style.opacity = t>=3.2 ? 1-ease((t-3.2)/0.3) : $('sleepy').style.opacity;
+  // end card
+  const e=ease((t-8.4)/0.5); $('end').style.opacity=e;
+};
+render(0);
+</script>
+</body></html>

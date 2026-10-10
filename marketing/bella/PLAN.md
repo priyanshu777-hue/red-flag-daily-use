@@ -1,0 +1,56 @@
+# Bella on Instagram: research and content plan
+
+Account: [@redflag.homes](https://www.instagram.com/redflag.homes/). On 11 Oct 2026 it had 184 followers and 10 posts. The two Bella launch posts from 10 Oct had no likes or comments yet.
+
+## What we're selling
+
+Bella is an AI co-host for Indian short-term rental hosts (Airbnb, homestays, villas). She works over WhatsApp. Claims we can use, all from the Bella brochure:
+
+- She replies to guests in about 3 seconds, 24/7, in 50+ languages, including Hinglish.
+- She sets nightly prices for weekends, festivals and demand.
+- She sends check-in details and blocks the calendar so nothing gets double-booked.
+- She talks to bnb support for the host.
+- Bella takes 0% commission. A property manager takes a cut.
+
+Don't claim any of these: a commission figure for a specific competitor, Bella's price, or user and booking numbers. We have no sources for them.
+
+## Competitors
+
+| Who | What they are | Gap Bella can use |
+|---|---|---|
+| **The Blue Kite** ([@staywiththebluekite](https://www.thebluekite.com/)) | A full-service manager, part of Vianaar, running since 2016. It manages 250+ homes in Goa, Delhi, Nainital, Kasauli and Shimla, and is a Superhost on many listings ([Airbtics](https://airbtics.com/airbnb-management-companies/the-blue-kite-195764429)). Its Instagram is about guest-facing villa content. | They take over the property and charge for it. Bella keeps the host in charge and takes nothing. Their content speaks to guests; ours speaks to hosts. |
+| Goa and Delhi managers (Alaya Stays, SelectStays, Getaway Villas, and others) | Commission-based managers. Fees are negotiated per contract and not published ([Airbtics directory](https://airbtics.com/airbnb-management-companies/selectstays-443217578)). | The same "keep 100%" angle. |
+| Global AI tools (Hospitable, Hostaway AI, Conduit, PriceLabs) | Priced in dollars or euros, built for Western hosts. None are WhatsApp-first or speak Hinglish ([overview](https://www.hostfully.com/blog/ai-tools-for-airbnb-hosts/)). | Bella is built for India: WhatsApp, Hinglish, Diwali and long-weekend pricing. |
+| Airbnb's own AI | Airbnb's fall 2026 update adds suggested price ranges and AI earnings summaries ([Airbnb](https://news.airbnb.com/airbnb-2026-fall-update)). | It only covers Airbnb. It doesn't handle WhatsApp guests or messages at 2 AM. |
+
+### What works for vacation-rental accounts in 2026
+
+- Reels drive reach to non-followers, and shares, saves and DM sends count for more than likes ([Houfy](https://www.houfy.com/blog/instagram-for-vacation-rentals-whats-working-in-2026)).
+- Content led by the host's own voice beats polished ads.
+- Posting consistently matters more than chasing one viral hit.
+
+## Content pillars
+
+1. **Normal or relatable (40%).** Host pain humour: messages at 2 AM, "Wi-Fi password?" for the 40th time, festival pricing panic, a guest who arrives 5 hours early. These are built to be shared to a host friend.
+2. **Engagement (30%).** Questions, "this or that", "tag a host who…", and "reply with your worst guest message" stories. These are built to get comments and DMs.
+3. **Marketing (30%).** Bella demos: inbox before and after, 0% against a manager's cut, a pricing tune-up for Diwali, a Hinglish reply. Each ends with **Comment "BELLA"**.
+
+Avoid the couple and "red flag" relationship reels from September. They don't reach hosts.
+
+## Cadence
+
+| Format | How often | When (IST) |
+|---|---|---|
+| Reel | 1 a day | 7:00–8:00 PM |
+| Stories | 3 a day | about 9 AM, 1:30 PM and 8 PM |
+| Carousel | 2 a week | 12:30 PM |
+
+## The CTA loop
+
+Every reel and carousel ends with **Comment "BELLA"**. Reply to each comment and send a DM within the day. Stories ask for replies, and replies land in DMs.
+
+Check every week: shares and saves per reel, comments that say "BELLA", DM count, and follower growth.
+
+## Production
+
+The templates are in `templates/`. Stories are rendered from HTML at 1080x1920. Reels are frames rendered from HTML, joined with ffmpeg and given a synthesized notification sound. Everything posted lives in a dated folder, such as `2026-10-11/`. Canva and Adobe Express are connected and can be used for photo-led posts.
