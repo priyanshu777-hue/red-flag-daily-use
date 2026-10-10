@@ -3,15 +3,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
 <style>
-/* Layout: one pinned stage. Scrolling plays the frames (open, spray, the three notes, the pour, The 22) while one line of copy changes beside them; then a short reserve close.
-   Phones: the image sits in its own band near the top and the copy sits below it, never on top of the bottle. Desktop: the image fills the screen and the copy sits bottom-left. */
+/* Layout: one pinned screen. Scrolling first drives a real-time 3D bottle (turn, unscrew, lift, spray, close),
+   then hands over to the bottle film, played frame by frame with its copy; then the reserve close.
+   Phones: the 3D fills the screen; the film sits in a band near the top with its copy below. */
 :root {
   --stage: #1C0C0C;      /* oxblood black */
-  --brass: #662424;      /* oxblood, the accent */
-  --brass-hi: #9CA0A7;   /* mist grey, lines and focus */
-  --sand: #9CA0A7;
+  --oxblood: #662424;    /* the accent */
+  --mist: #9CA0A7;       /* lines, focus, quiet labels */
+  --steel: #8A8B8F;
+  --slate: #747B83;
   --bone: #ECEDEF;
-  --ash: #8A8B8F;
+  --body: #C9CCD1;
   --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
   --sans: "Jost", "Futura", "Avenir Next", "Helvetica Neue", sans-serif;
   --gutter: clamp(20px, 5vw, 64px);
@@ -24,95 +26,53 @@
 body { margin: 0; background: var(--stage); color: var(--bone); font-family: var(--sans); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 button { font: inherit; color: inherit; }
 img { display: block; }
-:focus-visible { outline: 1px solid var(--brass-hi); outline-offset: 4px; }
+:focus-visible { outline: 1px solid var(--mist); outline-offset: 4px; }
 
 /* ---------- top bar ---------- */
 .top {
   position: fixed; z-index: 10; left: 0; right: 0; top: 0;
   padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gutter) 14px;
   display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 12px;
-  background: linear-gradient(180deg, rgba(28,12,12,.9) 0%, rgba(28,12,12,.6) 60%, rgba(28,12,12,0) 100%);
+  background: linear-gradient(180deg, rgba(28,12,12,.9) 0%, rgba(28,12,12,.55) 60%, rgba(28,12,12,0) 100%);
 }
-.icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; background: none; border: 0; cursor: pointer; color: var(--sand); }
+.icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; background: none; border: 0; cursor: pointer; color: var(--mist); }
 .icon-btn svg { width: 20px; height: 20px; }
 .brand { justify-self: center; color: var(--bone); display: block; padding: 10px 0; }
 .brand svg { display: block; width: clamp(112px, 12vw, 160px); height: auto; }
-.reserve-link { min-height: 44px; display: inline-flex; align-items: center; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--sand); text-decoration: none; }
-@media (hover: hover) and (pointer: fine) {
-  .icon-btn:hover, .reserve-link:hover { color: var(--bone); }
-}
+.reserve-link { min-height: 44px; display: inline-flex; align-items: center; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--mist); text-decoration: none; }
+@media (hover: hover) and (pointer: fine) { .icon-btn:hover, .reserve-link:hover { color: var(--bone); } }
 
-/* ---------- the scroll story ---------- */
-.story { position: relative; }                       /* height set from the frame list in script */
+/* ---------- the pinned show ---------- */
+.show { position: relative; }                 /* height set in script */
 .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
-.stage { position: absolute; inset: 0; }
-.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.stage img {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: var(--fx, 50%) 50%;
-  opacity: 0; will-change: opacity, transform;
-}
-.pin::after {           /* desktop: darken the left and the floor so the copy reads */
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(130% 100% at 50% 50%, transparent 60%, rgba(28,12,12,.6) 100%);
-}
-.copy {
-  position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px);
-  width: min(440px, calc(100% - 2 * var(--gutter)));
-}
-.chapter {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  display: flex; flex-direction: column; gap: 14px;
-  opacity: 0; transform: translateY(14px);
-  transition: opacity .45s var(--ease-out), transform .45s var(--ease-out);
-  pointer-events: none;
-}
+.layer { position: absolute; inset: 0; }
+.layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.three .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.three::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(130% 100% at 50% 50%, transparent 58%, rgba(28,12,12,.7) 100%); }
+.film { opacity: 0; }
+.shade { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(90deg, rgba(28,12,12,.86) 0%, rgba(28,12,12,.45) 32%, rgba(28,12,12,0) 58%), linear-gradient(0deg, rgba(28,12,12,.7) 0%, rgba(28,12,12,0) 34%); }
+.copy { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px); width: min(440px, calc(100% - 2 * var(--gutter))); opacity: 0; }
+.chapter { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px; opacity: 0; transform: translateY(14px); transition: opacity .45s var(--ease-out), transform .45s var(--ease-out); pointer-events: none; }
 .chapter.on { opacity: 1; transform: none; transition-delay: .12s; }
-.chapter h1, .chapter h2 {
-  margin: 0; font-family: var(--serif); font-weight: 400;
-  font-size: clamp(42px, 6vw, 84px); line-height: 1; letter-spacing: -.005em;
-  color: var(--bone); text-wrap: balance;
-}
-.chapter h1 { font-style: italic; }
-.chapter p { margin: 0; font-size: 17px; line-height: 1.6; color: #C9CCD1; max-width: 26em; }
-.chapter .note { font-size: 14px; color: var(--sand); }
-
-.cue {
-  position: absolute; z-index: 2; left: 50%; bottom: 22px; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ash);
-  transition: opacity .3s var(--ease-out);
-}
-.cue i { width: 1px; height: 36px; background: linear-gradient(var(--brass-hi), transparent); transform-origin: top; animation: drip 2.2s var(--ease-out) infinite; }
+.chapter h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6vw, 84px); line-height: 1; color: var(--bone); text-wrap: balance; }
+.chapter p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--body); max-width: 26em; }
+.cue { position: absolute; z-index: 2; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--steel); transition: opacity .3s var(--ease-out); }
+.cue i { width: 1px; height: 36px; background: linear-gradient(var(--mist), transparent); transform-origin: top; animation: drip 2.2s var(--ease-out) infinite; }
 @keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 70% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 .cue.gone { opacity: 0; }
+.rail { position: absolute; z-index: 2; right: var(--gutter); top: 50%; width: 1px; height: 26vh; transform: translateY(-50%); background: rgba(236,237,239,.16); opacity: 0; }
+.rail i { position: absolute; inset: 0; background: var(--mist); transform-origin: top; transform: scaleY(0); }
 
-.rail { position: absolute; z-index: 2; right: var(--gutter); top: 50%; width: 1px; height: 26vh; transform: translateY(-50%); background: rgba(236,237,239,.16); }
-.rail i { position: absolute; inset: 0; background: var(--brass-hi); transform-origin: top; transform: scaleY(0); }
-
-/* load moment: the first frame settles in, then the copy */
-.story:not(.ready) .stage img:first-child { opacity: 0 !important; }
-.story.ready .stage img:first-child { transition: opacity 1.4s var(--ease-out); }
-
-.film .pin::after {
-  background:
-    linear-gradient(90deg, rgba(28,12,12,.86) 0%, rgba(28,12,12,.45) 32%, rgba(28,12,12,0) 58%),
-    linear-gradient(0deg, rgba(28,12,12,.7) 0%, rgba(28,12,12,0) 34%);
-}
-
-/* phones and portrait screens: image band on top, copy below */
 @media (max-aspect-ratio: 1/1) {
-  .stage {
-    inset: auto 0 auto 0; top: 50%; transform: translateY(-46%);
-    aspect-ratio: 1 / 1.1; max-height: 66svh; width: 100%;
+  .film {
+    inset: auto 0 auto 0; top: calc(env(safe-area-inset-top, 0px) + 84px); aspect-ratio: 1 / 1.04; max-height: 60svh; width: 100%;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
   }
-  .pin::after { display: none; }
-  .film .stage { top: calc(env(safe-area-inset-top, 0px) + 84px); transform: none; aspect-ratio: 1 / 1.04; max-height: 60svh; }
+  .shade { display: none; }
   .copy { bottom: calc(env(safe-area-inset-bottom, 0px) + 72px); }
-  .chapter h1, .chapter h2 { font-size: clamp(40px, 11vw, 56px); }
+  .chapter h2 { font-size: clamp(40px, 11vw, 56px); }
   .chapter p { font-size: 16px; }
   .rail { right: auto; left: var(--gutter); top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 40px); width: calc(100% - 2 * var(--gutter)); height: 1px; transform: none; }
   .rail i { transform-origin: left; transform: scaleX(0); }
@@ -121,16 +81,17 @@ img { display: block; }
 
 /* ---------- reserve ---------- */
 .reserve { padding: clamp(48px, 10vh, 120px) var(--gutter) clamp(64px, 12vh, 140px); display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 5vh, 48px); }
-.reserve figure {
-  margin: 0; width: min(1100px, 100%); aspect-ratio: 16 / 8; max-width: 100%; overflow: hidden;
-  -webkit-mask-image: radial-gradient(75% 70% at 50% 50%, #000 55%, transparent 100%);
-          mask-image: radial-gradient(75% 70% at 50% 50%, #000 55%, transparent 100%);
-}
+.reserve figure { margin: 0; width: min(1100px, 100%); aspect-ratio: 16 / 8; max-width: 100%; overflow: hidden;
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(75% 70% at 50% 50%, #000 55%, transparent 100%); }
 .reserve figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
-.reserve .inner { width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+.reserve .inner { width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
 .reserve h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 5vw, 60px); line-height: 1.05; text-wrap: balance; color: var(--bone); }
-.reserve p { margin: 0; font-size: 17px; line-height: 1.6; color: #C9CCD1; max-width: 30em; }
-.pill { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 232px; min-height: 64px; padding: 10px 40px; border: 0; border-radius: 999px; cursor: pointer; background: linear-gradient(100deg, #8A3434 0%, #662424 45%, #3E1414 100%); color: #ECEDEF; box-shadow: 0 0 0 1px rgba(156,160,167,.25), 0 18px 50px -20px rgba(102,36,36,.7); transition: transform .16s var(--ease-out); }
+.reserve .lede { margin: 0; font-family: var(--serif); font-size: clamp(22px, 2.4vw, 28px); line-height: 1.3; color: var(--body); }
+.reserve .terms { margin: 0; font-size: 17px; line-height: 1.7; color: var(--body); max-width: 30em; }
+.price { display: inline-flex; align-items: center; vertical-align: middle; height: 1.5em; margin: 0 .15em; }
+.price canvas { height: 1.35em; width: auto; image-rendering: pixelated; image-rendering: crisp-edges; border-radius: 2px; }
+.price b { font-weight: 500; color: var(--bone); letter-spacing: .02em; }
+.pill { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 232px; min-height: 64px; padding: 10px 40px; margin-top: 8px; border: 0; border-radius: 999px; cursor: pointer; background: linear-gradient(100deg, #8A3434 0%, #662424 45%, #3E1414 100%); color: var(--bone); box-shadow: 0 0 0 1px rgba(156,160,167,.25), 0 18px 50px -20px rgba(102,36,36,.7); transition: transform .16s var(--ease-out); }
 .pill:active { transform: scale(.97); }
 .pill small { font-size: 10px; letter-spacing: .32em; margin-right: -.32em; text-transform: uppercase; font-weight: 500; opacity: .75; }
 .pill b { font-weight: 400; font-size: 18px; }
@@ -138,19 +99,18 @@ img { display: block; }
 .form-wrap.open { grid-template-rows: 1fr; }
 .form-wrap > div { overflow: hidden; }
 form { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; text-align: left; }
-label { font-size: 14px; color: var(--sand); }
+label { font-size: 14px; color: var(--mist); }
 .field { display: flex; gap: 10px; flex-wrap: wrap; }
 .field input { flex: 1 1 220px; min-width: 0; min-height: 52px; padding: 0 22px; background: rgba(28,12,12,.5); color: var(--bone); border: 1px solid rgba(156,160,167,.4); border-radius: 999px; font: inherit; font-size: 16px; }
-.field input:focus { outline: none; border-color: var(--brass-hi); }
-.field button { flex: 1 0 auto; min-height: 52px; padding: 0 26px; border-radius: 999px; cursor: pointer; background: var(--bone); color: #1C0C0C; border: 0; font-size: 15px; }
-.status { margin: 0; font-size: 14px; color: var(--sand); min-height: 1.6em; }
+.field input:focus { outline: none; border-color: var(--mist); }
+.field button { flex: 1 0 auto; min-height: 52px; padding: 0 26px; border-radius: 999px; cursor: pointer; background: var(--bone); color: var(--stage); border: 0; font-size: 15px; }
+.status { margin: 0; font-size: 14px; color: var(--mist); min-height: 1.6em; }
 
-footer { padding: 28px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 28px); display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: center; justify-content: space-between; border-top: 1px solid rgba(156,160,167,.12); font-size: 13px; color: #747B83; }
-footer svg { width: 110px; height: auto; color: var(--sand); display: block; }
+footer { padding: 28px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 28px); display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: center; justify-content: space-between; border-top: 1px solid rgba(156,160,167,.12); font-size: 13px; color: var(--slate); }
+footer svg { width: 110px; height: auto; color: var(--mist); display: block; }
 footer nav { display: flex; gap: 0 22px; flex-wrap: wrap; }
-footer a { color: #8A8B8F; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+footer a { color: var(--steel); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
 
-/* ---------- menu drawer ---------- */
 .scrim { position: fixed; inset: 0; z-index: 11; background: rgba(0,0,0,.55); opacity: 0; visibility: hidden; transition: opacity .3s var(--ease-out), visibility 0s .3s; }
 .drawer { position: fixed; z-index: 12; top: 0; bottom: 0; left: 0; width: min(360px, 88vw); padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gutter) 40px; background: #241010; border-right: 1px solid rgba(102,36,36,.6); display: flex; flex-direction: column; transform: translateX(-100%); transition: transform .4s var(--ease-drawer); }
 body.drawer-open .drawer { transform: none; }
@@ -174,39 +134,37 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
 </header>
 
 <main>
-  <section class="story" id="story" aria-label="Caldoir Elixir">
+  <section class="show" id="story" aria-label="Caldoir Elixir">
     <h1 class="sr-only">Caldoir Elixir</h1>
     <div class="pin">
-      <div class="stage" id="stage" aria-hidden="true"></div>
-
-      <div class="cue" id="cue" aria-hidden="true">Scroll<i></i></div>
-    </div>
-  </section>
-
-  <section class="story film" id="film" aria-label="The final bottle">
-    <div class="pin">
-      <div class="stage" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
-      <div class="copy" aria-live="polite">
+      <div class="layer three" aria-hidden="true"><canvas id="gl"></canvas></div>
+      <div class="layer film" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
+      <div class="shade" id="shade"></div>
+      <div class="copy" id="copy" aria-live="polite">
         <div class="chapter on"><h2>Caldoir Elixir</h2><p>The finished bottle: a round amber flask in clear glass, under a ribbed gold cap.</p></div>
         <div class="chapter"><h2>All of it, at once.</h2><p>Tobacco leaf, vanilla and cured leather gather around the bottle.</p></div>
         <div class="chapter"><h2>Then, smoke.</h2><p>A dry, smoky finish that stays into the night. 333 numbered bottles, poured once.</p></div>
       </div>
-      <div class="rail" aria-hidden="true"><i id="film-rail"></i></div>
+      <div class="cue" id="cue" aria-hidden="true">Scroll<i></i></div>
+      <div class="rail" id="rail-wrap" aria-hidden="true"><i id="rail"></i></div>
     </div>
   </section>
 
   <section class="reserve" id="reserve" aria-labelledby="r-title">
     <figure><img src="img/final-bottle.jpg" alt="The Caldoir bottle: a clear glass block holding a round amber flask, with a ribbed gold cap" loading="lazy"></figure>
     <div class="inner">
-      <h2 id="r-title">Three hundred and thirty-three. Then nothing.</h2>
-      <p>Join the list to reserve your number. A 10% booking amount holds your bottle when reservations open, and the price goes to the list first.</p>
+      <h2 id="r-title">Luxury is reserved, never requested.</h2>
+      <p class="lede">The list isn’t a queue. It’s the allocation.</p>
+      <p class="terms">Reserved by the collectors. Reserve your bottle with a
+        <span class="price" id="price"><canvas id="price-px" width="96" height="28" aria-hidden="true"></canvas><span class="sr-only" id="price-sr">deposit amount, shown once you join the list,</span></span>
+        deposit.</p>
       <button class="pill" id="pill" type="button" aria-expanded="false" aria-controls="form-wrap"><small>Reserve for</small><b>Early access</b></button>
       <div class="form-wrap" id="form-wrap">
         <div>
           <form id="waitlist" novalidate>
-            <label for="contact">Your email or WhatsApp number</label>
+            <label for="contact">Your email</label>
             <div class="field">
-              <input id="contact" name="contact" type="text" autocomplete="email" placeholder="name@domain.com or +91…">
+              <input id="contact" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@domain.com">
               <button type="submit">Join the list</button>
             </div>
             <p class="status" id="status" role="status"></p>
@@ -237,88 +195,328 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   </nav>
 </aside>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* Each frame: file, chapter, how long it holds (scroll weight), horizontal focus for phone crops. */
-  const FRAMES = [
-    ['scene-bottle', 0, 1.8, 50],
-    ['open-1', 1, 0.9, 66], ['open-2', 1, 0.8, 66], ['open-3', 1, 0.8, 68], ['open-4', 1, 0.8, 68], ['open-5', 1, 1.1, 70],
-    ['spray-1', 2, 0.9, 76], ['spray-2', 2, 1.1, 52], ['spray-3', 2, 0.9, 62], ['spray-4', 2, 1.1, 76],
-    ['scene-tobacco', 3, 1.6, 60], ['scene-vanilla', 4, 1.6, 38], ['scene-leather', 5, 1.6, 50],
-    ['pour-1', 6, 0.9, 70], ['pour-2', 6, 0.8, 70], ['pour-3', 6, 0.8, 66], ['pour-4', 6, 0.9, 58], ['pour-5', 6, 1.1, 56],
-    ['scene-22', 7, 1.8, 50],
-  ];
-  const UNIT = 0.5;                        // screen-heights of scroll per unit of weight
-  const story = $('story'), stage = $('stage');
-  const imgs = FRAMES.map(([f, , , fx], i) => {
-    const im = new Image();
-    im.src = `img/${f}.jpg`; im.alt = ''; im.decoding = 'async';
-    im.style.setProperty('--fx', fx + '%');
-    if (i === 0) im.style.opacity = 1;
-    stage.appendChild(im); return im;
-  });
-  const starts = []; let total = 0;
-  FRAMES.forEach(f => { starts.push(total); total += f[2]; });
-
-  let lastW = 0;
-  function size() {
-    if (innerWidth === lastW) return;                 // ignore mobile URL-bar height changes
-    lastW = innerWidth;
-    story.style.height = (innerHeight * (1 + total * UNIT)) + 'px';
-  }
-  size(); addEventListener('resize', size);
-
-  const chapters = [...story.querySelectorAll('.chapter')], cue = $('cue'), rail = $('rail');
   const portrait = matchMedia('(max-aspect-ratio: 1/1)');
-  let target = 0, current = 0, shown = -1, lastFrame = -1;
-  const smooth = t => t * t * (3 - 2 * t);
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const span = (v, a, b) => clamp((v - a) / (b - a));
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;     // in-out cubic, for on-screen movement
+  const lerp = (a, b, t) => a + (b - a) * t;
 
-  function read() {
-    const span = story.offsetHeight - innerHeight;
-    target = Math.min(1, Math.max(0, (scrollY - story.offsetTop) / span));
+  /* The show: 3D bottle first, then the film. Scroll lengths in screen heights. */
+  const SCREENS_3D = 5, SCREENS_FILM = 5.5, BLEND = 0.5;
+  const TOTAL = SCREENS_3D + BLEND + SCREENS_FILM;
+  const END_3D = SCREENS_3D / TOTAL, START_FILM = (SCREENS_3D + BLEND) / TOTAL;
+  const show = $('story');
+  let lastW = 0;
+  function sizeShow() { if (innerWidth !== lastW) { lastW = innerWidth; show.style.height = (innerHeight * (1 + TOTAL)) + 'px'; } }
+  sizeShow();
+
+  let target = 0, current = 0;
+  function read() { const s = show.offsetHeight - innerHeight; target = clamp((scrollY - show.offsetTop) / s); }
+
+  /* ================= 3D bottle ================= */
+  const three = (() => {
+    const canvas = $('gl');
+    if (!window.THREE) return null;
+    THREE.ColorManagement.legacyMode = false;   // read every hex colour as sRGB, so the dark oxblood stays dark
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); } catch (e) { return null; }
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    const BG = 0x1c0c0c;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(BG);
+    scene.fog = new THREE.Fog(BG, 10, 26);
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
+
+    // studio reflections: a soft top box, a long warm strip behind, tall strips at the sides
+    (() => {
+      const env = new THREE.Scene();
+      env.add(new THREE.Mesh(new THREE.BoxGeometry(40, 20, 40), new THREE.MeshBasicMaterial({ color: 0x120707, side: THREE.BackSide })));
+      const strip = (w, h, c, k, pos, ry = 0, rx = 0) => {
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), side: THREE.DoubleSide }));
+        m.position.set(...pos); m.rotation.set(rx, ry, 0); env.add(m);
+      };
+      strip(8, 8, 0xfff4ea, 0.9, [0, 9.5, 0], 0, Math.PI / 2);
+      strip(30, 0.8, 0xffe2c4, 5, [0, 1.2, -12]);
+      strip(3, 9, 0xffffff, 3.2, [-8, 3, 3], Math.PI / 2);
+      strip(2, 9, 0xf0e6ff, 2.4, [8, 3, -1], -Math.PI / 2);
+      strip(8, 3, 0xffffff, 1.2, [0, 2, 10]);
+      const pm = new THREE.PMREMGenerator(renderer);
+      scene.environment = pm.fromScene(env, 0.02).texture; pm.dispose();
+    })();
+
+    scene.add(new THREE.AmbientLight(0x3a2020, 0.5));
+    const key = new THREE.DirectionalLight(0xfff0dc, 1.6); key.position.set(-4, 6, 6); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xffffff, 2.2); rim.position.set(4, 3, -6); scene.add(rim);
+    const glow = new THREE.PointLight(0xd07a30, 0.7, 3, 2); scene.add(glow);
+
+    // ---------- bottle ----------
+    const W = 3.0, H = 1.7, D = 0.95;
+    function roundedBox(w, h, d, r, b) {
+      const s = new THREE.Shape(), x = -w / 2 + b, y = -h / 2 + b, ww = w - 2 * b, hh = h - 2 * b;
+      s.moveTo(x + r, y); s.lineTo(x + ww - r, y); s.quadraticCurveTo(x + ww, y, x + ww, y + r);
+      s.lineTo(x + ww, y + hh - r); s.quadraticCurveTo(x + ww, y + hh, x + ww - r, y + hh);
+      s.lineTo(x + r, y + hh); s.quadraticCurveTo(x, y + hh, x, y + hh - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+      const g = new THREE.ExtrudeGeometry(s, { depth: d - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 6, curveSegments: 12 });
+      g.center(); return g;
+    }
+    const glassMat = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff, metalness: 0, roughness: 0.02, transmission: 1, thickness: 0.3, ior: 1.42,
+      clearcoat: 1, clearcoatRoughness: 0.02, specularIntensity: 1, envMapIntensity: 1.5,
+    });
+    const liquidMat = new THREE.MeshPhysicalMaterial({
+      color: 0x4a2408, emissive: 0x8a4a12, emissiveIntensity: 1.0, roughness: 0.03, metalness: 0,
+      clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 0.55
+    });
+    // liquid depth: dark amber where the flask curves away, glowing amber where you look straight through it
+    liquidMat.onBeforeCompile = sh => {
+      sh.fragmentShader = sh.fragmentShader.replace('#include <output_fragment>', `
+        float facing = clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0);
+        outgoingLight *= mix(0.08, 1.5, pow(facing, 2.2));
+        #include <output_fragment>`);
+    };
+    const goldMat = new THREE.MeshStandardMaterial({ color: 0xd2a660, metalness: 1, roughness: 0.22, envMapIntensity: 1.6 });
+    const goldDark = new THREE.MeshStandardMaterial({ color: 0x9a7438, metalness: 1, roughness: 0.32 });
+    const neckMat = new THREE.MeshPhysicalMaterial({ color: 0x5a2a0c, roughness: 0.05, clearcoat: 1, emissive: 0x1a0702, emissiveIntensity: .5 });
+
+    const bottle = new THREE.Group();
+    const block = new THREE.Mesh(roundedBox(W, H, D, 0.14, 0.07), glassMat); block.position.y = H / 2; bottle.add(block);
+
+    // the round flask: a full, slightly egg-shaped pebble of amber, flat-ish front to back
+    const fg = new THREE.SphereGeometry(1, 96, 64), fp = fg.attributes.position, v = new THREE.Vector3();
+    for (let i = 0; i < fp.count; i++) { v.fromBufferAttribute(fp, i); const k = 1 + 0.05 * -v.y; fp.setXYZ(i, v.x * 0.66 * k, v.y * 0.62, v.z * 0.34 * k); }
+    fg.computeVertexNormals();
+    const FX = 0.6, FY = 0.86;
+    const flask = new THREE.Mesh(fg, liquidMat); flask.position.set(FX, FY, 0); bottle.add(flask);
+    glow.position.set(FX, FY, 0.6);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, H - FY - 0.5, 32), neckMat); neck.position.set(FX, (FY + 0.5 + H) / 2, 0); bottle.add(neck);
+    const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.23, 0.1, 64), goldDark); collar.position.set(FX, H + 0.05, 0); bottle.add(collar);
+
+    // atomizer, revealed when the cap comes off
+    const atom = new THREE.Group(); atom.position.set(FX, H + 0.1, 0); bottle.add(atom);
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.16, 32), goldMat); stem.position.y = 0.08; atom.add(stem);
+    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.1, 32), goldMat); head.position.y = 0.2; atom.add(head);
+    const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.05, 16), goldDark); nozzle.rotation.z = Math.PI / 2; nozzle.position.set(-0.08, 0.2, 0.0); atom.add(nozzle);
+
+    // ribbed gold dome cap
+    const prof = [[0.2, 0], [0.25, 0.01], [0.29, 0.05], [0.315, 0.12], [0.32, 0.2], [0.31, 0.28], [0.28, 0.36], [0.23, 0.43], [0.16, 0.48], [0.08, 0.51], [0, 0.52]].map(([x, y]) => new THREE.Vector2(x, y));
+    const cg = new THREE.LatheGeometry(prof, 144), cp = cg.attributes.position;
+    for (let i = 0; i < cp.count; i++) {
+      v.fromBufferAttribute(cp, i); const r = Math.hypot(v.x, v.z); if (r < 0.02) continue;
+      const th = Math.atan2(v.z, v.x), rib = 1 - 0.045 * Math.pow(0.5 - 0.5 * Math.cos(th * 24), 1.5) * (r / 0.32);
+      cp.setX(i, v.x * rib); cp.setZ(i, v.z * rib);
+    }
+    cg.computeVertexNormals();
+    const cap = new THREE.Group(); cap.add(new THREE.Mesh(cg, goldMat));
+    const capBand = new THREE.Mesh(new THREE.CylinderGeometry(0.205, 0.205, 0.04, 64), goldDark); capBand.position.y = 0.02; cap.add(capBand);
+    const CAP_Y = H + 0.1; cap.position.set(FX, CAP_Y, 0); bottle.add(cap);
+
+    // printed number, top-left of the front face
+    const ec = document.createElement('canvas'); ec.width = 1024; ec.height = 140;
+    const et = new THREE.CanvasTexture(ec); et.encoding = THREE.sRGBEncoding; et.anisotropy = 8;
+    const drawNum = () => { const x = ec.getContext('2d'); x.clearRect(0, 0, 1024, 140); x.fillStyle = 'rgba(150,150,150,0.95)'; x.font = '300 96px Jost, "Helvetica Neue", sans-serif'; x.textBaseline = 'middle'; x.fillText('Nº 001 | 333', 10, 74); et.needsUpdate = true; };
+    drawNum(); if (document.fonts) document.fonts.ready.then(drawNum);
+    const num = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 0.157), new THREE.MeshBasicMaterial({ map: et, transparent: true, depthWrite: false, toneMapped: false }));
+    num.position.set(-0.68, 1.36, D / 2 + 0.002); bottle.add(num);
+    scene.add(bottle);
+
+    // reflection: a faint mirrored copy painted over a solid floor (a solid floor is what the glass refracts)
+    const mirror = new THREE.Group(); mirror.scale.y = -1; scene.add(mirror);
+    const ghost = (mat, o) => { const m = mat.clone(); m.transparent = true; m.opacity = o; m.depthTest = false; m.depthWrite = false; m.side = THREE.DoubleSide; return m; };
+    const mFlask = new THREE.Mesh(fg, ghost(liquidMat, 0.1)); mFlask.position.copy(flask.position); mirror.add(mFlask);
+    const mCap = new THREE.Group(); mCap.add(new THREE.Mesh(cg, ghost(goldMat, 0.12))); mirror.add(mCap);
+    mirror.traverse(o => { o.renderOrder = 5; });
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({ color: 0x120707 }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = 0.001; scene.add(floor);
+
+    // a softly lit backdrop behind the bottle: the glass refracts it, which is what makes it read as clear glass
+    const bd = document.createElement('canvas'); bd.width = 512; bd.height = 256; { const x = bd.getContext('2d');
+      const g = x.createRadialGradient(256, 226, 10, 256, 226, 300); g.addColorStop(0, '#5e4d47'); g.addColorStop(.3, '#33221f'); g.addColorStop(.65, '#1f0e0e'); g.addColorStop(1, '#1c0c0c');
+      x.fillStyle = g; x.fillRect(0, 0, 512, 256); }
+    const bdt = new THREE.CanvasTexture(bd); bdt.encoding = THREE.sRGBEncoding;
+    const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(70, 16), new THREE.MeshBasicMaterial({ map: bdt, fog: false, toneMapped: false }));
+    backdrop.position.set(0, 8, -9); scene.add(backdrop);
+    // the horizon glow behind the bottle
+    function glowTex() {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 128; const x = c.getContext('2d');
+      const h = x.createLinearGradient(0, 0, 512, 0); h.addColorStop(0, 'rgba(255,255,255,0)'); h.addColorStop(.3, 'rgba(255,255,255,.3)'); h.addColorStop(.5, '#fff'); h.addColorStop(.7, 'rgba(255,255,255,.3)'); h.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = h; x.fillRect(0, 0, 512, 128); x.globalCompositeOperation = 'destination-in';
+      const g = x.createLinearGradient(0, 0, 0, 128); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.5, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 512, 128); return new THREE.CanvasTexture(c);
+    }
+    const streak = new THREE.Mesh(new THREE.PlaneGeometry(24, 2.2), new THREE.MeshBasicMaterial({ map: glowTex(), color: 0xc9a58a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, opacity: .55 }));
+    streak.position.set(0, 1.1, -7); scene.add(streak);
+
+    // spray mist: every particle's path is a function of the spray time, so scrolling back rewinds it
+    const N = 900, pg = new THREE.BufferGeometry(), seeds = new Float32Array(N * 4), base = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) { seeds[i * 4] = Math.random() * 0.45; seeds[i * 4 + 1] = Math.random(); seeds[i * 4 + 2] = Math.random(); seeds[i * 4 + 3] = Math.random(); }
+    pg.setAttribute('position', new THREE.BufferAttribute(base, 3)); pg.setAttribute('seed', new THREE.BufferAttribute(seeds, 4));
+    const mistMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.NormalBlending,
+      uniforms: { uT: { value: 0 }, uOrigin: { value: new THREE.Vector3() }, uScale: { value: 300 } },
+      vertexShader: `
+        attribute vec4 seed; uniform float uT; uniform vec3 uOrigin; uniform float uScale; varying float vA;
+        void main() {
+          float life = clamp((uT - seed.x) / 0.55, 0.0, 1.0);
+          float d = 1.0 - pow(1.0 - life, 2.2);                       // fast out, slow drift
+          vec3 dir = normalize(vec3(-1.0, 0.12 + (seed.y - 0.5) * 0.5, 0.25 + (seed.z - 0.5) * 0.6));
+          vec3 p = uOrigin + dir * d * (2.2 + seed.w * 1.4);
+          p.y += life * life * 0.35;                                  // warm mist rises a little
+          p += vec3(sin(seed.y * 40.0 + life * 3.0), cos(seed.z * 30.0 + life * 2.0), sin(seed.w * 20.0)) * 0.12 * life;
+          vA = smoothstep(0.0, 0.06, life) * (1.0 - smoothstep(0.55, 1.0, life)) * step(0.0001, uT - seed.x);
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_PointSize = (0.08 + life * 0.75) * uScale / -mv.z;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        varying float vA;
+        void main() { vec2 c = gl_PointCoord - 0.5; float r = length(c); float a = smoothstep(0.5, 0.0, r); gl_FragColor = vec4(0.94, 0.9, 0.86, a * vA * 0.55); }`
+    });
+    const mist = new THREE.Points(pg, mistMat); mist.frustumCulled = false; scene.add(mist);
+
+    // ---------- framing and the scroll timeline ----------
+    let baseDist = 8;
+    function resize() {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      renderer.setPixelRatio(Math.min(devicePixelRatio, w < 700 ? 1.6 : 2));
+      renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+      const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(15)) * camera.aspect);
+      baseDist = Math.max(7.4, 2.15 / Math.tan(half));
+      mistMat.uniforms.uScale.value = h * 0.9;
+    }
+    const look = new THREE.Vector3(), mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth - .5; mouse.ty = e.clientY / innerHeight - .5; }, { passive: true });
+    const clock = new THREE.Clock();
+
+    function render(q) {
+      const t = clock.getElapsedTime();
+      mouse.x += (mouse.tx - mouse.x) * .05; mouse.y += (mouse.ty - mouse.y) * .05;
+      const intro = ease(span(q, 0, 0.18)), unscrew = ease(span(q, 0.18, 0.4)), lift = ease(span(q, 0.4, 0.56));
+      const spray = span(q, 0.56, 0.82), close = ease(span(q, 0.82, 1));
+
+      // cap: two turns off, lift and drift aside, then screw back on
+      const off = lift * (1 - close), turn = unscrew * (1 - close);
+      cap.rotation.y = -turn * Math.PI * 4;
+      cap.position.set(FX + off * 0.5, CAP_Y + turn * 0.1 + off * 0.5, off * 0.2);
+      cap.rotation.z = -off * 0.38;
+      atom.position.y = H + 0.1 - (spray > 0 && spray < 0.12 ? Math.sin(spray / 0.12 * Math.PI) * 0.03 : 0);
+      atom.visible = unscrew > 0.02 && close < 0.98;
+      mCap.position.copy(cap.position); mCap.rotation.copy(cap.rotation);
+
+      mistMat.uniforms.uT.value = spray < 0.001 ? 0 : spray * 0.95 + close * 0.6;
+      mistMat.uniforms.uOrigin.value.set(FX - 0.11, H + 0.3, 0);
+
+      // camera: settle from a three-quarter view, push in to the neck for the spray, come back to the front
+      const push = lift * (1 - close);
+      const angle = lerp(0.6, 0.12, intro) * (1 - close) + (reduce ? 0 : Math.sin(t * 0.25) * 0.03) + mouse.x * 0.12;
+      const dist = baseDist * lerp(1.12, 1, intro) * lerp(1, 0.7, push);
+      const ty = lerp(0.85, 1.5, push), tx = lerp(0.05, 0.2, push);
+      camera.position.set(tx + Math.sin(angle) * dist, ty + lerp(0.9, 0.35, intro) * (1 - push) + 0.25 - mouse.y * 0.25, Math.cos(angle) * dist);
+      look.set(tx, ty, 0); camera.lookAt(look);
+      streak.material.opacity = 0.45 + 0.15 * Math.sin(t * 0.6);
+      renderer.render(scene, camera);
+    }
+    resize();
+    return { render, resize };
+  })();
+  if (!three) {  // no WebGL: a still of the bottle stands in for the 3D
+    const img = new Image(); img.src = 'img/final-bottle.jpg'; img.className = 'fallback'; img.alt = ''; $('gl').replaceWith(img);
   }
-  function paint(p) {
-    const pos = p * total;
-    let i = 0; while (i < FRAMES.length - 1 && starts[i + 1] <= pos) i++;
-    const t = Math.min(1, (pos - starts[i]) / FRAMES[i][2]);
-    const fade = i < FRAMES.length - 1 ? smooth(Math.max(0, (t - 0.7) / 0.3)) : 0;
-    if (lastFrame !== i) { imgs.forEach((im, k) => { if (k !== i && k !== i + 1) im.style.opacity = 0; }); lastFrame = i; }
-    const a = imgs[i], b = imgs[i + 1];
-    a.style.opacity = 1;
-    a.style.transform = reduce ? '' : `scale(${(1 + 0.045 * t).toFixed(4)})`;
-    if (b) { b.style.opacity = fade.toFixed(3); b.style.transform = ''; }
-    const c = FRAMES[fade > 0.5 && b ? i + 1 : i][1];
-    if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
-    cue.classList.toggle('gone', p > 0.01);
-    if (rail) rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
-  }
-  function loop() {
-    current += (target - current) * (reduce ? 1 : 0.14);
+
+  /* ================= the film, frame by frame ================= */
+  const film = (() => {
+    const COUNT = 150, CUTS = [0, 0.24, 0.62];
+    const canvas = $('film-canvas'), ctx = canvas.getContext('2d');
+    const frames = new Array(COUNT), loaded = new Array(COUNT).fill(false);
+    const chapters = [...document.querySelectorAll('#copy .chapter')];
+    let drawn = -1, need = 0, started = false, shown = 0;
+    function load(i) {
+      if (frames[i]) return;
+      const im = new Image(); im.decoding = 'async';
+      im.onload = () => { loaded[i] = true; if (Math.abs(i - need) < 3 || drawn < 0) draw(need, true); };
+      im.src = `seq/f${String(i + 1).padStart(3, '0')}.jpg`; frames[i] = im;
+    }
+    function start() { if (started) return; started = true; load(0); for (let i = 8; i < COUNT; i += 8) load(i); for (let i = 1; i < COUNT; i++) load(i); }
+    function draw(i, force) {
+      let k = i; while (k > 0 && !loaded[k]) k--;
+      if (!loaded[k] || (k === drawn && !force)) return;
+      const im = frames[k], cw = canvas.width, ch = canvas.height;
+      const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+      ctx.drawImage(im, (cw - w) * (portrait.matches ? 0.54 : 0.5), (ch - h) / 2, w, h); drawn = k;
+    }
+    function resize() { const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); drawn = -1; draw(need, true); }
+    function paint(f) {
+      need = Math.round(clamp((f - 0.04) / 0.86) * (COUNT - 1)); draw(need);
+      let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
+      if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
+      $('rail').style.transform = portrait.matches ? `scaleX(${f.toFixed(4)})` : `scaleY(${f.toFixed(4)})`;
+    }
+    resize();
+    return { start, paint, resize };
+  })();
+  setTimeout(film.start, 1200);   // the 3D comes first; the film frames load in the background
+
+  /* ================= drive both from scroll ================= */
+  const filmLayer = document.querySelector('.film'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue'), threeLayer = document.querySelector('.three');
+  let visible = true;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(show);
+  function frame() {
+    current += (target - current) * (reduce ? 1 : 0.12);
     if (Math.abs(target - current) < 0.00005) current = target;
-    paint(current);
-    requestAnimationFrame(loop);
+    if (visible) {
+      const p = current;
+      const mix = ease(span(p, END_3D, START_FILM));          // 0 = 3D, 1 = film
+      threeLayer.style.opacity = (1 - mix).toFixed(3);
+      filmLayer.style.opacity = shade.style.opacity = mix.toFixed(3);
+      copy.style.opacity = railWrap.style.opacity = span(p, START_FILM - 0.01, START_FILM + 0.02).toFixed(3);
+      cue.classList.toggle('gone', p > 0.01);
+      if (three && mix < 1) three.render(span(p, 0, END_3D));
+      if (mix > 0) film.paint(span(p, START_FILM, 1));
+    }
+    requestAnimationFrame(frame);
   }
   addEventListener('scroll', read, { passive: true });
-  addEventListener('resize', read);
-  read(); current = target; paint(current); loop();
-  setTimeout(() => story.classList.add('ready'), 60);
+  addEventListener('resize', () => { sizeShow(); read(); three && three.resize(); film.resize(); });
+  portrait.addEventListener('change', () => { three && three.resize(); film.resize(); });
+  read(); current = target; frame();
 
-  /* menu */
-  function drawer(open) {
-    document.body.classList.toggle('drawer-open', open);
-    $('drawer').setAttribute('aria-hidden', String(!open));
-    $('menu').setAttribute('aria-expanded', String(open));
-  }
-  $('menu').onclick = () => drawer(true);
-  $('close').onclick = () => drawer(false);
-  $('scrim').onclick = () => drawer(false);
+  /* ================= menu ================= */
+  function drawer(open) { document.body.classList.toggle('drawer-open', open); $('drawer').setAttribute('aria-hidden', String(!open)); $('menu').setAttribute('aria-expanded', String(open)); }
+  $('menu').onclick = () => drawer(true); $('close').onclick = () => drawer(false); $('scrim').onclick = () => drawer(false);
   addEventListener('keydown', e => { if (e.key === 'Escape') drawer(false); });
   document.querySelectorAll('.drawer nav a').forEach(a => a.addEventListener('click', () => drawer(false)));
 
-  /* reserve */
+  /* ================= reserve: the deposit stays pixelated until an email is given ================= */
+  const DEPOSIT = '$34.99';
+  const px = $('price-px'), pctx = px.getContext('2d');
+  function pixelate(block) {
+    const w = px.width, h = px.height, sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
+    const off = document.createElement('canvas'); off.width = sw; off.height = sh; const o = off.getContext('2d');
+    o.fillStyle = '#ECEDEF'; o.font = `500 ${sh * 0.82}px Jost, "Helvetica Neue", sans-serif`; o.textBaseline = 'middle'; o.textAlign = 'center';
+    o.fillText(DEPOSIT, sw / 2, sh / 2 + sh * 0.04);
+    pctx.clearRect(0, 0, w, h); pctx.imageSmoothingEnabled = false; pctx.drawImage(off, 0, 0, w, h);
+  }
+  pixelate(7);
+  if (document.fonts) document.fonts.ready.then(() => { if (!revealed) pixelate(7); });
+  let revealed = false;
+  function reveal() {
+    if (revealed) return; revealed = true;
+    const steps = reduce ? [] : [6, 4, 3, 2];
+    let i = 0;
+    const tick = () => {
+      if (i < steps.length) { pixelate(steps[i++]); setTimeout(tick, 110); return; }
+      const b = document.createElement('b'); b.textContent = DEPOSIT; $('price').replaceChildren(b);
+    };
+    tick();
+  }
+  try { if (localStorage.getItem('caldoir-list') === '1') reveal(); } catch (e) {}
+
   const pill = $('pill'), wrap = $('form-wrap');
   function setForm(open, focus) { wrap.classList.toggle('open', open); pill.setAttribute('aria-expanded', String(open)); if (open && focus) setTimeout(() => $('contact').focus({ preventScroll: true }), 320); }
   pill.onclick = () => setForm(!wrap.classList.contains('open'), true);
@@ -326,76 +524,11 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   $('waitlist').addEventListener('submit', e => {
     e.preventDefault();
     const v = $('contact').value.trim(), status = $('status');
-    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || /^\+?[\d\s-]{8,}$/.test(v);
-    if (!ok) { status.textContent = 'Enter an email address or a phone number with its country code.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { status.textContent = 'Enter your email address, for example name@domain.com.'; return; }
     // TODO before launch: send `v` to your waitlist service (form backend, sheet or CRM).
-    status.textContent = 'You are on the list. We will write to you before reservations open.';
-    e.target.reset();
+    status.textContent = 'You are on the list. Your deposit is shown above.';
+    try { localStorage.setItem('caldoir-list', '1'); } catch (err) {}
+    reveal(); e.target.reset();
   });
-})();
-/* ---------- the final bottle film, played by scroll after the story ---------- */
-(() => {
-  const COUNT = 150;                        // seq/f001.jpg … f150.jpg: the 10 s film at 15 frames a second
-  const SCREENS = 5;                        // screen-heights of scroll for the whole film
-  const HOLD_IN = 0.06, HOLD_OUT = 0.1;     // rest on the first and last frame
-  const CUTS = [0, 0.24, 0.62];             // chapters: bottle alone, ingredients arrive, smoke
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const film = document.getElementById('film'), canvas = document.getElementById('film-canvas'), ctx = canvas.getContext('2d');
-  const chapters = [...film.querySelectorAll('.chapter')], rail = document.getElementById('film-rail');
-  const portrait = matchMedia('(max-aspect-ratio: 1/1)');
-  const frames = new Array(COUNT), loaded = new Array(COUNT).fill(false);
-  let drawn = -1, need = 0, started = false;
-
-  function load(i) {
-    if (frames[i]) return;
-    const im = new Image(); im.decoding = 'async';
-    im.onload = () => { loaded[i] = true; if (Math.abs(i - need) < 3 || drawn < 0) draw(need, true); };
-    im.src = `seq/f${String(i + 1).padStart(3, '0')}.jpg`; frames[i] = im;
-  }
-  function start() {                       // load the film only as the reader gets close to it
-    if (started) return; started = true;
-    load(0); for (let i = 8; i < COUNT; i += 8) load(i); for (let i = 1; i < COUNT; i++) load(i);
-  }
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); }, { rootMargin: '150% 0px' }).observe(film);
-
-  function draw(i, force) {
-    let k = i; while (k > 0 && !loaded[k]) k--;
-    if (!loaded[k] || (k === drawn && !force)) return;
-    const im = frames[k], cw = canvas.width, ch = canvas.height;
-    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
-    ctx.drawImage(im, (cw - w) * (portrait.matches ? 0.54 : 0.5), (ch - h) / 2, w, h);
-    drawn = k;
-  }
-  function fit() {
-    const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
-    drawn = -1; draw(need, true);
-  }
-  let lastW = 0;
-  function size() {
-    if (innerWidth !== lastW) { lastW = innerWidth; film.style.height = (innerHeight * (1 + SCREENS)) + 'px'; }
-    fit();
-  }
-  let target = 0, current = 0, shown = 0;
-  function read() {
-    const span = film.offsetHeight - innerHeight;
-    target = Math.min(1, Math.max(0, (scrollY - film.offsetTop) / span));
-  }
-  function paint(p) {
-    const f = Math.min(1, Math.max(0, (p - HOLD_IN) / (1 - HOLD_IN - HOLD_OUT)));
-    need = Math.round(f * (COUNT - 1)); draw(need);
-    let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
-    if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
-    if (rail) rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
-  }
-  function loop() {
-    current += (target - current) * (reduce ? 1 : 0.16);
-    if (Math.abs(target - current) < 0.00005) current = target;
-    paint(current); requestAnimationFrame(loop);
-  }
-  addEventListener('scroll', read, { passive: true });
-  addEventListener('resize', () => { size(); read(); });
-  portrait.addEventListener('change', fit);
-  size(); read(); current = target; paint(current); loop();
 })();
 </script>
