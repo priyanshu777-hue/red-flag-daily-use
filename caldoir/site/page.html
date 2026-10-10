@@ -82,6 +82,53 @@ img { display: block; }
   .cue { display: none; }
 }
 
+
+/* ---------- glass side bar (desktop) / dock (phones) ---------- */
+.rail-nav { position: fixed; z-index: 9; left: clamp(14px, 2vw, 28px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.glass {
+  background: linear-gradient(160deg, rgba(236,237,239,.16), rgba(236,237,239,.06));
+  -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(236,237,239,.32);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 40px -18px rgba(0,0,0,.6);
+}
+.orb { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: var(--bone); text-decoration: none; overflow: hidden; }
+.orb svg { width: 30px; height: 30px; }
+.orb img { width: 100%; height: 100%; object-fit: cover; }
+.dock { width: 62px; padding: 6px 0; border-radius: 999px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.dock a {
+  position: relative; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center;
+  color: var(--bone); text-decoration: none; border: 1px solid transparent;
+  transition: background .25s var(--ease-out), border-color .25s var(--ease-out);
+}
+.dock a svg { width: 22px; height: 22px; }
+.dock a[aria-current="true"] {
+  background: radial-gradient(120% 120% at 30% 20%, rgba(102,36,36,.75), rgba(28,12,12,.85));
+  border-color: rgba(236,237,239,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 6px 16px -6px rgba(0,0,0,.6);
+}
+.tip {
+  position: absolute; left: calc(100% + 14px); top: 50%; transform: translate(-4px, -50%); white-space: nowrap;
+  padding: 6px 12px; border-radius: 999px; font-size: 13px; color: var(--bone);
+  background: rgba(28,12,12,.8); border: 1px solid rgba(236,237,239,.2);
+  opacity: 0; pointer-events: none; transition: opacity .18s var(--ease-out), transform .18s var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .dock a:hover:not([aria-current="true"]) { background: rgba(236,237,239,.12); }
+  .rail-nav a:hover .tip, .rail-nav a:focus-visible .tip { opacity: 1; transform: translate(0, -50%); }
+}
+@media (min-width: 761px) { .copy { left: calc(clamp(14px, 2vw, 28px) + 96px); } }   /* clear the side bar */
+@media (max-width: 760px) {
+  .rail-nav { left: 50%; top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); transform: translateX(-50%); flex-direction: row; gap: 10px; }
+  .orb { width: 52px; height: 52px; }
+  .orb svg { width: 26px; height: 26px; }
+  .dock { width: auto; height: 58px; padding: 0 5px; flex-direction: row; }
+  .dock a { width: 46px; height: 46px; }
+  .tip { display: none; }
+  .copy { bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important; }
+  .rail { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px) !important; }
+  footer { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px); }
+}
+
 /* ---------- reserve ---------- */
 .reserve { padding: clamp(48px, 10vh, 120px) var(--gutter) clamp(64px, 12vh, 140px); display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 5vh, 48px); }
 .reserve figure { margin: 0; width: min(1100px, 100%); aspect-ratio: 16 / 8; max-width: 100%; overflow: hidden;
@@ -136,6 +183,17 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   <a class="reserve-link" href="#reserve">Reserve</a>
 </header>
 
+<nav class="rail-nav" aria-label="Sections">
+  <a class="orb glass" href="#story" data-go="top" aria-label="Caldoir, back to the start"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="-305 -1040 1380 1380"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292Z"/></svg></a>
+  <div class="dock glass">
+    <a href="#story" data-go="top" data-sec="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V18a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z"/><path d="M9.5 15.2c1.4 1 3.6 1 5 0"/></svg><span class="tip">The elixir</span><span class="sr-only">The elixir</span></a>
+    <a href="#story" data-go="film" data-sec="film" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3.5"/><path d="m10.3 9.4 4.4 2.6-4.4 2.6z"/></svg><span class="tip">The film</span><span class="sr-only">The film</span></a>
+    <a href="#reserve" data-sec="reserve" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8.5h12l-.8 10A2 2 0 0 1 15.2 20H8.8a2 2 0 0 1-2-1.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg><span class="tip">Reserve</span><span class="sr-only">Reserve</span></a>
+    <a href="#contact" data-sec="contact" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5c4.4 0 8 3 8 6.8S16.4 18 12 18c-1 0-2-.1-2.9-.4L5 19.5l1.2-3.4C4.8 14.9 4 13.2 4 11.3 4 7.5 7.6 4.5 12 4.5z"/><path d="M8.6 11.4h.01M12 11.4h.01M15.4 11.4h.01"/></svg><span class="tip">Contact</span><span class="sr-only">Contact</span></a>
+  </div>
+  <a class="orb glass" href="#reserve" aria-label="The bottle: reserve yours"><img src="img/bottle-thumb.jpg" alt=""></a>
+</nav>
+
 <main>
   <section class="show" id="story" aria-label="Caldoir Elixir">
     <h1 class="sr-only">Caldoir Elixir</h1>
@@ -178,7 +236,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   </section>
 </main>
 
-<footer>
+<footer id="contact">
   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="60 -714 7165 728"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292ZM1539.0 -714 1835.0 -6H1750.0L1519.0 -619ZM1324.0 -73Q1317.0 -53 1322.0 -39.0Q1327.0 -25 1338.5 -17.5Q1350.0 -10 1362.0 -10H1371.0V0H1170.0V-10Q1170.0 -10 1174.5 -10.0Q1179.0 -10 1179.0 -10Q1202.0 -10 1226.5 -24.5Q1251.0 -39 1267.0 -73ZM1539.0 -714 1548.0 -644 1297.0 -3H1237.0L1493.0 -611Q1493.0 -611 1498.5 -623.5Q1504.0 -636 1511.5 -654.0Q1519.0 -672 1524.5 -689.0Q1530.0 -706 1530.0 -714ZM1680.0 -273V-243H1367.0V-273ZM1725.0 -73H1807.0Q1822.0 -39 1847.0 -24.5Q1872.0 -10 1895.0 -10Q1895.0 -10 1899.0 -10.0Q1903.0 -10 1903.0 -10V0H1678.0V-10H1687.0Q1706.0 -10 1721.0 -26.5Q1736.0 -43 1725.0 -73ZM2514.0 -700V0H2449.0V-700ZM2784.0 -31V0H2511.0V-31ZM2845.0 -162 2787.0 0H2621.0L2657.0 -31Q2710.0 -31 2743.5 -47.5Q2777.0 -64 2798.0 -94.0Q2819.0 -124 2835.0 -162ZM2452.0 -73V0H2372.0V-10Q2372.0 -10 2378.5 -10.0Q2385.0 -10 2385.0 -10Q2411.0 -10 2429.5 -28.5Q2448.0 -47 2449.0 -73ZM2452.0 -627H2449.0Q2448.0 -653 2429.5 -671.5Q2411.0 -690 2385.0 -690Q2385.0 -690 2378.5 -690.0Q2372.0 -690 2372.0 -690V-700H2452.0ZM2511.0 -627V-700H2591.0V-690Q2590.0 -690 2584.0 -690.0Q2578.0 -690 2578.0 -690Q2552.0 -690 2533.5 -671.5Q2515.0 -653 2514.0 -627ZM3693.0 -700Q3800.0 -700 3880.5 -656.5Q3961.0 -613 4006.5 -534.0Q4052.0 -455 4052.0 -350Q4052.0 -245 4006.5 -166.5Q3961.0 -88 3880.5 -44.0Q3800.0 0 3693.0 0H3479.0L3478.0 -30Q3478.0 -30 3499.5 -30.0Q3521.0 -30 3553.5 -30.0Q3586.0 -30 3618.0 -30.0Q3650.0 -30 3671.5 -30.0Q3693.0 -30 3693.0 -30Q3779.0 -30 3842.5 -70.0Q3906.0 -110 3941.5 -182.0Q3977.0 -254 3977.0 -350Q3977.0 -446 3941.5 -518.0Q3906.0 -590 3842.0 -630.0Q3778.0 -670 3693.0 -670Q3693.0 -670 3670.5 -670.0Q3648.0 -670 3614.5 -670.0Q3581.0 -670 3547.5 -670.0Q3514.0 -670 3491.0 -670.0Q3468.0 -670 3468.0 -670V-700ZM3496.0 -700V0H3431.0V-700ZM3434.0 -73V0H3354.0V-10Q3354.0 -10 3360.5 -10.0Q3367.0 -10 3367.0 -10Q3393.0 -10 3411.5 -28.5Q3430.0 -47 3431.0 -73ZM3434.0 -627H3431.0Q3431.0 -653 3412.0 -671.5Q3393.0 -690 3367.0 -690Q3367.0 -690 3361.0 -690.0Q3355.0 -690 3355.0 -690L3354.0 -700H3434.0ZM4950.0 -714Q5057.0 -714 5138.0 -668.5Q5219.0 -623 5264.5 -541.0Q5310.0 -459 5310.0 -350Q5310.0 -241 5264.5 -159.0Q5219.0 -77 5138.0 -31.5Q5057.0 14 4950.0 14Q4844.0 14 4763.0 -31.5Q4682.0 -77 4636.5 -159.0Q4591.0 -241 4591.0 -350Q4591.0 -459 4636.5 -541.0Q4682.0 -623 4763.0 -668.5Q4844.0 -714 4950.0 -714ZM4950.0 -16Q5035.0 -16 5098.5 -58.0Q5162.0 -100 5197.5 -175.0Q5233.0 -250 5233.0 -350Q5233.0 -450 5197.5 -525.0Q5162.0 -600 5098.5 -642.0Q5035.0 -684 4950.0 -684Q4866.0 -684 4802.5 -642.0Q4739.0 -600 4703.5 -525.0Q4668.0 -450 4668.0 -350Q4668.0 -250 4703.5 -175.0Q4739.0 -100 4802.5 -58.0Q4866.0 -16 4950.0 -16ZM5981.0 -700V0H5916.0V-700ZM5919.0 -73V0H5839.0V-10Q5839.0 -10 5845.5 -10.0Q5852.0 -10 5852.0 -10Q5878.0 -10 5896.5 -28.5Q5915.0 -47 5916.0 -73ZM5919.0 -627H5916.0Q5915.0 -653 5896.5 -671.5Q5878.0 -690 5852.0 -690Q5852.0 -690 5845.5 -690.0Q5839.0 -690 5839.0 -690V-700H5919.0ZM5978.0 -73H5981.0Q5982.0 -47 6000.5 -28.5Q6019.0 -10 6045.0 -10Q6045.0 -10 6051.0 -10.0Q6057.0 -10 6058.0 -10V0H5978.0ZM5978.0 -627V-700H6058.0V-690Q6057.0 -690 6051.0 -690.0Q6045.0 -690 6045.0 -690Q6019.0 -690 6000.5 -671.5Q5982.0 -653 5981.0 -627ZM6726.0 -700H6867.0Q6912.0 -700 6948.5 -687.0Q6985.0 -674 7010.0 -649.5Q7035.0 -625 7048.5 -590.5Q7062.0 -556 7062.0 -512Q7062.0 -464 7039.5 -420.0Q7017.0 -376 6978.5 -348.5Q6940.0 -321 6892.0 -321Q6909.0 -314 6929.0 -292.5Q6949.0 -271 6964.0 -251Q6964.0 -251 6977.5 -231.5Q6991.0 -212 7011.5 -184.0Q7032.0 -156 7053.0 -129.0Q7074.0 -102 7089.0 -86Q7109.0 -64 7129.0 -47.0Q7149.0 -30 7172.5 -20.0Q7196.0 -10 7225.0 -10V0H7170.0Q7124.0 0 7090.5 -14.0Q7057.0 -28 7034.0 -48.5Q7011.0 -69 6995.0 -88Q6992.0 -92 6978.5 -111.0Q6965.0 -130 6946.5 -156.5Q6928.0 -183 6910.0 -209.0Q6892.0 -235 6879.0 -253.5Q6866.0 -272 6864.0 -275Q6845.0 -300 6822.0 -321.0Q6799.0 -342 6772.0 -342V-352Q6772.0 -352 6787.5 -351.5Q6803.0 -351 6825.0 -352Q6851.0 -353 6882.0 -360.0Q6913.0 -367 6940.0 -389.0Q6967.0 -411 6981.0 -456Q6984.0 -467 6986.0 -483.5Q6988.0 -500 6987.0 -516Q6986.0 -584 6952.5 -624.5Q6919.0 -665 6863.0 -668Q6835.0 -670 6805.5 -669.5Q6776.0 -669 6756.0 -669.0Q6736.0 -669 6736.0 -669Q6736.0 -670 6733.5 -677.5Q6731.0 -685 6728.5 -692.5Q6726.0 -700 6726.0 -700ZM6739.0 -700V0H6674.0V-700ZM6677.0 -73V0H6597.0V-10Q6597.0 -10 6603.5 -10.0Q6610.0 -10 6610.0 -10Q6636.0 -10 6654.5 -28.5Q6673.0 -47 6674.0 -73ZM6677.0 -627H6674.0Q6673.0 -653 6654.5 -671.5Q6636.0 -690 6610.0 -690Q6610.0 -690 6603.5 -690.0Q6597.0 -690 6597.0 -690V-700H6677.0ZM6736.0 -73H6739.0Q6739.0 -47 6758.0 -28.5Q6777.0 -10 6803.0 -10Q6803.0 -10 6809.0 -10.0Q6815.0 -10 6815.0 -10V0H6736.0Z"/></svg>
   <nav aria-label="Footer">
     <a href="#story">The elixir</a>
@@ -292,6 +350,26 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   addEventListener('resize', () => { sizeShow(); read(); anim.resize(); film.resize(); });
   portrait.addEventListener('change', () => { anim.resize(); film.resize(); });
   read(); current = target; frame();
+
+
+  /* ================= side bar: follow the section in view, and jump to the film ================= */
+  const navLinks = [...document.querySelectorAll('.dock a')];
+  function activeSection() {
+    const res = $('reserve').getBoundingClientRect(), foot = $('contact').getBoundingClientRect();
+    if (foot.top < innerHeight * 0.85) return 'contact';
+    if (res.top < innerHeight * 0.5) return 'reserve';
+    return current >= END_ANIM ? 'film' : 'home';
+  }
+  let lastSec = '';
+  function markNav() { const s = activeSection(); if (s !== lastSec) { navLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.sec === s))); lastSec = s; } requestAnimationFrame(markNav); }
+  markNav();
+  document.querySelectorAll('.rail-nav [data-go]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const span = show.offsetHeight - innerHeight;
+    const y = a.dataset.go === 'film' ? show.offsetTop + span * (START_FILM + 0.005) : show.offsetTop;
+    if (a.dataset.go === 'film') film.start();
+    scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  }));
 
   /* ================= menu ================= */
   function drawer(open) { document.body.classList.toggle('drawer-open', open); $('drawer').setAttribute('aria-hidden', String(!open)); $('menu').setAttribute('aria-expanded', String(open)); }
