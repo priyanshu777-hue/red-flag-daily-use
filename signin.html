@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in · Red Flag Homes</title>
+<meta name="description" content="Sign in or create your Red Flag Homes account with email, Google, Apple or your phone number.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A0505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0A0505; --card: #140B0B; --field: #1C1010; --line: rgba(242,228,225,.12); --text: #F2E4E1; --body: #DCCBC7; --muted: #A8958F; --red: #FF3B30; --ok: #4CD964;
+    --serif: "Instrument Serif", Georgia, serif; --sans: "Inter Tight", system-ui, sans-serif; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+  a { color: var(--text); text-decoration-color: var(--red); text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 18px 16px; max-width: 520px; width: 100%; margin: 0 auto; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: .08em; font-size: 14px; }
+  .logo i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 14px var(--red); }
+  .x { color: var(--muted); font-size: 14px; text-decoration: none; }
+  main { flex: 1; width: 100%; max-width: 440px; margin: 0 auto; padding: 8px 16px 32px; }
+  h1 { font: 400 clamp(40px, 9vw, 54px)/1 var(--serif); margin: 12px 0 6px; letter-spacing: -.02em; }
+  .sub { color: var(--muted); margin: 0 0 22px; font-size: 15px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid var(--line); margin-bottom: 20px; }
+  .seg button { min-height: 42px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 500 15px var(--sans); cursor: pointer; }
+  .seg button[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  .btn { width: 100%; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: 500 15.5px var(--sans); cursor: pointer; text-decoration: none; }
+  .btn:hover { border-color: rgba(242,228,225,.3); }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn.primary { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn[disabled] { opacity: .55; cursor: wait; }
+  .stack { display: grid; gap: 10px; }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; margin: 20px 0; }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+  .methods button { min-height: 40px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--muted); font: 500 14px var(--sans); cursor: pointer; }
+  .methods button[aria-pressed="true"] { color: var(--text); border-color: rgba(242,228,225,.4); background: var(--card); }
+  label { display: block; font-size: 13.5px; color: var(--muted); margin: 0 0 6px; }
+  .field { margin-bottom: 12px; }
+  input { width: 100%; min-height: 50px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--field); color: var(--text); font: 400 16px var(--sans); }
+  input:focus { outline: none; border-color: var(--red); }
+  .phone-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: -2px 0 14px; font-size: 14px; }
+  .link { background: none; border: 0; padding: 0; color: var(--text); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 3px; font: inherit; cursor: pointer; }
+  .msg { display: none; padding: 12px 14px; border-radius: 14px; font-size: 14.5px; margin-bottom: 14px; border: 1px solid var(--line); }
+  .msg.err { display: block; border-color: rgba(255,59,48,.45); background: rgba(255,59,48,.08); }
+  .msg.ok { display: block; border-color: rgba(76,217,100,.4); background: rgba(76,217,100,.07); }
+  .fine { color: var(--muted); font-size: 13px; margin: 18px 0 0; text-align: center; }
+  .hide { display: none !important; }
+  .card { border: 1px solid var(--line); background: var(--card); border-radius: 20px; padding: 22px 18px; text-align: center; }
+  .card .avatar { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 10px; background: var(--field); display: grid; place-items: center; font: 400 26px var(--serif); overflow: hidden; }
+  .card .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .card p { margin: 0 0 16px; color: var(--body); }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 26px; }
+  footer a { color: var(--muted); margin: 0 8px; }
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/"><i></i>RED FLAG HOMES</a>
+  <a class="x" id="closeLink" href="/">Close</a>
+</header>
+
+<main>
+  <!-- Signed-in view -->
+  <section id="doneView" class="hide" aria-live="polite">
+    <h1>You're in</h1>
+    <p class="sub">You're signed in to Red Flag Homes.</p>
+    <div class="card">
+      <div class="avatar" id="doneAvatar"></div>
+      <p id="doneName"></p>
+      <div class="stack">
+        <button class="btn primary" id="continueBtn" type="button">Continue</button>
+        <button class="btn" id="signOutBtn" type="button">Sign out</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sign in / Create account -->
+  <section id="authView">
+    <h1 id="title">Welcome back</h1>
+    <p class="sub" id="subtitle">Sign in to book stays, track applications and manage Bella.</p>
+
+    <div class="seg" role="tablist" aria-label="Sign in or create account">
+      <button type="button" role="tab" id="tabIn" aria-selected="true">Sign in</button>
+      <button type="button" role="tab" id="tabUp" aria-selected="false">Create account</button>
+    </div>
+
+    <div class="msg" id="msg" role="alert"></div>
+
+    <div class="stack">
+      <button class="btn" type="button" id="googleBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.5 12 2.5 6.8 2.5 2.6 6.7 2.6 12s4.2 9.5 9.4 9.5c5.4 0 9-3.8 9-9.2 0-.6-.1-1.1-.2-1.6H12z"/><path fill="#4285F4" d="M21 12.3c0-.6-.1-1.1-.2-1.6H12v3.9h5.5c-.3 1.3-1.1 2.4-2.2 3.1l3.4 2.6c2-1.8 3.3-4.6 3.3-8z" opacity=".9"/><path fill="#FBBC05" d="M6.4 14.3A6 6 0 0 1 6 12c0-.8.1-1.6.4-2.3L2.9 7A9.4 9.4 0 0 0 2.6 12c0 1.5.4 3 1 4.3l2.8-2z"/><path fill="#34A853" d="M12 21.5c2.6 0 4.7-.9 6.3-2.3l-3.4-2.6c-.9.6-2 1-3 1-2.6 0-4.8-1.7-5.5-4l-2.8 2.1c1.6 3.4 4.9 5.8 8.4 5.8z"/></svg>
+        <span>Continue with Google</span>
+      </button>
+      <button class="btn" type="button" id="appleBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.5-1-2.4-3.9zM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.6 2.8-1.4z"/></svg>
+        <span>Continue with Apple</span>
+      </button>
+    </div>
+
+    <div class="or">or</div>
+
+    <div class="methods" role="group" aria-label="Choose how to continue">
+      <button type="button" id="mEmail" aria-pressed="true">Email</button>
+      <button type="button" id="mPhone" aria-pressed="false">Phone</button>
+    </div>
+
+    <!-- Email -->
+    <form id="emailForm" novalidate>
+      <div class="field hide" id="nameField">
+        <label for="name">Full name</label>
+        <input id="name" name="name" autocomplete="name" maxlength="80">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required>
+      </div>
+      <div class="row" id="forgotRow">
+        <span></span>
+        <button type="button" class="link" id="forgotBtn">Forgot password?</button>
+      </div>
+      <button class="btn primary" type="submit" id="emailSubmit">Sign in</button>
+    </form>
+
+    <!-- Phone -->
+    <form id="phoneForm" class="hide" novalidate>
+      <div id="phoneStep1">
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <div class="phone-row">
+            <input id="cc" name="cc" value="+91" inputmode="tel" maxlength="5" aria-label="Country code">
+            <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="numeric" maxlength="15" placeholder="98765 43210">
+          </div>
+        </div>
+        <button class="btn primary" type="submit" id="sendCodeBtn">Send code</button>
+      </div>
+      <div id="phoneStep2" class="hide">
+        <div class="field">
+          <label for="code">6-digit code sent to <span id="sentTo"></span></label>
+          <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+        </div>
+        <div class="row">
+          <button type="button" class="link" id="changeNumber">Change number</button>
+          <button type="button" class="link" id="resendBtn">Resend code</button>
+        </div>
+        <button class="btn primary" type="submit" id="verifyBtn">Verify and continue</button>
+      </div>
+      <div id="recaptcha"></div>
+    </form>
+
+    <p class="fine">By continuing you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/cancellation">Cancellation</a>
+</footer>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, sendEmailVerification,
+  RecaptchaVerifier, signInWithPhoneNumber, signOut } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const isPopup = params.get('popup') === '1' && !!window.opener;
+
+// Only same-site paths are allowed as the return address.
+function safeNext() {
+  const n = params.get('next') || '/';
+  if (!n.startsWith('/') || n.startsWith('//') || n.startsWith('/\\') || n.startsWith('/signin')) return '/';
+  return n;
+}
+const NEXT = safeNext();
+$('closeLink').href = NEXT;
+$('closeLink').addEventListener('click', (e) => { if (isPopup) { e.preventDefault(); window.close(); } });
+
+let mode = 'in';        // 'in' | 'up'
+let method = 'email';   // 'email' | 'phone'
+let auth = null;
+let confirmation = null;
+let verifier = null;
+let finishing = false;
+
+function showMsg(text, kind) { const m = $('msg'); m.textContent = text; m.className = 'msg ' + (kind || 'err'); }
+function clearMsg() { const m = $('msg'); m.textContent = ''; m.className = 'msg'; }
+function busy(btn, on, label) { if (!btn) return; if (on) { btn.dataset.label = btn.textContent; btn.textContent = label || 'Please wait…'; btn.disabled = true; } else { btn.textContent = btn.dataset.label || btn.textContent; btn.disabled = false; } }
+
+function friendly(err) {
+  const c = (err && err.code) || '';
+  const map = {
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/missing-password': 'Please enter your password.',
+    'auth/invalid-credential': 'That email and password don’t match. Try again, or reset your password.',
+    'auth/wrong-password': 'That email and password don’t match. Try again, or reset your password.',
+    'auth/user-not-found': 'No account with that email. Choose “Create account” to sign up.',
+    'auth/email-already-in-use': 'An account with this email already exists. Choose “Sign in”, or reset your password.',
+    'auth/weak-password': 'Please use a password with at least 8 characters.',
+    'auth/too-many-requests': 'Too many attempts. Please wait a few minutes and try again.',
+    'auth/network-request-failed': 'Network problem. Check your connection and try again.',
+    'auth/popup-blocked': 'Your browser blocked the sign-in window. Please allow pop-ups and try again.',
+    'auth/account-exists-with-different-credential': 'This email is already registered with a different sign-in method. Use the method you signed up with first.',
+    'auth/operation-not-allowed': 'This sign-in method isn’t available yet. Please use another option.',
+    'auth/invalid-phone-number': 'Please enter a valid mobile number with the country code.',
+    'auth/missing-phone-number': 'Please enter your mobile number.',
+    'auth/invalid-verification-code': 'That code isn’t right. Please check it and try again.',
+    'auth/code-expired': 'That code has expired. Please request a new one.',
+    'auth/quota-exceeded': 'We can’t send codes right now. Please try email, Google or Apple.',
+    'auth/captcha-check-failed': 'Verification failed. Please try again.',
+    'auth/unauthorized-domain': 'Sign-in isn’t enabled for this address yet. Please try again later.'
+  };
+  return map[c] || 'Something went wrong. Please try again.';
+}
+
+function setMode(m) {
+  mode = m; clearMsg();
+  $('tabIn').setAttribute('aria-selected', String(m === 'in'));
+  $('tabUp').setAttribute('aria-selected', String(m === 'up'));
+  $('title').textContent = m === 'in' ? 'Welcome back' : 'Create your account';
+  $('subtitle').textContent = m === 'in' ? 'Sign in to book stays, track applications and manage Bella.' : 'Join Red Flag Homes. It takes less than a minute.';
+  $('nameField').classList.toggle('hide', m === 'in');
+  $('forgotRow').classList.toggle('hide', m === 'up');
+  $('password').setAttribute('autocomplete', m === 'in' ? 'current-password' : 'new-password');
+  $('emailSubmit').textContent = m === 'in' ? 'Sign in' : 'Create account';
+}
+function setMethod(m) {
+  method = m; clearMsg();
+  $('mEmail').setAttribute('aria-pressed', String(m === 'email'));
+  $('mPhone').setAttribute('aria-pressed', String(m === 'phone'));
+  $('emailForm').classList.toggle('hide', m !== 'email');
+  $('phoneForm').classList.toggle('hide', m !== 'phone');
+}
+$('tabIn').onclick = () => setMode('in');
+$('tabUp').onclick = () => setMode('up');
+$('mEmail').onclick = () => setMethod('email');
+$('mPhone').onclick = () => setMethod('phone');
+if (params.get('mode') === 'signup') setMode('up');
+
+function finish(user) {
+  if (finishing) return; finishing = true;
+  if (isPopup) {
+    try { window.opener.postMessage({ type: 'rf-auth', uid: user.uid }, location.origin); } catch (e) {}
+    // Give Firebase a moment to save the session so the opening tab picks it up.
+    setTimeout(() => window.close(), 700);
+    setTimeout(() => { finishing = false; showDone(user); }, 1500);
+  } else {
+    location.replace(NEXT);
+  }
+}
+
+function showDone(user) {
+  $('authView').classList.add('hide');
+  $('doneView').classList.remove('hide');
+  const name = user.displayName || user.email || user.phoneNumber || 'Red Flag member';
+  $('doneName').textContent = name;
+  const av = $('doneAvatar'); av.textContent = '';
+  if (user.photoURL) { const img = new Image(); img.alt = ''; img.referrerPolicy = 'no-referrer'; img.src = user.photoURL; av.appendChild(img); }
+  else av.textContent = name.trim().charAt(0).toUpperCase();
+}
+function showAuth() { $('doneView').classList.add('hide'); $('authView').classList.remove('hide'); }
+
+$('continueBtn').onclick = () => { if (isPopup) window.close(); else location.replace(NEXT); };
+$('signOutBtn').onclick = async () => { await signOut(auth); showAuth(); };
+
+async function init() {
+  const cfg = await (await fetch('/firebase-applet-config.json')).json();
+  const app = initializeApp({ apiKey: cfg.apiKey, authDomain: cfg.authDomain, projectId: cfg.projectId, storageBucket: cfg.storageBucket, messagingSenderId: cfg.messagingSenderId, appId: cfg.appId });
+  auth = getAuth(app);
+  auth.useDeviceLanguage();
+  try { const r = await getRedirectResult(auth); if (r && r.user) return finish(r.user); }
+  catch (e) { showMsg(friendly(e)); }
+  let first = true;
+  onAuthStateChanged(auth, (u) => {
+    if (first) { first = false; if (u) showDone(u); return; }
+    if (!u) showAuth();
+  });
+}
+
+async function oauth(provider, btn) {
+  clearMsg(); busy(btn, true, 'Opening…');
+  try {
+    const r = await signInWithPopup(auth, provider);
+    finish(r.user);
+  } catch (e) {
+    if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') { busy(btn, false); return; }
+    if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') { return signInWithRedirect(auth, provider); }
+    showMsg(friendly(e)); busy(btn, false);
+  }
+}
+$('googleBtn').onclick = () => { const p = new GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' }); oauth(p, $('googleBtn').querySelector('span')); };
+$('appleBtn').onclick = () => { const p = new OAuthProvider('apple.com'); p.addScope('email'); p.addScope('name'); oauth(p, $('appleBtn').querySelector('span')); };
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+$('emailForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); clearMsg();
+  const email = $('email').value.trim().toLowerCase();
+  const password = $('password').value;
+  const name = $('name').value.replace(/[<>]/g, '').trim();
+  if (!EMAIL_RE.test(email)) return showMsg('Please enter a valid email address.');
+  if (mode === 'up' && name.length < 2) return showMsg('Please enter your full name.');
+  if (password.length < (mode === 'up' ? 8 : 1)) return showMsg(mode === 'up' ? 'Please use a password with at least 8 characters.' : 'Please enter your password.');
+  const btn = $('emailSubmit'); busy(btn, true);
+  try {
+    if (mode === 'in') {
+      const r = await signInWithEmailAndPassword(auth, email, password);
+      finish(r.user);
+    } else {
+      const r = await createUserWithEmailAndPassword(auth, email, password);
+      try { await updateProfile(r.user, { displayName: name }); } catch (x) {}
+      try { await sendEmailVerification(r.user); } catch (x) {}
+      finish(r.user);
+    }
+  } catch (err) { showMsg(friendly(err)); busy(btn, false); }
+});
+
+$('forgotBtn').onclick = async () => {
+  clearMsg();
+  const email = $('email').value.trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) { $('email').focus(); return showMsg('Enter your email above, then tap “Forgot password?” again.'); }
+  try { await sendPasswordResetEmail(auth, email); } catch (err) { if (err.code === 'auth/invalid-email' || err.code === 'auth/too-many-requests') return showMsg(friendly(err)); }
+  // Same message either way, so nobody can tell which emails have accounts.
+  showMsg('If an account exists for ' + email + ', a reset link is on its way. Check your inbox and spam folder.', 'ok');
+};
+
+function phoneNumber() {
+  let cc = $('cc').value.replace(/[^\d+]/g, ''); if (!cc.startsWith('+')) cc = '+' + cc;
+  const n = $('phone').value.replace(/\D/g, '').replace(/^0+/, '');
+  return cc + n;
+}
+async function sendCode() {
+  const num = phoneNumber();
+  if (!/^\+\d{8,15}$/.test(num)) return showMsg('Please enter a valid mobile number with the country code.');
+  const btn = $('phoneStep2').classList.contains('hide') ? $('sendCodeBtn') : $('resendBtn'); busy(btn, true, 'Sending…');
+  try {
+    if (!verifier) verifier = new RecaptchaVerifier(auth, 'recaptcha', { size: 'invisible' });
+    confirmation = await signInWithPhoneNumber(auth, num, verifier);
+    $('sentTo').textContent = num;
+    $('phoneStep1').classList.add('hide'); $('phoneStep2').classList.remove('hide');
+    $('code').value = ''; $('code').focus();
+    showMsg('We sent a 6-digit code to ' + num + '.', 'ok');
+  } catch (err) {
+    showMsg(friendly(err));
+    try { verifier && verifier.clear(); } catch (x) {} verifier = null; $('recaptcha').innerHTML = '';
+  } finally { busy(btn, false); }
+}
+$('phoneForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); clearMsg();
+  if (!$('phoneStep1').classList.contains('hide')) return sendCode();
+  const code = $('code').value.replace(/\D/g, '');
+  if (code.length !== 6) return showMsg('Please enter the 6-digit code.');
+  const btn = $('verifyBtn'); busy(btn, true, 'Verifying…');
+  try { const r = await confirmation.confirm(code); finish(r.user); }
+  catch (err) { showMsg(friendly(err)); busy(btn, false); }
+});
+$('resendBtn').onclick = () => { clearMsg(); sendCode(); };
+$('changeNumber').onclick = () => { clearMsg(); confirmation = null; $('phoneStep2').classList.add('hide'); $('phoneStep1').classList.remove('hide'); $('phone').focus(); };
+
+init().catch(() => showMsg('Sign-in couldn’t load. Please refresh the page.'));
+</script>
+</body>
+</html>
