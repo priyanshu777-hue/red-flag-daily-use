@@ -1,4 +1,5 @@
 <title>Caldoir Elixir</title>
+<link rel="preload" as="image" href="anim/a001.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
@@ -259,45 +260,75 @@ bodybody
   function read() { const s = show.offsetHeight - innerHeight; target = clamp((scrollY - show.offsetTop) / s); }
 
   /* ================= frame players: the frame animation and the film ================= */
+  // Loading: a shared queue (6 requests at a time). Frames near what is on screen go first, then a coarse-to-fine
+  // pass over the whole sequence (every 16th frame, then every 8th, 4th, 2nd, the rest) so scrubbing works early.
+  const queue = { busy: 0, players: [] };
+  function pump() {
+    while (queue.busy < 6) {
+      let job = null;
+      for (const pl of queue.players) { job = pl.next(); if (job) break; }
+      if (!job) return;
+      queue.busy++;
+      const { pl, i } = job, im = new Image(); im.decoding = 'async';
+      const done = ok => { queue.busy--; if (ok) pl.loaded(i, im); pump(); };
+      im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(() => done(true));
+      im.onerror = () => done(false);
+      im.src = pl.path(i);
+    }
+  }
   function player({ canvasId, path, count, focusPortrait = 0.5, onPaint }) {
     const canvas = $(canvasId), ctx = canvas.getContext('2d');
-    const frames = new Array(count), loaded = new Array(count).fill(false);
-    let drawnKey = '', need = 0, started = false;
-    function load(i) {
-      if (frames[i]) return;
-      const im = new Image(); im.decoding = 'async';
-      im.onload = () => { loaded[i] = true; if (Math.abs(i - need) < 3) draw(need, true); };
-      im.src = path(i); frames[i] = im;
+    const frames = new Array(count), requested = new Uint8Array(count);
+    let drawnKey = '', need = 0, active = false;
+    const order = [];                       // coarse to fine
+    for (const step of [16, 8, 4, 2, 1]) for (let i = 0; i < count; i += step) if (!order.includes(i)) order.push(i);
+    let cursor = 0;
+    const pl = {
+      path,
+      next() {
+        if (!active) return null;
+        const c = Math.round(need);
+        for (let d = 0; d <= 10; d++) for (const k of [c + d, c - d]) if (k >= 0 && k < count && !requested[k]) { requested[k] = 1; return { pl, i: k }; }
+        while (cursor < order.length && requested[order[cursor]]) cursor++;
+        if (cursor < order.length) { const k = order[cursor++]; requested[k] = 1; return { pl, i: k }; }
+        return null;
+      },
+      loaded(i, im) { frames[i] = im; if (Math.abs(i - need) < 12 || drawnKey === '') draw(need, true); }
+    };
+    queue.players.push(pl);
+    function nearest(f) {                    // closest loaded frame, looking both ways
+      const c = Math.floor(f);
+      for (let d = 0; d < count; d++) { if (frames[c - d]) return c - d; if (frames[c + d]) return c + d; }
+      return -1;
     }
-    function start() { if (started) return; started = true; load(0); for (let i = 8; i < count; i += 8) load(i); for (let i = 1; i < count; i++) load(i); }
     function blit(im, alpha) {
       const cw = canvas.width, ch = canvas.height;
       const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
       ctx.globalAlpha = alpha; ctx.drawImage(im, (cw - w) * (portrait.matches ? focusPortrait : 0.5), (ch - h) / 2, w, h); ctx.globalAlpha = 1;
     }
     function draw(f, force) {
-      let k = Math.floor(f); while (k > 0 && !loaded[k]) k--;
-      if (!loaded[k]) return;
-      const n = k + 1 < count && loaded[k + 1] && Math.floor(f) === k ? k + 1 : -1, t = n > 0 ? f - k : 0;
+      const k = nearest(f); if (k < 0) return;
+      const exact = k === Math.floor(f), n = exact && frames[k + 1] ? k + 1 : -1, t = n > 0 ? f - k : 0;
       const key = k + ':' + t.toFixed(2);
       if (key === drawnKey && !force) return;
       blit(frames[k], 1); if (n > 0 && t > 0.01) blit(frames[n], t);
       drawnKey = key;
     }
+    function start() { if (!active) { active = true; pump(); } }
     function resize() { const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); drawnKey = ''; draw(need, true); }
-    function paint(p) { need = clamp((p - 0.03) / 0.9) * (count - 1); draw(need); onPaint && onPaint(p); }
+    function paint(p) { const prev = Math.round(need); need = clamp((p - 0.03) / 0.9) * (count - 1); draw(need); if (Math.round(need) !== prev) pump(); onPaint && onPaint(p); }
     resize();
     return { start, paint, resize };
   }
 
   // the frame animation: 24 fps with a 180° shutter (1/48 s motion blur), built from the stills and generated in-betweens
-  const anim = player({ canvasId: 'anim-canvas', count: 301, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.jpg` });
+  const anim = player({ canvasId: 'anim-canvas', count: 301, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.webp` });
 
   // the bottle film, with its three lines of copy
   const film = (() => {
     const CUTS = [0, 0.24, 0.62], chapters = [...document.querySelectorAll('#copy .chapter')];
     let shown = 0;
-    return player({ canvasId: 'film-canvas', count: 150, focusPortrait: 0.54, path: i => `seq/f${String(i + 1).padStart(3, '0')}.jpg`,
+    return player({ canvasId: 'film-canvas', count: 150, focusPortrait: 0.54, path: i => `seq/f${String(i + 1).padStart(3, '0')}.webp`,
       onPaint: f => {
         let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
         if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
@@ -320,7 +351,7 @@ bodybody
       filmLayer.style.opacity = shade.style.opacity = toFilm.toFixed(3);
       copy.style.opacity = railWrap.style.opacity = span(p, START_FILM - 0.01, START_FILM + 0.02).toFixed(3);
       cue.classList.toggle('gone', p > 0.01);
-      if (p > END_ANIM * 0.5) film.start();
+      if (p > END_ANIM * 0.25) film.start();
       if (toFilm < 1) anim.paint(span(p, 0, END_ANIM));
       if (toFilm > 0) film.paint(span(p, START_FILM, 1));
     }
