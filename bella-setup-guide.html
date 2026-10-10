@@ -1,0 +1,117 @@
+<!-- Bella setup guide: one block, used on /bella/setup and on the payment confirmation screen (/bella/thank-you).
+     Keep the two copies identical. Never use the platform's brand name or logo: write "bnb". -->
+<style>
+  .sg { --sg-ink: #141217; --sg-mute: #6B635A; --sg-line: rgba(20,18,23,.09); --sg-card: #fff; --sg-red: #E8335B; --sg-purple: #8B4FE0; --sg-gold: #E5A53A; --sg-green: #3E9B5B;
+    position: relative; margin: 26px 0 0; padding: 22px 16px 18px; border-radius: 28px; background: linear-gradient(180deg, #FBEFEA 0%, #F7F1EE 40%, #F6F2F0 100%); border: 1px solid var(--sg-line); color: var(--sg-ink); font-family: "Outfit", "DM Sans", system-ui, sans-serif; overflow: hidden; }
+  .sg * { box-sizing: border-box; }
+  .sg-hero { display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: 8px; align-items: end; padding: 0 4px 6px; }
+  .sg-hero h2 { margin: 0 0 6px; font: 700 clamp(1.9rem, 1.2rem + 3vw, 2.5rem)/1 "Outfit", system-ui, sans-serif; letter-spacing: -.035em; }
+  .sg-hero h2 em { font-style: normal; color: var(--sg-red); }
+  .sg-hero p { margin: 0; color: var(--sg-mute); font-size: .98rem; line-height: 1.45; }
+  .sg-hero img { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 14px 30px -14px rgba(80,40,30,.5); }
+  .sg-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; position: relative; }
+  .sg-step { position: relative; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; }
+  .sg-step:not(:last-child)::before { content: ""; position: absolute; left: 18px; top: 42px; bottom: -14px; border-left: 2px dashed rgba(20,18,23,.14); }
+  .sg-num { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 700 1.05rem "Outfit", system-ui, sans-serif; box-shadow: 0 8px 18px -8px currentColor; position: relative; z-index: 1; }
+  .sg-num.c1 { background: var(--sg-red); } .sg-num.c2 { background: var(--sg-purple); } .sg-num.c3 { background: var(--sg-gold); } .sg-num.c4 { background: var(--sg-green); } .sg-num.c5 { background: var(--sg-purple); }
+  .sg-body h3 { margin: 6px 0 2px; font: 600 1.08rem "Outfit", system-ui, sans-serif; letter-spacing: -.01em; }
+  .sg-body > p { margin: 0 0 10px; color: var(--sg-mute); font-size: .92rem; line-height: 1.45; }
+  .sg-card { background: var(--sg-card); border: 1px solid var(--sg-line); border-radius: 18px; padding: 12px; box-shadow: 0 16px 30px -24px rgba(60,30,20,.35); }
+  .sg-email { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 12px 12px 16px; border-radius: 14px; background: #F4F1EF; font: 500 .98rem "DM Sans", system-ui, sans-serif; flex-wrap: wrap; }
+  .sg-email > span { white-space: nowrap; }
+  .sg-copy { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 6px 12px; border-radius: 10px; border: 1px solid var(--sg-line); background: #fff; color: var(--sg-ink); font: 600 .85rem "Outfit", system-ui, sans-serif; cursor: pointer; }
+  .sg-copy svg { width: 16px; height: 16px; }
+  .sg-mock { display: grid; grid-template-columns: 42% 58%; padding: 0; overflow: hidden; }
+  .sg-nav { padding: 12px 8px; border-right: 1px solid var(--sg-line); display: grid; gap: 2px; align-content: start; font-size: .82rem; }
+  .sg-nav b { display: flex; align-items: center; gap: 6px; padding: 2px 8px 8px; color: var(--sg-red); font: 700 .9rem "Outfit", system-ui, sans-serif; }
+  .sg-nav span { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 10px; color: #3b3640; }
+  .sg-nav span.on { background: #FCE4EA; color: var(--sg-ink); font-weight: 600; }
+  .sg-nav svg, .sg-side svg { width: 15px; height: 15px; flex: none; }
+  .sg-side { padding: 12px 10px; display: grid; gap: 6px; align-content: start; font-size: .82rem; }
+  .sg-side > b { font: 600 .9rem "Outfit", system-ui, sans-serif; }
+  .sg-pics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
+  .sg-pics i { display: block; aspect-ratio: 4/3; border-radius: 8px; background: linear-gradient(135deg, #D9C2AE, #A98B74 60%, #6E5646); }
+  .sg-pics i + i { background: linear-gradient(135deg, #EEE6DD, #CDBFB2 60%, #A99B8E); }
+  .sg-side span { display: flex; align-items: center; gap: 8px; padding: 6px 6px; border-radius: 8px; color: #3b3640; }
+  .sg-side span.on { background: #FCE4EA; font-weight: 600; color: var(--sg-ink); }
+  .sg-cohost { display: grid; gap: 10px; }
+  .sg-cohost-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .sg-cohost-top b { font: 600 1rem "Outfit", system-ui, sans-serif; }
+  .sg-pill { padding: 9px 14px; border-radius: 12px; background: var(--sg-ink); color: #fff; font: 600 .85rem "Outfit", system-ui, sans-serif; white-space: nowrap; }
+  .sg-input { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--sg-line); background: #FAF8F7; font-size: .95rem; }
+  .sg-perm-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+  .sg-perm-top b { display: block; font: 600 .92rem "Outfit", system-ui, sans-serif; }
+  .sg-perm-top small { color: var(--sg-mute); font-size: .78rem; }
+  .sg-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 600; white-space: nowrap; }
+  .sg-toggle i { width: 34px; height: 20px; border-radius: 999px; background: var(--sg-green); position: relative; }
+  .sg-toggle i::after { content: ""; position: absolute; right: 2px; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+  .sg-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: .88rem; }
+  .sg-checks li { display: flex; align-items: center; gap: 9px; }
+  .sg-checks li::before { content: ""; width: 18px; height: 18px; flex: none; border-radius: 5px; background: var(--sg-green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center/12px no-repeat; }
+  .sg-save { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sg-save .sg-pill { padding: 12px 26px; font-size: .95rem; }
+  .sg-foot { margin: 16px 4px 0; padding-top: 14px; border-top: 1px dashed rgba(20,18,23,.14); color: var(--sg-mute); font-size: .86rem; line-height: 1.5; }
+  .sg-foot a { color: var(--sg-ink); }
+  @media (max-width: 420px) { .sg-hero { grid-template-columns: minmax(0, 1fr) 84px; } .sg-hero img { width: 84px; height: 84px; } .sg-mock { grid-template-columns: 1fr; } .sg-nav { border-right: 0; border-bottom: 1px solid var(--sg-line); grid-template-columns: repeat(2, minmax(0, 1fr)); } .sg-nav b { grid-column: 1 / -1; } }
+  @media print { .sg { display: none !important; } }
+</style>
+<section class="sg" id="setup-guide" aria-labelledby="sg-title">
+  <div class="sg-hero">
+    <div>
+      <h2 id="sg-title">Setup <em>guide</em></h2>
+      <p>Add Bella as a co-host to your bnb listing in 5 simple steps. It takes about 60 seconds.</p>
+    </div>
+    <img src="https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@b0c58373c2d2827d5fcac202aba3b9b04875e1e5/bella-assets/face-happy.webp" alt="Bella, your AI co-host" width="112" height="112" loading="lazy">
+  </div>
+  <ol class="sg-list">
+    <li class="sg-step"><span class="sg-num c1">1</span><div class="sg-body">
+      <h3>Copy Bella's email</h3>
+      <p>You'll use this email to add Bella as your co-host.</p>
+      <div class="sg-card"><div class="sg-email"><span>bella@redflaghomes.in</span>
+        <button class="sg-copy" type="button" data-sg-copy="bella@redflaghomes.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div></div>
+    </div></li>
+    <li class="sg-step"><span class="sg-num c2">2</span><div class="sg-body">
+      <h3>Open your listing</h3>
+      <p>Go to your bnb host dashboard, open <b>Listings</b>, choose the listing you want Bella to manage and click <b>Co-hosts</b>.</p>
+      <div class="sg-card sg-mock" aria-hidden="true">
+        <div class="sg-nav"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 11 12 4l9 7v9H3z"/></svg>bnb</b>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</span>
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18"/></svg>Listings</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Calendar</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg>Messages</span>
+        </div>
+        <div class="sg-side"><b>Your listing</b><div class="sg-pics"><i></i><i></i></div>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Listing details</span>
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11a3 3 0 1 0 0-6M21.5 20a5 5 0 0 0-4-4.9"/></svg>Co-hosts</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9M12 6v2M12 16v2"/></svg>Pricing</span>
+        </div>
+      </div>
+    </div></li>
+    <li class="sg-step"><span class="sg-num c3">3</span><div class="sg-body">
+      <h3>Add Bella</h3>
+      <p>Click <b>Add co-host</b> (or <b>Invite a co-host</b>) and paste Bella's email.</p>
+      <div class="sg-card sg-cohost" aria-hidden="true"><div class="sg-cohost-top"><b>Co-hosts</b><span class="sg-pill">Add co-host</span></div>
+        <div class="sg-input"><span>bella@redflaghomes.in</span><span style="color:var(--sg-mute)">✕</span></div></div>
+    </div></li>
+    <li class="sg-step"><span class="sg-num c4">4</span><div class="sg-body">
+      <h3>Give full permission</h3>
+      <p>Choose <b>full access</b> so Bella can manage your listing completely.</p>
+      <div class="sg-card"><div class="sg-perm-top"><div><b>Host permissions</b><small>Choose what this co-host can do</small></div><span class="sg-toggle">Full access <i aria-hidden="true"></i></span></div>
+        <ul class="sg-checks"><li>Manage listing and settings</li><li>Respond to guests</li><li>Manage reservations</li><li>Manage calendar</li><li>Manage pricing</li><li>Handle cancellations and support</li></ul></div>
+    </div></li>
+    <li class="sg-step"><span class="sg-num c5">5</span><div class="sg-body">
+      <h3>Save</h3>
+      <div class="sg-card sg-save"><p style="margin:0;color:var(--sg-mute);font-size:.92rem">Click <b style="color:var(--sg-ink)">Save</b> or <b style="color:var(--sg-ink)">Send invite</b>. We accept the invite and Bella goes live, usually within a few hours.</p><span class="sg-pill" aria-hidden="true">Save</span></div>
+    </div></li>
+  </ol>
+  <p class="sg-foot">Have more than one listing? Repeat steps 2 to 5 for each listing your plan covers. Stuck? WhatsApp us at <a href="https://wa.me/918881306632?text=Hi%20Red%20Flag%2C%20I%20need%20help%20adding%20Bella%20as%20co-host." target="_blank" rel="noopener">+91 88813 06632</a> or email <a href="mailto:hello@redflaghomes.in">hello@redflaghomes.in</a>.</p>
+</section>
+<script>
+document.querySelectorAll('[data-sg-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var t = b.getAttribute('data-sg-copy'), l = b.querySelector('span');
+    var done = function () { l.textContent = 'Copied'; setTimeout(function () { l.textContent = 'Copy'; }, 1600); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done, done); else done();
+  });
+});
+</script>
