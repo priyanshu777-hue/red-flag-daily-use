@@ -4,6 +4,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
 <style>
+/* the engraving face: Waltograph (mickeyavenue.com), personal / non-commercial licence, see fonts/license.txt */
+@font-face { font-family: "Waltograph"; src: url("fonts/waltograph.woff2") format("woff2"); font-display: swap; }
 /* Layout: one pinned screen. Scrolling plays the frame animation (cap, spray, the notes, the pour, The 22),
    then the bottle film with its copy; then the reserve close.
    Phones: the 3D fills the screen; the film sits in a band near the top with its copy below. */
@@ -209,7 +211,7 @@ body.rv-open { overflow: hidden; }
 .named h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 5vw, 60px); line-height: 1.05; color: var(--bone); text-wrap: balance; }
 .named p.say { margin: 0; font-size: 17px; line-height: 1.7; color: var(--body); max-width: 28em; }
 .named .f { margin-top: 10px; }
-.named .f input { font-family: "Cinzel", var(--serif); letter-spacing: .14em; text-transform: uppercase; }
+.named .f input, #rv-engrave { font-family: "Waltograph", var(--serif); font-size: 30px; letter-spacing: .02em; text-transform: lowercase; }
 .named .count { margin: 0; font-size: 14px; color: var(--slate); }
 .named .pill { align-self: flex-start; }
 @media (max-width: 760px) { .named { grid-template-columns: 1fr; } .named .pill { align-self: center; } }
@@ -219,7 +221,7 @@ body.rv-open { overflow: hidden; }
 .engrave-in { position: absolute; inset: 0; transform: scale(1.6); transform-origin: 47% 60%; }   /* close in on the glass */
 .engrave img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .engrave-name { position: absolute; left: 26.6%; top: 66%; max-width: 18.5%; white-space: nowrap;
-  font-family: "Cinzel", "Cormorant Garamond", Georgia, serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
+  font-family: "Waltograph", "Cormorant Garamond", Georgia, serif; font-weight: 400; letter-spacing: .02em; text-transform: lowercase;
   color: rgba(52,44,40,.88); text-shadow: 0 1px 0 rgba(255,255,255,.18); mix-blend-mode: multiply; transition: opacity .2s var(--ease-out); }
 .engrave-name:empty { opacity: 0; }
 .engrave.done { margin-top: 22px; }
@@ -275,7 +277,7 @@ body.rv-open { overflow: hidden; }
       <p class="say">Like the name on your coffee cup, except this one is engraved and it stays. Every bottle carries its number and the name of the person it belongs to.</p>
       <div class="f">
         <label for="n-engrave">See your name on the bottle</label>
-        <input id="n-engrave" type="text" spellcheck="false" maxlength="14" autocomplete="given-name" autocapitalize="characters" placeholder="Type your name" aria-describedby="n-count">
+        <input id="n-engrave" type="text" spellcheck="false" maxlength="14" autocomplete="given-name" autocapitalize="none" placeholder="Type your name" aria-describedby="n-count">
       </div>
       <p class="count" id="n-count">Up to 14 letters.</p>
       <button class="pill" id="n-reserve" type="button" data-open-reserve aria-haspopup="dialog"><small>Reserve with</small><b>This name</b></button>
@@ -326,7 +328,7 @@ body.rv-open { overflow: hidden; }
         </div>
         <div class="f">
           <label for="rv-engrave">Name for your bottle<span class="req" aria-hidden="true">*</span></label>
-          <input id="rv-engrave" name="engraving" type="text" maxlength="14" autocomplete="off" autocapitalize="characters" placeholder="As it should read on the glass" required aria-describedby="h-engrave e-engrave">
+          <input id="rv-engrave" name="engraving" type="text" maxlength="14" autocomplete="off" autocapitalize="none" placeholder="As it should read on the glass" required aria-describedby="h-engrave e-engrave">
           <p class="hint" id="h-engrave">Engraved beneath your number. Up to 14 letters.</p>
       <figure class="engrave" id="engrave-live" aria-hidden="true">
         <div class="engrave-in"><img src="img/final-bottle.jpg" alt=""><span class="engrave-name"></span></div>
@@ -593,11 +595,11 @@ body.rv-open { overflow: hidden; }
   // the engraving: the name, cleaned and sized to fit the space on the glass
   const engraveInput = $('rv-engrave');
   let engraveTouched = false;
-  const cleanEngraving = v => v.replace(/[^\p{L}\s.'&-]/gu, '').replace(/\s+/g, ' ').trimStart().slice(0, 14).toUpperCase();
+  const cleanEngraving = v => v.replace(/[^\p{L}\s.'&-]/gu, '').replace(/\s+/g, ' ').trimStart().slice(0, 14).toLowerCase();
   function paintEngraving(fig, text) {
     const span = fig.querySelector('.engrave-name'), w = fig.clientWidth;
     span.textContent = text.trim();
-    let size = w * 0.026; span.style.fontSize = size + 'px';
+    let size = w * 0.034; span.style.fontSize = size + 'px';
     const max = w * 0.185;
     while (span.scrollWidth > max && size > 6) { size -= 0.5; span.style.fontSize = size + 'px'; }
   }
@@ -616,7 +618,7 @@ body.rv-open { overflow: hidden; }
 
   // the same engraving on the main page; whatever they type carries into the reservation
   const mainInput = $('n-engrave'), mainFig = $('engrave-main');
-  const paintMain = () => paintEngraving(mainFig, mainInput.value || 'YOUR NAME');
+  const paintMain = () => paintEngraving(mainFig, mainInput.value || 'your name');
   mainInput.addEventListener('input', () => {
     const c = cleanEngraving(mainInput.value); if (c !== mainInput.value) mainInput.value = c;
     $('n-count').textContent = `${14 - c.trim().length} of 14 letters left.`;
@@ -629,6 +631,7 @@ body.rv-open { overflow: hidden; }
   addEventListener('resize', paintMain);
   if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => e.isIntersecting && paintMain())).observe(mainFig);
   paintMain();
+  if (document.fonts) document.fonts.ready.then(() => { paintMain(); paintEngraving($('engrave-live'), engraveInput.value); });
 
   // the reservation page
   const rv = $('rv'), form = $('rv-form');
