@@ -25,6 +25,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 body { margin: 0; background: var(--stage); color: var(--bone); font-family: var(--sans); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 button { font: inherit; color: inherit; }
 img { display: block; }
@@ -59,8 +60,7 @@ img { display: block; }
 .pin::after {           /* desktop: darken the left and the floor so the copy reads */
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(10,9,8,.86) 0%, rgba(10,9,8,.45) 32%, rgba(10,9,8,0) 58%),
-    linear-gradient(0deg, rgba(10,9,8,.7) 0%, rgba(10,9,8,0) 34%);
+    radial-gradient(130% 100% at 50% 50%, transparent 60%, rgba(10,9,8,.6) 100%);
 }
 .copy {
   position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px);
@@ -103,8 +103,8 @@ img { display: block; }
 /* phones and portrait screens: image band on top, copy below */
 @media (max-aspect-ratio: 1/1) {
   .stage {
-    inset: auto 0 auto 0; top: calc(env(safe-area-inset-top, 0px) + 84px);
-    aspect-ratio: 1 / 1.04; max-height: 60svh; width: 100%;
+    inset: auto 0 auto 0; top: 50%; transform: translateY(-46%);
+    aspect-ratio: 1 / 1.1; max-height: 66svh; width: 100%;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
   }
@@ -175,34 +175,17 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
 
 <main>
   <section class="story" id="story" aria-label="Caldoir Elixir">
+    <h1 class="sr-only">Caldoir Elixir</h1>
     <div class="pin">
       <div class="stage" id="stage" aria-hidden="true"></div>
 
-      <div class="copy" aria-live="polite">
-        <div class="chapter on" data-c="0"><h1>Smoke on stone.</h1><p>Caldoir Elixir. Tobacco leaf, vanilla and cured leather, in 333 numbered bottles.</p></div>
-        <div class="chapter" data-c="1"><h2>A quarter turn.</h2><p>The brass cap lifts away from a block of clear resin.</p></div>
-        <div class="chapter" data-c="2"><h2>One press.</h2><p>Made at elixir strength. A single spray lasts the evening.</p></div>
-        <div class="chapter" data-c="3"><h2>Tobacco leaf</h2><p>The opening: cured, honeyed, faintly sweet.</p></div>
-        <div class="chapter" data-c="4"><h2>Vanilla pod</h2><p>The heart: dark, resinous and slow.</p></div>
-        <div class="chapter" data-c="5"><h2>Cured leather</h2><p>The base: worn saddle leather and a dry, smoky finish.</p></div>
-        <div class="chapter" data-c="6"><h2>Poured once.</h2><p>Every flask is filled by hand. There is no second batch.</p></div>
-        <div class="chapter" data-c="7"><h2>The 22</h2><p>Twenty-two bottles of 50 mL, offered to the list first.</p></div>
-      </div>
-
       <div class="cue" id="cue" aria-hidden="true">Scroll<i></i></div>
-      <div class="rail" aria-hidden="true"><i id="rail"></i></div>
     </div>
   </section>
 
   <section class="story film" id="film" aria-label="The final bottle">
     <div class="pin">
       <div class="stage" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
-      <div class="copy" aria-live="polite">
-        <div class="chapter on"><h2>Caldoir Elixir</h2><p>The finished bottle: a round amber flask in clear glass, under a ribbed gold cap.</p></div>
-        <div class="chapter"><h2>All of it, at once.</h2><p>Tobacco leaf, vanilla and cured leather gather around the bottle.</p></div>
-        <div class="chapter"><h2>Then, smoke.</h2><p>A dry, smoky finish that stays into the night. 333 numbered bottles, poured once.</p></div>
-      </div>
-      <div class="rail" aria-hidden="true"><i id="film-rail"></i></div>
     </div>
   </section>
 
@@ -304,7 +287,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     const c = FRAMES[fade > 0.5 && b ? i + 1 : i][1];
     if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
     cue.classList.toggle('gone', p > 0.01);
-    rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
+    if (rail) rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
   }
   function loop() {
     current += (target - current) * (reduce ? 1 : 0.14);
@@ -397,7 +380,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     need = Math.round(f * (COUNT - 1)); draw(need);
     let c = 0; while (c < CUTS.length - 1 && f >= CUTS[c + 1]) c++;
     if (c !== shown) { chapters.forEach((el, k) => el.classList.toggle('on', k === c)); shown = c; }
-    rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
+    if (rail) rail.style.transform = portrait.matches ? `scaleX(${p.toFixed(4)})` : `scaleY(${p.toFixed(4)})`;
   }
   function loop() {
     current += (target - current) * (reduce ? 1 : 0.16);
