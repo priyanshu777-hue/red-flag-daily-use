@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
 <style>
-/* Layout: one pinned screen. Scrolling first drives a real-time 3D bottle (turn, unscrew, lift, spray, close),
-   then the frame animation (cap, spray, the notes, the pour, The 22), then the bottle film with its copy; then the reserve close.
+/* Layout: one pinned screen. Scrolling plays the frame animation (cap, spray, the notes, the pour, The 22),
+   then the bottle film with its copy; then the reserve close.
    Phones: the 3D fills the screen; the film sits in a band near the top with its copy below. */
 :root {
   --stage: #1C0C0C;      /* oxblood black */
@@ -52,9 +52,7 @@ img { display: block; }
 .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .layer { position: absolute; inset: 0; }
 .layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.three .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.three::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(130% 100% at 50% 50%, transparent 58%, rgba(28,12,12,.7) 100%); }
-.film, .anim { opacity: 0; }
+.film { opacity: 0; }
 .shade { position: absolute; inset: 0; pointer-events: none; opacity: 0;
   background: linear-gradient(90deg, rgba(28,12,12,.86) 0%, rgba(28,12,12,.45) 32%, rgba(28,12,12,0) 58%), linear-gradient(0deg, rgba(28,12,12,.7) 0%, rgba(28,12,12,0) 34%); }
 .copy { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px); width: min(440px, calc(100% - 2 * var(--gutter))); opacity: 0; }
@@ -149,7 +147,6 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   <section class="show" id="story" aria-label="Caldoir Elixir">
     <h1 class="sr-only">Caldoir Elixir</h1>
     <div class="pin">
-      <div class="layer three" aria-hidden="true"><canvas id="gl"></canvas></div>
       <div class="layer anim" aria-hidden="true"><canvas id="anim-canvas"></canvas></div>
       <div class="layer film" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
       <div class="shade" id="shade"></div>
@@ -208,7 +205,6 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   </nav>
 </aside>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -220,10 +216,9 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   const lerp = (a, b, t) => a + (b - a) * t;
 
   /* The show: 3D bottle first, then the film. Scroll lengths in screen heights. */
-  const SCREENS_3D = 5, SCREENS_ANIM = 7, SCREENS_FILM = 5.5, BLEND = 0.5;
-  const TOTAL = SCREENS_3D + BLEND + SCREENS_ANIM + BLEND + SCREENS_FILM;
-  const END_3D = SCREENS_3D / TOTAL, START_ANIM = (SCREENS_3D + BLEND) / TOTAL;
-  const END_ANIM = START_ANIM + SCREENS_ANIM / TOTAL, START_FILM = END_ANIM + BLEND / TOTAL;
+  const SCREENS_ANIM = 7, SCREENS_FILM = 5.5, BLEND = 0.5;
+  const TOTAL = SCREENS_ANIM + BLEND + SCREENS_FILM;
+  const END_ANIM = SCREENS_ANIM / TOTAL, START_FILM = END_ANIM + BLEND / TOTAL;
   const show = $('story');
   let lastW = 0;
   function sizeShow() { if (innerWidth !== lastW) { lastW = innerWidth; show.style.height = (innerHeight * (1 + TOTAL)) + 'px'; } }
@@ -231,217 +226,6 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
 
   let target = 0, current = 0;
   function read() { const s = show.offsetHeight - innerHeight; target = clamp((scrollY - show.offsetTop) / s); }
-
-  /* ================= 3D bottle ================= */
-  const three = (() => {
-    const canvas = $('gl');
-    if (!window.THREE) return null;
-    THREE.ColorManagement.legacyMode = false;   // read every hex colour as sRGB, so the dark oxblood stays dark
-    let renderer;
-    try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); } catch (e) { return null; }
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    const BG = 0x1c0c0c;
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(BG);
-    scene.fog = new THREE.Fog(BG, 10, 26);
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
-
-    // studio reflections: a soft top box, a long warm strip behind, tall strips at the sides
-    (() => {
-      const env = new THREE.Scene();
-      env.add(new THREE.Mesh(new THREE.BoxGeometry(40, 20, 40), new THREE.MeshBasicMaterial({ color: 0x120707, side: THREE.BackSide })));
-      const strip = (w, h, c, k, pos, ry = 0, rx = 0) => {
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), side: THREE.DoubleSide }));
-        m.position.set(...pos); m.rotation.set(rx, ry, 0); env.add(m);
-      };
-      strip(8, 8, 0xfff4ea, 0.9, [0, 9.5, 0], 0, Math.PI / 2);
-      strip(30, 0.8, 0xffe2c4, 5, [0, 1.2, -12]);
-      strip(3, 9, 0xffffff, 3.2, [-8, 3, 3], Math.PI / 2);
-      strip(2, 9, 0xf0e6ff, 2.4, [8, 3, -1], -Math.PI / 2);
-      strip(8, 3, 0xffffff, 1.2, [0, 2, 10]);
-      const pm = new THREE.PMREMGenerator(renderer);
-      scene.environment = pm.fromScene(env, 0.02).texture; pm.dispose();
-    })();
-
-    scene.add(new THREE.AmbientLight(0x3a2020, 0.5));
-    const key = new THREE.DirectionalLight(0xfff0dc, 1.6); key.position.set(-4, 6, 6); scene.add(key);
-    const rim = new THREE.DirectionalLight(0xffffff, 2.2); rim.position.set(4, 3, -6); scene.add(rim);
-    const glow = new THREE.PointLight(0xd07a30, 0.7, 3, 2); scene.add(glow);
-
-    // ---------- bottle ----------
-    const W = 3.0, H = 1.7, D = 0.95;
-    function roundedBox(w, h, d, r, b) {
-      const s = new THREE.Shape(), x = -w / 2 + b, y = -h / 2 + b, ww = w - 2 * b, hh = h - 2 * b;
-      s.moveTo(x + r, y); s.lineTo(x + ww - r, y); s.quadraticCurveTo(x + ww, y, x + ww, y + r);
-      s.lineTo(x + ww, y + hh - r); s.quadraticCurveTo(x + ww, y + hh, x + ww - r, y + hh);
-      s.lineTo(x + r, y + hh); s.quadraticCurveTo(x, y + hh, x, y + hh - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
-      const g = new THREE.ExtrudeGeometry(s, { depth: d - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 6, curveSegments: 12 });
-      g.center(); return g;
-    }
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, metalness: 0, roughness: 0.02, transmission: 1, thickness: 0.3, ior: 1.42,
-      clearcoat: 1, clearcoatRoughness: 0.02, specularIntensity: 1, envMapIntensity: 1.5,
-    });
-    const liquidMat = new THREE.MeshPhysicalMaterial({
-      color: 0x4a2408, emissive: 0x8a4a12, emissiveIntensity: 1.0, roughness: 0.03, metalness: 0,
-      clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 0.55
-    });
-    // liquid depth: dark amber where the flask curves away, glowing amber where you look straight through it
-    liquidMat.onBeforeCompile = sh => {
-      sh.fragmentShader = sh.fragmentShader.replace('#include <output_fragment>', `
-        float facing = clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0);
-        outgoingLight *= mix(0.08, 1.5, pow(facing, 2.2));
-        #include <output_fragment>`);
-    };
-    const goldMat = new THREE.MeshStandardMaterial({ color: 0xd2a660, metalness: 1, roughness: 0.22, envMapIntensity: 1.6 });
-    const goldDark = new THREE.MeshStandardMaterial({ color: 0x9a7438, metalness: 1, roughness: 0.32 });
-    const neckMat = new THREE.MeshPhysicalMaterial({ color: 0x5a2a0c, roughness: 0.05, clearcoat: 1, emissive: 0x1a0702, emissiveIntensity: .5 });
-
-    const bottle = new THREE.Group();
-    const block = new THREE.Mesh(roundedBox(W, H, D, 0.14, 0.07), glassMat); block.position.y = H / 2; bottle.add(block);
-
-    // the round flask: a full, slightly egg-shaped pebble of amber, flat-ish front to back
-    const fg = new THREE.SphereGeometry(1, 96, 64), fp = fg.attributes.position, v = new THREE.Vector3();
-    for (let i = 0; i < fp.count; i++) { v.fromBufferAttribute(fp, i); const k = 1 + 0.05 * -v.y; fp.setXYZ(i, v.x * 0.66 * k, v.y * 0.62, v.z * 0.34 * k); }
-    fg.computeVertexNormals();
-    const FX = 0.6, FY = 0.86;
-    const flask = new THREE.Mesh(fg, liquidMat); flask.position.set(FX, FY, 0); bottle.add(flask);
-    glow.position.set(FX, FY, 0.6);
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, H - FY - 0.5, 32), neckMat); neck.position.set(FX, (FY + 0.5 + H) / 2, 0); bottle.add(neck);
-    const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.23, 0.1, 64), goldDark); collar.position.set(FX, H + 0.05, 0); bottle.add(collar);
-
-    // atomizer, revealed when the cap comes off
-    const atom = new THREE.Group(); atom.position.set(FX, H + 0.1, 0); bottle.add(atom);
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.16, 32), goldMat); stem.position.y = 0.08; atom.add(stem);
-    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.1, 32), goldMat); head.position.y = 0.2; atom.add(head);
-    const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.05, 16), goldDark); nozzle.rotation.z = Math.PI / 2; nozzle.position.set(-0.08, 0.2, 0.0); atom.add(nozzle);
-
-    // ribbed gold dome cap
-    const prof = [[0.2, 0], [0.25, 0.01], [0.29, 0.05], [0.315, 0.12], [0.32, 0.2], [0.31, 0.28], [0.28, 0.36], [0.23, 0.43], [0.16, 0.48], [0.08, 0.51], [0, 0.52]].map(([x, y]) => new THREE.Vector2(x, y));
-    const cg = new THREE.LatheGeometry(prof, 144), cp = cg.attributes.position;
-    for (let i = 0; i < cp.count; i++) {
-      v.fromBufferAttribute(cp, i); const r = Math.hypot(v.x, v.z); if (r < 0.02) continue;
-      const th = Math.atan2(v.z, v.x), rib = 1 - 0.045 * Math.pow(0.5 - 0.5 * Math.cos(th * 24), 1.5) * (r / 0.32);
-      cp.setX(i, v.x * rib); cp.setZ(i, v.z * rib);
-    }
-    cg.computeVertexNormals();
-    const cap = new THREE.Group(); cap.add(new THREE.Mesh(cg, goldMat));
-    const capBand = new THREE.Mesh(new THREE.CylinderGeometry(0.205, 0.205, 0.04, 64), goldDark); capBand.position.y = 0.02; cap.add(capBand);
-    const CAP_Y = H + 0.1; cap.position.set(FX, CAP_Y, 0); bottle.add(cap);
-
-    // printed number, top-left of the front face
-    const ec = document.createElement('canvas'); ec.width = 1024; ec.height = 140;
-    const et = new THREE.CanvasTexture(ec); et.encoding = THREE.sRGBEncoding; et.anisotropy = 8;
-    const drawNum = () => { const x = ec.getContext('2d'); x.clearRect(0, 0, 1024, 140); x.fillStyle = 'rgba(150,150,150,0.95)'; x.font = '300 96px Jost, "Helvetica Neue", sans-serif'; x.textBaseline = 'middle'; x.fillText('Nº 001 | 333', 10, 74); et.needsUpdate = true; };
-    drawNum(); if (document.fonts) document.fonts.ready.then(drawNum);
-    const num = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 0.157), new THREE.MeshBasicMaterial({ map: et, transparent: true, depthWrite: false, toneMapped: false }));
-    num.position.set(-0.68, 1.36, D / 2 + 0.002); bottle.add(num);
-    scene.add(bottle);
-
-    // reflection: a faint mirrored copy painted over a solid floor (a solid floor is what the glass refracts)
-    const mirror = new THREE.Group(); mirror.scale.y = -1; scene.add(mirror);
-    const ghost = (mat, o) => { const m = mat.clone(); m.transparent = true; m.opacity = o; m.depthTest = false; m.depthWrite = false; m.side = THREE.DoubleSide; return m; };
-    const mFlask = new THREE.Mesh(fg, ghost(liquidMat, 0.1)); mFlask.position.copy(flask.position); mirror.add(mFlask);
-    const mCap = new THREE.Group(); mCap.add(new THREE.Mesh(cg, ghost(goldMat, 0.12))); mirror.add(mCap);
-    mirror.traverse(o => { o.renderOrder = 5; });
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({ color: 0x120707 }));
-    floor.rotation.x = -Math.PI / 2; floor.position.y = 0.001; scene.add(floor);
-
-    // a softly lit backdrop behind the bottle: the glass refracts it, which is what makes it read as clear glass
-    const bd = document.createElement('canvas'); bd.width = 512; bd.height = 256; { const x = bd.getContext('2d');
-      const g = x.createRadialGradient(256, 226, 10, 256, 226, 300); g.addColorStop(0, '#5e4d47'); g.addColorStop(.3, '#33221f'); g.addColorStop(.65, '#1f0e0e'); g.addColorStop(1, '#1c0c0c');
-      x.fillStyle = g; x.fillRect(0, 0, 512, 256); }
-    const bdt = new THREE.CanvasTexture(bd); bdt.encoding = THREE.sRGBEncoding;
-    const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(70, 16), new THREE.MeshBasicMaterial({ map: bdt, fog: false, toneMapped: false }));
-    backdrop.position.set(0, 8, -9); scene.add(backdrop);
-    // the horizon glow behind the bottle
-    function glowTex() {
-      const c = document.createElement('canvas'); c.width = 512; c.height = 128; const x = c.getContext('2d');
-      const h = x.createLinearGradient(0, 0, 512, 0); h.addColorStop(0, 'rgba(255,255,255,0)'); h.addColorStop(.3, 'rgba(255,255,255,.3)'); h.addColorStop(.5, '#fff'); h.addColorStop(.7, 'rgba(255,255,255,.3)'); h.addColorStop(1, 'rgba(255,255,255,0)');
-      x.fillStyle = h; x.fillRect(0, 0, 512, 128); x.globalCompositeOperation = 'destination-in';
-      const g = x.createLinearGradient(0, 0, 0, 128); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.5, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
-      x.fillStyle = g; x.fillRect(0, 0, 512, 128); return new THREE.CanvasTexture(c);
-    }
-    const streak = new THREE.Mesh(new THREE.PlaneGeometry(24, 2.2), new THREE.MeshBasicMaterial({ map: glowTex(), color: 0xc9a58a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, opacity: .55 }));
-    streak.position.set(0, 1.1, -7); scene.add(streak);
-
-    // spray mist: every particle's path is a function of the spray time, so scrolling back rewinds it
-    const N = 900, pg = new THREE.BufferGeometry(), seeds = new Float32Array(N * 4), base = new Float32Array(N * 3);
-    for (let i = 0; i < N; i++) { seeds[i * 4] = Math.random() * 0.45; seeds[i * 4 + 1] = Math.random(); seeds[i * 4 + 2] = Math.random(); seeds[i * 4 + 3] = Math.random(); }
-    pg.setAttribute('position', new THREE.BufferAttribute(base, 3)); pg.setAttribute('seed', new THREE.BufferAttribute(seeds, 4));
-    const mistMat = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, blending: THREE.NormalBlending,
-      uniforms: { uT: { value: 0 }, uOrigin: { value: new THREE.Vector3() }, uScale: { value: 300 } },
-      vertexShader: `
-        attribute vec4 seed; uniform float uT; uniform vec3 uOrigin; uniform float uScale; varying float vA;
-        void main() {
-          float life = clamp((uT - seed.x) / 0.55, 0.0, 1.0);
-          float d = 1.0 - pow(1.0 - life, 2.2);                       // fast out, slow drift
-          vec3 dir = normalize(vec3(-1.0, 0.12 + (seed.y - 0.5) * 0.5, 0.25 + (seed.z - 0.5) * 0.6));
-          vec3 p = uOrigin + dir * d * (2.2 + seed.w * 1.4);
-          p.y += life * life * 0.35;                                  // warm mist rises a little
-          p += vec3(sin(seed.y * 40.0 + life * 3.0), cos(seed.z * 30.0 + life * 2.0), sin(seed.w * 20.0)) * 0.12 * life;
-          vA = smoothstep(0.0, 0.06, life) * (1.0 - smoothstep(0.55, 1.0, life)) * step(0.0001, uT - seed.x);
-          vec4 mv = modelViewMatrix * vec4(p, 1.0);
-          gl_PointSize = (0.08 + life * 0.75) * uScale / -mv.z;
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: `
-        varying float vA;
-        void main() { vec2 c = gl_PointCoord - 0.5; float r = length(c); float a = smoothstep(0.5, 0.0, r); gl_FragColor = vec4(0.94, 0.9, 0.86, a * vA * 0.55); }`
-    });
-    const mist = new THREE.Points(pg, mistMat); mist.frustumCulled = false; scene.add(mist);
-
-    // ---------- framing and the scroll timeline ----------
-    let baseDist = 8;
-    function resize() {
-      const w = canvas.clientWidth, h = canvas.clientHeight;
-      renderer.setPixelRatio(Math.min(devicePixelRatio, w < 700 ? 1.6 : 2));
-      renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-      const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(15)) * camera.aspect);
-      baseDist = Math.max(7.4, 2.15 / Math.tan(half));
-      mistMat.uniforms.uScale.value = h * 0.9;
-    }
-    const look = new THREE.Vector3(), mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth - .5; mouse.ty = e.clientY / innerHeight - .5; }, { passive: true });
-    const clock = new THREE.Clock();
-
-    function render(q) {
-      const t = clock.getElapsedTime();
-      mouse.x += (mouse.tx - mouse.x) * .05; mouse.y += (mouse.ty - mouse.y) * .05;
-      const intro = ease(span(q, 0, 0.18)), unscrew = ease(span(q, 0.18, 0.4)), lift = ease(span(q, 0.4, 0.56));
-      const spray = span(q, 0.56, 0.82), close = ease(span(q, 0.82, 1));
-
-      // cap: two turns off, lift and drift aside, then screw back on
-      const off = lift * (1 - close), turn = unscrew * (1 - close);
-      cap.rotation.y = -turn * Math.PI * 4;
-      cap.position.set(FX + off * 0.5, CAP_Y + turn * 0.1 + off * 0.5, off * 0.2);
-      cap.rotation.z = -off * 0.38;
-      atom.position.y = H + 0.1 - (spray > 0 && spray < 0.12 ? Math.sin(spray / 0.12 * Math.PI) * 0.03 : 0);
-      atom.visible = unscrew > 0.02 && close < 0.98;
-      mCap.position.copy(cap.position); mCap.rotation.copy(cap.rotation);
-
-      mistMat.uniforms.uT.value = spray < 0.001 ? 0 : spray * 0.95 + close * 0.6;
-      mistMat.uniforms.uOrigin.value.set(FX - 0.11, H + 0.3, 0);
-
-      // camera: settle from a three-quarter view, push in to the neck for the spray, come back to the front
-      const push = lift * (1 - close);
-      const angle = lerp(0.6, 0.12, intro) * (1 - close) + (reduce ? 0 : Math.sin(t * 0.25) * 0.03) + mouse.x * 0.12;
-      const dist = baseDist * lerp(1.12, 1, intro) * lerp(1, 0.7, push);
-      const ty = lerp(0.85, 1.5, push), tx = lerp(0.05, 0.2, push);
-      camera.position.set(tx + Math.sin(angle) * dist, ty + lerp(0.9, 0.35, intro) * (1 - push) + 0.25 - mouse.y * 0.25, Math.cos(angle) * dist);
-      look.set(tx, ty, 0); camera.lookAt(look);
-      streak.material.opacity = 0.45 + 0.15 * Math.sin(t * 0.6);
-      renderer.render(scene, camera);
-    }
-    resize();
-    return { render, resize };
-  })();
-  if (!three) {  // no WebGL: a still of the bottle stands in for the 3D
-    const img = new Image(); img.src = 'img/final-bottle.jpg'; img.className = 'fallback'; img.alt = ''; $('gl').replaceWith(img);
-  }
 
   /* ================= frame players: the frame animation and the film ================= */
   function player({ canvasId, path, count, focusPortrait = 0.5, onPaint }) {
@@ -489,10 +273,10 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
         $('rail').style.transform = portrait.matches ? `scaleX(${f.toFixed(4)})` : `scaleY(${f.toFixed(4)})`;
       } });
   })();
-  setTimeout(anim.start, 900);    // the 3D comes first; the frames load behind it, the film once the reader gets near it
+  anim.start();                    // the film's frames load once the reader gets near it
 
   /* ================= drive both from scroll ================= */
-  const filmLayer = document.querySelector('.film'), animLayer = document.querySelector('.anim'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue'), threeLayer = document.querySelector('.three');
+  const filmLayer = document.querySelector('.film'), animLayer = document.querySelector('.anim'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue');
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(show);
   function frame() {
@@ -500,22 +284,20 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     if (Math.abs(target - current) < 0.00005) current = target;
     if (visible) {
       const p = current;
-      const toAnim = ease(span(p, END_3D, START_ANIM)), toFilm = ease(span(p, END_ANIM, START_FILM));
-      threeLayer.style.opacity = (1 - toAnim).toFixed(3);
-      animLayer.style.opacity = (toAnim * (1 - toFilm)).toFixed(3);
+      const toFilm = ease(span(p, END_ANIM, START_FILM));
+      animLayer.style.opacity = (1 - toFilm).toFixed(3);
       filmLayer.style.opacity = shade.style.opacity = toFilm.toFixed(3);
       copy.style.opacity = railWrap.style.opacity = span(p, START_FILM - 0.01, START_FILM + 0.02).toFixed(3);
       cue.classList.toggle('gone', p > 0.01);
-      if (p > END_3D * 0.6) film.start();
-      if (three && toAnim < 1) three.render(span(p, 0, END_3D));
-      if (toAnim > 0 && toFilm < 1) anim.paint(span(p, START_ANIM, END_ANIM));
+      if (p > END_ANIM * 0.5) film.start();
+      if (toFilm < 1) anim.paint(span(p, 0, END_ANIM));
       if (toFilm > 0) film.paint(span(p, START_FILM, 1));
     }
     requestAnimationFrame(frame);
   }
   addEventListener('scroll', read, { passive: true });
-  addEventListener('resize', () => { sizeShow(); read(); three && three.resize(); anim.resize(); film.resize(); });
-  portrait.addEventListener('change', () => { three && three.resize(); anim.resize(); film.resize(); });
+  addEventListener('resize', () => { sizeShow(); read(); anim.resize(); film.resize(); });
+  portrait.addEventListener('change', () => { anim.resize(); film.resize(); });
   read(); current = target; frame();
 
   /* ================= menu ================= */
