@@ -204,6 +204,21 @@ footer a { color: var(--steel); text-decoration: none; min-height: 44px; display
 .confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
 body.rv-open { overflow: hidden; }
 
+
+/* ---------- your name on the glass (main page) ---------- */
+.named { padding: clamp(64px, 12vh, 140px) var(--gutter) 0; display: grid; gap: clamp(28px, 5vw, 64px); align-items: center;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+.named .engrave { margin: 0; border-radius: 20px; box-shadow: 0 30px 80px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(156,160,167,.12); }
+.named .n-copy { display: flex; flex-direction: column; gap: 16px; }
+.named .eyebrow { margin: 0; font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: var(--mist); }
+.named h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 5vw, 60px); line-height: 1.05; color: var(--bone); text-wrap: balance; }
+.named p.say { margin: 0; font-size: 17px; line-height: 1.7; color: var(--body); max-width: 28em; }
+.named .f { margin-top: 10px; }
+.named .f input { font-family: "Cinzel", var(--serif); letter-spacing: .14em; text-transform: uppercase; }
+.named .count { margin: 0; font-size: 14px; color: var(--slate); }
+.named .pill { align-self: flex-start; }
+@media (max-width: 760px) { .named { grid-template-columns: 1fr; } .named .pill { align-self: center; } }
+
 /* the engraving preview: the name sits on the glass under the printed number */
 .engrave { position: relative; margin: 14px 0 0; border-radius: 14px; overflow: hidden; aspect-ratio: 1120 / 630; max-width: 100%; background: #111; }
 .engrave-in { position: absolute; inset: 0; transform: scale(1.6); transform-origin: 47% 60%; }   /* close in on the glass */
@@ -254,6 +269,23 @@ body.rv-open { overflow: hidden; }
       </div>
       <div class="cue" id="cue" aria-hidden="true">Scroll<i></i></div>
       <div class="rail" id="rail-wrap" aria-hidden="true"><i id="rail"></i></div>
+    </div>
+  </section>
+
+  <section class="named" id="named" aria-labelledby="n-title">
+    <figure class="engrave" id="engrave-main" aria-hidden="true">
+      <div class="engrave-in"><img src="img/final-bottle.jpg" alt="" loading="lazy"><span class="engrave-name"></span></div>
+    </figure>
+    <div class="n-copy">
+      <p class="eyebrow">One of 333, and only yours</p>
+      <h2 id="n-title">Your name, on the glass.</h2>
+      <p class="say">Like the name on your coffee cup, except this one is engraved and it stays. Every bottle carries its number and the name of the person it belongs to.</p>
+      <div class="f">
+        <label for="n-engrave">See your name on the bottle</label>
+        <input id="n-engrave" type="text" spellcheck="false" maxlength="14" autocomplete="given-name" autocapitalize="characters" placeholder="Type your name" aria-describedby="n-count">
+      </div>
+      <p class="count" id="n-count">Up to 14 letters.</p>
+      <button class="pill" id="n-reserve" type="button" data-open-reserve aria-haspopup="dialog"><small>Reserve with</small><b>This name</b></button>
     </div>
   </section>
 
@@ -495,7 +527,7 @@ body.rv-open { overflow: hidden; }
   function activeSection() {
     const res = $('reserve').getBoundingClientRect(), foot = $('contact').getBoundingClientRect();
     if (foot.top < innerHeight * 0.85) return 'contact';
-    if (res.top < innerHeight * 0.5) return 'reserve';
+    if (res.top < innerHeight * 0.5 || $('named').getBoundingClientRect().top < innerHeight * 0.5) return 'reserve';
     return current >= END_ANIM ? 'film' : 'home';
   }
   let lastSec = '';
@@ -588,6 +620,22 @@ body.rv-open { overflow: hidden; }
     if (first) { $('e-engrave').textContent = ''; engraveInput.removeAttribute('aria-invalid'); }
   });
   addEventListener('resize', () => { paintEngraving($('engrave-live'), engraveInput.value); paintEngraving($('engrave-done'), $('engrave-done').dataset.text || ''); });
+
+  // the same engraving on the main page; whatever they type carries into the reservation
+  const mainInput = $('n-engrave'), mainFig = $('engrave-main');
+  const paintMain = () => paintEngraving(mainFig, mainInput.value || 'YOUR NAME');
+  mainInput.addEventListener('input', () => {
+    const c = cleanEngraving(mainInput.value); if (c !== mainInput.value) mainInput.value = c;
+    $('n-count').textContent = `${14 - c.trim().length} of 14 letters left.`;
+    paintMain();
+  });
+  $('n-reserve').addEventListener('click', () => {
+    const c = mainInput.value.trim();
+    if (c) { engraveInput.value = c; engraveTouched = true; }
+  });
+  addEventListener('resize', paintMain);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => e.isIntersecting && paintMain())).observe(mainFig);
+  paintMain();
 
   // the reservation page
   const rv = $('rv'), form = $('rv-form');
