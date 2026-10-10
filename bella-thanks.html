@@ -96,10 +96,11 @@
     <span class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-10"/></svg>Payment successful</span>
     <h1 id="paid-title">Welcome to Bella.</h1>
     <p class="lede" id="paid-lede">Your bill is below. Your setup guide is on its way to your email.</p>
-    <article class="bill" id="bill" aria-label="Payment receipt"></article>
+    <article class="bill" id="bill" aria-label="Invoice and payment confirmation"></article>
     <div class="actions">
       <button class="btn btn--ink" type="button" id="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Download / print bill</button>
-      <a class="btn" id="paid-wa" target="_blank" rel="noopener">Questions? WhatsApp us</a>
+      <a class="btn" id="paid-mail" href="mailto:hello@redflaghomes.in">Email support</a>
+      <a class="btn" id="paid-wa" target="_blank" rel="noopener">WhatsApp us</a>
     </div>
     <section class="panel" id="account" hidden>
       <h2 id="acc-title">Your Red Flag account is ready</h2>
@@ -128,13 +129,14 @@
       <a class="btn" href="/bella/#pricing">See plans</a>
     </div>
     <p class="fine" id="fail-ref"></p>
+    <p class="fine">Support: <a href="mailto:hello@redflaghomes.in">hello@redflaghomes.in</a></p>
   </section>
 </main>
 
 <script type="module">
 /* ===== Settings ===== */
 const WHATSAPP = '918881306632';
-const SUPPORT_EMAIL = 'bella@redflaghomes.in';
+const SUPPORT_EMAIL = 'hello@redflaghomes.in';
 const PLAN_NAMES = { solo: 'Solo', growth: 'Growth', pro: 'Pro' };
 const LISTINGS = { solo: '1 listing', growth: 'Up to 3 listings', pro: 'Up to 5 listings' };
 const LINKS = {
@@ -185,7 +187,7 @@ function paid(r) {
   const date = new Date(r.paidAt || Date.now()).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
   $('#bill').innerHTML = `
     <div class="bill-head"><div><b>Red Flag Homes Network</b><small>Bella by Red Flag Homes</small><small>${esc(SUPPORT_EMAIL)}</small></div>
-      <div class="r"><b>Payment receipt</b><small>No. ${esc(r.receiptNo || '')}</small><small>${esc(date)}</small></div></div>
+      <div class="r"><b>Invoice</b><small>No. ${esc(r.receiptNo || '')}</small><small>${esc(date)}</small></div></div>
     <div class="bill-sec"><h2>Billed to</h2><div>${esc(r.name || (pending && pending.name) || '')}</div><div style="color:var(--mute);font-size:.92rem">${esc(r.email || '')}${r.phone ? ' · ' + esc(r.phone) : ''}</div></div>
     <div class="bill-sec"><h2>Item</h2><div class="item"><div><b>${esc(item)}</b><span>${esc(LISTINGS[plan] || 'AI co-host subscription')}${period ? ' · renews ' + (period === 'yearly' ? 'yearly' : 'monthly') : ''} · cancel anytime</span></div><b>${esc(money(r.amount, r.currency))}</b></div></div>
     <div class="total"><span>Total paid</span><span>${esc(money(r.amount, r.currency))}</span></div>
@@ -194,9 +196,10 @@ function paid(r) {
       ${r.txnId && r.paymentId && r.txnId !== r.paymentId ? `<dt>Payment ID</dt><dd class="txn">${esc(r.paymentId)}</dd>` : ''}
       <dt>Paid with</dt><dd>${esc((r.gateway === 'stripe' ? 'Stripe' : 'Razorpay') + (r.method ? ' · ' + r.method : ''))}</dd>
       <dt>Status</dt><dd style="color:var(--ok);font-weight:700">Paid</dd></dl></div>
-    <p class="fine">This is a payment receipt from Red Flag Homes Network for your Bella subscription. Keep it for your records.</p>`;
+    <p class="fine">This invoice confirms your Bella subscription payment from Red Flag Homes Network. Quote the transaction ID when you contact support at <a href="mailto:hello@redflaghomes.in">hello@redflaghomes.in</a>.</p>`;
   document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(b.dataset.copy).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1500); }); }));
   $('#step-email').textContent = r.email || 'your email';
+  $('#paid-mail').href = 'mailto:' + SUPPORT_EMAIL + '?subject=' + encodeURIComponent('Bella payment ' + (r.txnId || r.paymentId)) + '&body=' + encodeURIComponent('Transaction ID: ' + (r.txnId || r.paymentId) + '\nInvoice: ' + (r.receiptNo || '') + '\nEmail: ' + (r.email || ''));
   $('#paid-wa').href = wa('Hi Red Flag, I just bought ' + item + '. Transaction ID: ' + (r.txnId || r.paymentId) + '.');
   if (r.account && r.account.email && !r.account.error) {
     $('#account').hidden = false;
