@@ -14,7 +14,7 @@ In the Express server file, find the existing Red Flag pages block. It starts wi
 // HTML Google receives, plus /sitemap.xml and /robots.txt.
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit; to update the pages, only change RF_VERSION.
-const RF_VERSION = '8d519e1cb0ae82ac3940363d94ac7c373fa7b73f';
+const RF_VERSION = 'e8bdc0b1b577fe11910c8c99a8df3f1b2fd67b89';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_SITE = 'https://redflaghomes.in';
 const RF_PAGES = [
