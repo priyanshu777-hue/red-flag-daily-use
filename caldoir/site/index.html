@@ -216,7 +216,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   const lerp = (a, b, t) => a + (b - a) * t;
 
   /* The show: 3D bottle first, then the film. Scroll lengths in screen heights. */
-  const SCREENS_ANIM = 7, SCREENS_FILM = 5.5, BLEND = 0.5;
+  const SCREENS_ANIM = 9, SCREENS_FILM = 5.5, BLEND = 0.5;
   const TOTAL = SCREENS_ANIM + BLEND + SCREENS_FILM;
   const END_ANIM = SCREENS_ANIM / TOTAL, START_FILM = END_ANIM + BLEND / TOTAL;
   const show = $('story');
@@ -259,8 +259,8 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
     return { start, paint, resize };
   }
 
-  // the frame animation: the earlier stills joined with generated in-between frames
-  const anim = player({ canvasId: 'anim-canvas', count: 156, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.jpg` });
+  // the frame animation: 24 fps with a 180° shutter (1/48 s motion blur), built from the stills and generated in-betweens
+  const anim = player({ canvasId: 'anim-canvas', count: 301, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.jpg` });
 
   // the bottle film, with its three lines of copy
   const film = (() => {
@@ -280,7 +280,7 @@ body.drawer-open .scrim { opacity: 1; visibility: visible; transition: opacity .
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(show);
   function frame() {
-    current += (target - current) * (reduce ? 1 : 0.12);
+    current += (target - current) * (reduce ? 1 : 0.09);   // a soft follow, so the frames glide rather than jump with the wheel
     if (Math.abs(target - current) < 0.00005) current = target;
     if (visible) {
       const p = current;
