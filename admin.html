@@ -777,18 +777,20 @@ function leads() {
 }
 
 /* ===================== Site health ===================== */
-const PAGES = [['/', 'Home page'], ['/franchise', 'Franchise page'], ['/bella/', 'Bella page'], ['/form-handler.js', 'Form handler script'], ['/firebase-client.js', 'Sign-in script'], ['/firebase-applet-config.json', 'Firebase config'], ['/manifest.json', 'App manifest'], ['/transitions.js', 'Page transitions']];
+const PAGES = [['/', 'Home page'], ['/franchise', 'Franchise page'], ['/bella/', 'Bella page'], ['/form-handler.js', 'Form handler script'], ['/firebase-client.js', 'Sign-in script'], ['/firebase-applet-config.json', 'Firebase config'], ['/manifest.json', 'App manifest'], ['/transitions.js', 'Page transitions'], ['/privacy', 'Privacy, Terms and Cancellation'], ['/signin', 'Sign-in page'], ['/robots.txt', 'Robots file'], ['/.well-known/security.txt', 'Security contact file']];
 async function runHealth() {
   const base = S.fb || location.hostname.endsWith('redflaghomes.in') ? '' : CONFIG.site; // same site when the admin is served from it
-  S.health = { running: true, items: PAGES.map(([p, n]) => ({ p, n, st: 'wait' })), scan: [] }; render();
-  const texts = {};
+  S.health = { running: true, items: PAGES.map(([p, n]) => ({ p, n, st: 'wait' })), scan: [], sec: [] }; render();
+  const texts = {}, heads = {};
   await Promise.all(S.health.items.map(async it => {
     const t0 = performance.now();
     try {
-      const r = await fetch(base + it.p, { cache: 'no-store' }); const txt = await r.text(); texts[it.p] = txt;
+      const r = await fetch(base + it.p, { cache: 'no-store' }); const txt = await r.text(); texts[it.p] = txt; heads[it.p] = r.headers;
       const ms = Math.round(performance.now() - t0), kb = Math.round(txt.length / 1024);
       it.st = !r.ok ? 'fail' : ms > 2500 ? 'warn' : 'ok'; it.meta = r.status + ' · ' + ms + ' ms · ' + kb + ' KB';
       if (it.p === '/bella/' && r.ok && !/Bella by Red Flag/i.test(txt)) { it.st = 'fail'; it.note = 'Loads, but it is not the Bella page (the site is showing another page at /bella/).'; }
+      const want = { '/privacy': [/Privacy Policy[\s\S]*Cancellation/i, 'Loads, but it is not the legal page yet (the site shows another page here).'], '/signin': [/Continue with Apple/i, 'Loads, but it is not the sign-in page yet (the site shows another page here).'], '/robots.txt': [/User-agent/i, 'Loads, but it is not a robots file.'], '/.well-known/security.txt': [/Contact:/i, 'Loads, but it is not a security contact file.'] }[it.p];
+      if (want && r.ok && !want[0].test(txt)) { it.st = 'fail'; it.note = want[1]; }
       if (it.p === '/franchise' && r.ok && !/franchise|outpost/i.test(txt)) { it.st = 'warn'; it.note = 'Loads, but does not look like the franchise page.'; }
     } catch (e) { it.st = 'wait'; it.meta = 'not checked'; it.note = 'Your browser blocked this check here. Open the admin on redflaghomes.in/admin to check it.'; }
     render();
@@ -810,7 +812,27 @@ async function runHealth() {
   }
   const ep = (texts['/form-handler.js'] || '').match(/https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec/);
   scan.push(ep ? ['ok', 'Form endpoint configured', 'Website forms post to your Google Apps Script, with a WhatsApp fallback.'] : ['wait', 'Form endpoint', 'Could not read /form-handler.js from here.']);
+  S.health.sec = securityChecks(heads, texts);
   S.health.scan = scan; S.health.running = false; S.health.at = new Date().toISOString(); render();
+}
+// Security headers and files. Browsers can't see the SSL certificate itself, so that check links to SSL Labs.
+function securityChecks(heads, texts) {
+  const h = heads['/'];
+  if (!h) return [['wait', 'Security checks', 'Open the admin on redflaghomes.in/admin to check the live security settings.']];
+  const v = (n) => h.get(n) || '', out = [];
+  out.push(location.protocol === 'https:' ? ['ok', 'HTTPS', 'This page is loaded over a secure connection.'] : ['fail', 'HTTPS', 'This page is not on https.']);
+  const hsts = v('strict-transport-security'), age = +((hsts.match(/max-age=(\d+)/) || [])[1] || 0);
+  out.push(age >= 15552000 ? ['ok', 'HSTS', hsts] : hsts ? ['warn', 'HSTS', 'Set, but max-age is short: ' + hsts] : ['fail', 'HSTS', 'Missing. Browsers may still try http:// first.']);
+  out.push(v('x-content-type-options').toLowerCase() === 'nosniff' ? ['ok', 'No content sniffing', 'X-Content-Type-Options: nosniff'] : ['fail', 'No content sniffing', 'X-Content-Type-Options is missing.']);
+  out.push(v('x-frame-options') || /frame-ancestors/i.test(v('content-security-policy')) ? ['ok', 'Clickjacking protection', v('x-frame-options') || 'frame-ancestors set'] : ['fail', 'Clickjacking protection', 'No X-Frame-Options or frame-ancestors. Other sites could frame your pages.']);
+  out.push(v('referrer-policy') ? ['ok', 'Referrer policy', v('referrer-policy')] : ['warn', 'Referrer policy', 'Missing.']);
+  out.push(v('permissions-policy') ? ['ok', 'Permissions policy', 'Camera, microphone and location are switched off for the site.'] : ['warn', 'Permissions policy', 'Missing.']);
+  out.push(v('x-powered-by') ? ['warn', 'Server name hidden', 'The site announces "' + v('x-powered-by') + '". Hide it so attackers learn less.'] : ['ok', 'Server name hidden', 'No X-Powered-By header.']);
+  const rb = texts['/robots.txt'] || '';
+  out.push(/Disallow:\s*\/admin/i.test(rb) ? ['ok', 'Admin hidden from search', 'robots.txt blocks /admin.'] : ['warn', 'Admin hidden from search', 'robots.txt does not block /admin.']);
+  out.push(/Contact:/i.test(texts['/.well-known/security.txt'] || '') ? ['ok', 'Security contact', '/.well-known/security.txt is published.'] : ['warn', 'Security contact', '/.well-known/security.txt is missing.']);
+  out.push(['wait', 'SSL certificate', 'Browsers can\'t read the certificate. Once a month, test it at ssllabs.com/ssltest (aim for A) and the headers at securityheaders.com.']);
+  return out;
 }
 function health() {
   const h = S.health;
@@ -820,7 +842,8 @@ function health() {
     ${h ? `<div class="grid two">
       <section class="card"><div class="card-head"><h2>Pages and files</h2></div><ul class="checks">${h.items.map(it => `<li class="${it.st}">${CHECK[it.st]}<div><b>${esc(it.n)}</b><small>${esc(it.p)}${it.note ? ' · ' + esc(it.note) : ''}</small></div><span class="meta">${esc(it.meta || '…')}</span></li>`).join('')}</ul></section>
       <section class="card"><div class="card-head"><h2>Content checks</h2></div>${h.scan.length ? `<ul class="checks">${h.scan.map(([st, t, d]) => `<li class="${st}">${CHECK[st]}<div><b>${esc(t)}</b><small>${esc(d)}</small></div><span></span></li>`).join('')}</ul>` : '<p class="empty">Waiting for pages…</p>'}</section>
-    </div>` : `<section class="card empty">Checks the home, franchise and Bella pages, the scripts the forms depend on, and scans for placeholder links, missing alt text and SEO basics.</section>`}`;
+      <section class="card"><div class="card-head"><h2>Security</h2></div>${h.sec && h.sec.length ? `<ul class="checks">${h.sec.map(([st, t, d]) => `<li class="${st}">${CHECK[st]}<div><b>${esc(t)}</b><small>${esc(d)}</small></div><span></span></li>`).join('')}</ul>` : '<p class="empty">Waiting for pages…</p>'}</section>
+    </div>` : `<section class="card empty">Checks the home, franchise and Bella pages, the scripts the forms depend on, scans for placeholder links, missing alt text and SEO basics, and checks the site's security settings.</section>`}`;
   $('#run').addEventListener('click', runHealth);
 }
 
