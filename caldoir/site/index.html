@@ -149,23 +149,62 @@ img { display: block; }
 .pill:active { transform: scale(.97); }
 .pill small { font-size: 10px; letter-spacing: .32em; margin-right: -.32em; text-transform: uppercase; font-weight: 500; opacity: .75; }
 .pill b { font-weight: 400; font-size: 18px; }
-.form-wrap { width: 100%; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s var(--ease-out); }
-.form-wrap.open { grid-template-rows: 1fr; }
-.form-wrap > div { overflow: hidden; }
-form { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; text-align: left; }
-label { font-size: 14px; color: var(--mist); }
-.field { display: flex; gap: 10px; flex-wrap: wrap; }
-.field input { flex: 1 1 220px; min-width: 0; min-height: 52px; padding: 0 22px; background: rgba(28,12,12,.5); color: var(--bone); border: 1px solid rgba(156,160,167,.4); border-radius: 999px; font: inherit; font-size: 16px; }
-.field input:focus { outline: none; border-color: var(--mist); }
-.field button { flex: 1 0 auto; min-height: 52px; padding: 0 26px; border-radius: 999px; cursor: pointer; background: var(--bone); color: var(--stage); border: 0; font-size: 15px; }
-.status { margin: 0; font-size: 14px; color: var(--mist); min-height: 1.6em; }
 
 footer { padding: 28px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 28px); display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: center; justify-content: space-between; border-top: 1px solid rgba(156,160,167,.12); font-size: 13px; color: var(--slate); }
 footer svg { width: 110px; height: auto; color: var(--mist); display: block; }
 footer nav { display: flex; gap: 0 22px; flex-wrap: wrap; }
 footer a { color: var(--steel); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
 
-bodybody
+
+/* ---------- reservation page ---------- */
+.rv { position: fixed; inset: 0; z-index: 30; overflow-y: auto; overscroll-behavior: contain;
+  background: radial-gradient(120% 70% at 85% 0%, #2c1212 0%, var(--stage) 60%);
+  opacity: 0; transform: translateY(24px); transition: opacity .35s var(--ease-out), transform .45s var(--ease-out); }
+.rv.open { opacity: 1; transform: none; }
+.rv-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gutter) 14px; background: linear-gradient(180deg, rgba(28,12,12,.95), rgba(28,12,12,0)); }
+.rv-mark svg { display: block; width: 116px; height: auto; color: var(--bone); }
+.rv-close { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--bone);
+  background: rgba(236,237,239,.08); border: 1px solid rgba(236,237,239,.22); }
+.rv-close svg { width: 18px; height: 18px; }
+.rv-body { max-width: 600px; padding: clamp(24px, 6vh, 64px) var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 72px); margin: 0 auto 0 clamp(0px, 8vw, 140px); }
+.rv h2 { margin: 0 0 20px; font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 10vw, 92px); line-height: .98; color: var(--bone); text-wrap: balance; }
+.rv-lede { margin: 0; font-size: 18px; line-height: 1.55; color: var(--steel); max-width: 30em; }
+.rv-lede.small { font-size: 16px; margin-top: 18px; }
+#rv-form { margin-top: clamp(36px, 7vh, 64px); display: flex; flex-direction: column; gap: 30px; }
+.f { display: flex; flex-direction: column; gap: 6px; }
+.f label { font-size: 17px; color: var(--bone); font-weight: 400; }
+.req { color: #D46A6A; margin-left: 3px; }
+.f input, .phone select { font: inherit; font-size: 18px; color: var(--bone); background: transparent; border: 0; border-bottom: 1px solid rgba(156,160,167,.28); border-radius: 0; padding: 12px 0; min-height: 52px; width: 100%; }
+.f input::placeholder { color: #6f6a6a; }
+.f input:focus, .phone select:focus { outline: none; border-bottom-color: var(--bone); }
+.f input[aria-invalid="true"] { border-bottom-color: #D46A6A; }
+.phone { display: flex; align-items: stretch; gap: 14px; }
+.phone select { flex: 0 0 auto; width: auto; padding: 0 30px 0 14px; border: 0; border-radius: 10px; background: rgba(236,237,239,.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%239CA0A7' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat right 10px center / 12px; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.phone select option { color: #1C0C0C; }
+.phone input { flex: 1 1 auto; min-width: 0; }
+.err { margin: 0; min-height: 1.2em; font-size: 14px; color: #E59A9A; }
+.hint { margin: 0; font-size: 14px; color: var(--slate); line-height: 1.5; }
+.consent { position: relative; display: flex; gap: 14px; align-items: flex-start; font-size: 16px; line-height: 1.5; color: var(--body); cursor: pointer; }
+.consent input { position: absolute; opacity: 0; width: 24px; height: 24px; margin: 0; }
+.consent .box { flex: 0 0 24px; height: 24px; margin-top: 2px; border-radius: 6px; border: 1px solid rgba(156,160,167,.55); display: grid; place-items: center; color: transparent; transition: background .15s var(--ease-out), color .15s var(--ease-out); }
+.consent .box svg { width: 15px; height: 15px; }
+.consent input:checked + .box { background: var(--bone); border-color: var(--bone); color: var(--stage); }
+.consent input:focus-visible + .box { outline: 1px solid var(--mist); outline-offset: 3px; }
+.consent a { color: var(--bone); }
+.submit { align-self: flex-start; display: inline-flex; align-items: center; justify-content: center; min-width: 180px; min-height: 56px; padding: 0 40px; margin-top: 10px;
+  border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-size: 17px; font-weight: 400; color: var(--bone); text-decoration: none;
+  background: linear-gradient(100deg, #8A3434 0%, #662424 45%, #3E1414 100%); box-shadow: 0 0 0 1px rgba(156,160,167,.25), 0 18px 40px -18px rgba(102,36,36,.8);
+  transition: transform .16s var(--ease-out); }
+.submit:active { transform: scale(.97); }
+.submit.pay { margin-top: 28px; }
+.big-price { margin-top: 18px; height: clamp(84px, 16vw, 120px); display: flex; align-items: center; }
+.big-price canvas { height: 100%; width: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.big-price b { font-family: var(--serif); font-weight: 400; font-size: clamp(72px, 15vw, 112px); line-height: 1; color: var(--bone); }
+.confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+body.rv-open { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .rv { transition: opacity .2s ease; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .chapter { transform: none; transition: opacity .2s ease; }
   .cue i { animation: none; }
@@ -177,7 +216,7 @@ bodybody
 <header class="top">
   <span aria-hidden="true"></span>
   <a class="brand" href="#story" aria-label="Caldoir, back to the start"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="60 -714 7165 728"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292ZM1539.0 -714 1835.0 -6H1750.0L1519.0 -619ZM1324.0 -73Q1317.0 -53 1322.0 -39.0Q1327.0 -25 1338.5 -17.5Q1350.0 -10 1362.0 -10H1371.0V0H1170.0V-10Q1170.0 -10 1174.5 -10.0Q1179.0 -10 1179.0 -10Q1202.0 -10 1226.5 -24.5Q1251.0 -39 1267.0 -73ZM1539.0 -714 1548.0 -644 1297.0 -3H1237.0L1493.0 -611Q1493.0 -611 1498.5 -623.5Q1504.0 -636 1511.5 -654.0Q1519.0 -672 1524.5 -689.0Q1530.0 -706 1530.0 -714ZM1680.0 -273V-243H1367.0V-273ZM1725.0 -73H1807.0Q1822.0 -39 1847.0 -24.5Q1872.0 -10 1895.0 -10Q1895.0 -10 1899.0 -10.0Q1903.0 -10 1903.0 -10V0H1678.0V-10H1687.0Q1706.0 -10 1721.0 -26.5Q1736.0 -43 1725.0 -73ZM2514.0 -700V0H2449.0V-700ZM2784.0 -31V0H2511.0V-31ZM2845.0 -162 2787.0 0H2621.0L2657.0 -31Q2710.0 -31 2743.5 -47.5Q2777.0 -64 2798.0 -94.0Q2819.0 -124 2835.0 -162ZM2452.0 -73V0H2372.0V-10Q2372.0 -10 2378.5 -10.0Q2385.0 -10 2385.0 -10Q2411.0 -10 2429.5 -28.5Q2448.0 -47 2449.0 -73ZM2452.0 -627H2449.0Q2448.0 -653 2429.5 -671.5Q2411.0 -690 2385.0 -690Q2385.0 -690 2378.5 -690.0Q2372.0 -690 2372.0 -690V-700H2452.0ZM2511.0 -627V-700H2591.0V-690Q2590.0 -690 2584.0 -690.0Q2578.0 -690 2578.0 -690Q2552.0 -690 2533.5 -671.5Q2515.0 -653 2514.0 -627ZM3693.0 -700Q3800.0 -700 3880.5 -656.5Q3961.0 -613 4006.5 -534.0Q4052.0 -455 4052.0 -350Q4052.0 -245 4006.5 -166.5Q3961.0 -88 3880.5 -44.0Q3800.0 0 3693.0 0H3479.0L3478.0 -30Q3478.0 -30 3499.5 -30.0Q3521.0 -30 3553.5 -30.0Q3586.0 -30 3618.0 -30.0Q3650.0 -30 3671.5 -30.0Q3693.0 -30 3693.0 -30Q3779.0 -30 3842.5 -70.0Q3906.0 -110 3941.5 -182.0Q3977.0 -254 3977.0 -350Q3977.0 -446 3941.5 -518.0Q3906.0 -590 3842.0 -630.0Q3778.0 -670 3693.0 -670Q3693.0 -670 3670.5 -670.0Q3648.0 -670 3614.5 -670.0Q3581.0 -670 3547.5 -670.0Q3514.0 -670 3491.0 -670.0Q3468.0 -670 3468.0 -670V-700ZM3496.0 -700V0H3431.0V-700ZM3434.0 -73V0H3354.0V-10Q3354.0 -10 3360.5 -10.0Q3367.0 -10 3367.0 -10Q3393.0 -10 3411.5 -28.5Q3430.0 -47 3431.0 -73ZM3434.0 -627H3431.0Q3431.0 -653 3412.0 -671.5Q3393.0 -690 3367.0 -690Q3367.0 -690 3361.0 -690.0Q3355.0 -690 3355.0 -690L3354.0 -700H3434.0ZM4950.0 -714Q5057.0 -714 5138.0 -668.5Q5219.0 -623 5264.5 -541.0Q5310.0 -459 5310.0 -350Q5310.0 -241 5264.5 -159.0Q5219.0 -77 5138.0 -31.5Q5057.0 14 4950.0 14Q4844.0 14 4763.0 -31.5Q4682.0 -77 4636.5 -159.0Q4591.0 -241 4591.0 -350Q4591.0 -459 4636.5 -541.0Q4682.0 -623 4763.0 -668.5Q4844.0 -714 4950.0 -714ZM4950.0 -16Q5035.0 -16 5098.5 -58.0Q5162.0 -100 5197.5 -175.0Q5233.0 -250 5233.0 -350Q5233.0 -450 5197.5 -525.0Q5162.0 -600 5098.5 -642.0Q5035.0 -684 4950.0 -684Q4866.0 -684 4802.5 -642.0Q4739.0 -600 4703.5 -525.0Q4668.0 -450 4668.0 -350Q4668.0 -250 4703.5 -175.0Q4739.0 -100 4802.5 -58.0Q4866.0 -16 4950.0 -16ZM5981.0 -700V0H5916.0V-700ZM5919.0 -73V0H5839.0V-10Q5839.0 -10 5845.5 -10.0Q5852.0 -10 5852.0 -10Q5878.0 -10 5896.5 -28.5Q5915.0 -47 5916.0 -73ZM5919.0 -627H5916.0Q5915.0 -653 5896.5 -671.5Q5878.0 -690 5852.0 -690Q5852.0 -690 5845.5 -690.0Q5839.0 -690 5839.0 -690V-700H5919.0ZM5978.0 -73H5981.0Q5982.0 -47 6000.5 -28.5Q6019.0 -10 6045.0 -10Q6045.0 -10 6051.0 -10.0Q6057.0 -10 6058.0 -10V0H5978.0ZM5978.0 -627V-700H6058.0V-690Q6057.0 -690 6051.0 -690.0Q6045.0 -690 6045.0 -690Q6019.0 -690 6000.5 -671.5Q5982.0 -653 5981.0 -627ZM6726.0 -700H6867.0Q6912.0 -700 6948.5 -687.0Q6985.0 -674 7010.0 -649.5Q7035.0 -625 7048.5 -590.5Q7062.0 -556 7062.0 -512Q7062.0 -464 7039.5 -420.0Q7017.0 -376 6978.5 -348.5Q6940.0 -321 6892.0 -321Q6909.0 -314 6929.0 -292.5Q6949.0 -271 6964.0 -251Q6964.0 -251 6977.5 -231.5Q6991.0 -212 7011.5 -184.0Q7032.0 -156 7053.0 -129.0Q7074.0 -102 7089.0 -86Q7109.0 -64 7129.0 -47.0Q7149.0 -30 7172.5 -20.0Q7196.0 -10 7225.0 -10V0H7170.0Q7124.0 0 7090.5 -14.0Q7057.0 -28 7034.0 -48.5Q7011.0 -69 6995.0 -88Q6992.0 -92 6978.5 -111.0Q6965.0 -130 6946.5 -156.5Q6928.0 -183 6910.0 -209.0Q6892.0 -235 6879.0 -253.5Q6866.0 -272 6864.0 -275Q6845.0 -300 6822.0 -321.0Q6799.0 -342 6772.0 -342V-352Q6772.0 -352 6787.5 -351.5Q6803.0 -351 6825.0 -352Q6851.0 -353 6882.0 -360.0Q6913.0 -367 6940.0 -389.0Q6967.0 -411 6981.0 -456Q6984.0 -467 6986.0 -483.5Q6988.0 -500 6987.0 -516Q6986.0 -584 6952.5 -624.5Q6919.0 -665 6863.0 -668Q6835.0 -670 6805.5 -669.5Q6776.0 -669 6756.0 -669.0Q6736.0 -669 6736.0 -669Q6736.0 -670 6733.5 -677.5Q6731.0 -685 6728.5 -692.5Q6726.0 -700 6726.0 -700ZM6739.0 -700V0H6674.0V-700ZM6677.0 -73V0H6597.0V-10Q6597.0 -10 6603.5 -10.0Q6610.0 -10 6610.0 -10Q6636.0 -10 6654.5 -28.5Q6673.0 -47 6674.0 -73ZM6677.0 -627H6674.0Q6673.0 -653 6654.5 -671.5Q6636.0 -690 6610.0 -690Q6610.0 -690 6603.5 -690.0Q6597.0 -690 6597.0 -690V-700H6677.0ZM6736.0 -73H6739.0Q6739.0 -47 6758.0 -28.5Q6777.0 -10 6803.0 -10Q6803.0 -10 6809.0 -10.0Q6815.0 -10 6815.0 -10V0H6736.0Z"/></svg></a>
-  <a class="reserve-link" href="#reserve">Reserve</a>
+  <a class="reserve-link" href="#reserve" data-open-reserve>Reserve</a>
 </header>
 
 <nav class="rail-nav" aria-label="Sections">
@@ -185,10 +224,10 @@ bodybody
   <div class="dock glass">
     <a href="#story" data-go="top" data-sec="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V18a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z"/><path d="M9.5 15.2c1.4 1 3.6 1 5 0"/></svg><span class="tip">The elixir</span><span class="sr-only">The elixir</span></a>
     <a href="#story" data-go="film" data-sec="film" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3.5"/><path d="m10.3 9.4 4.4 2.6-4.4 2.6z"/></svg><span class="tip">The film</span><span class="sr-only">The film</span></a>
-    <a href="#reserve" data-sec="reserve" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8.5h12l-.8 10A2 2 0 0 1 15.2 20H8.8a2 2 0 0 1-2-1.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg><span class="tip">Reserve</span><span class="sr-only">Reserve</span></a>
+    <a href="#reserve" data-sec="reserve" data-open-reserve aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8.5h12l-.8 10A2 2 0 0 1 15.2 20H8.8a2 2 0 0 1-2-1.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg><span class="tip">Reserve</span><span class="sr-only">Reserve</span></a>
     <a href="#contact" data-sec="contact" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5c4.4 0 8 3 8 6.8S16.4 18 12 18c-1 0-2-.1-2.9-.4L5 19.5l1.2-3.4C4.8 14.9 4 13.2 4 11.3 4 7.5 7.6 4.5 12 4.5z"/><path d="M8.6 11.4h.01M12 11.4h.01M15.4 11.4h.01"/></svg><span class="tip">Contact</span><span class="sr-only">Contact</span></a>
   </div>
-  <a class="orb glass" href="#reserve" aria-label="The bottle: reserve yours"><img src="img/bottle-thumb.jpg" alt=""></a>
+  <a class="orb glass" href="#reserve" data-open-reserve aria-label="The bottle: reserve yours"><img src="img/bottle-thumb.jpg" alt=""></a>
 </nav>
 
 <main>
@@ -216,19 +255,7 @@ bodybody
       <p class="terms">Reserved by the collectors. Reserve your bottle with a
         <span class="price" id="price"><canvas id="price-px" width="96" height="28" aria-hidden="true"></canvas><span class="sr-only" id="price-sr">deposit amount, shown once you join the list,</span></span>
         deposit.</p>
-      <button class="pill" id="pill" type="button" aria-expanded="false" aria-controls="form-wrap"><small>Reserve for</small><b>Early access</b></button>
-      <div class="form-wrap" id="form-wrap">
-        <div>
-          <form id="waitlist" novalidate>
-            <label for="contact">Your email</label>
-            <div class="field">
-              <input id="contact" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@domain.com">
-              <button type="submit">Join the list</button>
-            </div>
-            <p class="status" id="status" role="status"></p>
-          </form>
-        </div>
-      </div>
+      <button class="pill" id="pill" type="button" data-open-reserve aria-haspopup="dialog"><small>Reserve for</small><b>Early access</b></button>
     </div>
   </section>
 </main>
@@ -237,12 +264,82 @@ bodybody
   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="60 -714 7165 728"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292ZM1539.0 -714 1835.0 -6H1750.0L1519.0 -619ZM1324.0 -73Q1317.0 -53 1322.0 -39.0Q1327.0 -25 1338.5 -17.5Q1350.0 -10 1362.0 -10H1371.0V0H1170.0V-10Q1170.0 -10 1174.5 -10.0Q1179.0 -10 1179.0 -10Q1202.0 -10 1226.5 -24.5Q1251.0 -39 1267.0 -73ZM1539.0 -714 1548.0 -644 1297.0 -3H1237.0L1493.0 -611Q1493.0 -611 1498.5 -623.5Q1504.0 -636 1511.5 -654.0Q1519.0 -672 1524.5 -689.0Q1530.0 -706 1530.0 -714ZM1680.0 -273V-243H1367.0V-273ZM1725.0 -73H1807.0Q1822.0 -39 1847.0 -24.5Q1872.0 -10 1895.0 -10Q1895.0 -10 1899.0 -10.0Q1903.0 -10 1903.0 -10V0H1678.0V-10H1687.0Q1706.0 -10 1721.0 -26.5Q1736.0 -43 1725.0 -73ZM2514.0 -700V0H2449.0V-700ZM2784.0 -31V0H2511.0V-31ZM2845.0 -162 2787.0 0H2621.0L2657.0 -31Q2710.0 -31 2743.5 -47.5Q2777.0 -64 2798.0 -94.0Q2819.0 -124 2835.0 -162ZM2452.0 -73V0H2372.0V-10Q2372.0 -10 2378.5 -10.0Q2385.0 -10 2385.0 -10Q2411.0 -10 2429.5 -28.5Q2448.0 -47 2449.0 -73ZM2452.0 -627H2449.0Q2448.0 -653 2429.5 -671.5Q2411.0 -690 2385.0 -690Q2385.0 -690 2378.5 -690.0Q2372.0 -690 2372.0 -690V-700H2452.0ZM2511.0 -627V-700H2591.0V-690Q2590.0 -690 2584.0 -690.0Q2578.0 -690 2578.0 -690Q2552.0 -690 2533.5 -671.5Q2515.0 -653 2514.0 -627ZM3693.0 -700Q3800.0 -700 3880.5 -656.5Q3961.0 -613 4006.5 -534.0Q4052.0 -455 4052.0 -350Q4052.0 -245 4006.5 -166.5Q3961.0 -88 3880.5 -44.0Q3800.0 0 3693.0 0H3479.0L3478.0 -30Q3478.0 -30 3499.5 -30.0Q3521.0 -30 3553.5 -30.0Q3586.0 -30 3618.0 -30.0Q3650.0 -30 3671.5 -30.0Q3693.0 -30 3693.0 -30Q3779.0 -30 3842.5 -70.0Q3906.0 -110 3941.5 -182.0Q3977.0 -254 3977.0 -350Q3977.0 -446 3941.5 -518.0Q3906.0 -590 3842.0 -630.0Q3778.0 -670 3693.0 -670Q3693.0 -670 3670.5 -670.0Q3648.0 -670 3614.5 -670.0Q3581.0 -670 3547.5 -670.0Q3514.0 -670 3491.0 -670.0Q3468.0 -670 3468.0 -670V-700ZM3496.0 -700V0H3431.0V-700ZM3434.0 -73V0H3354.0V-10Q3354.0 -10 3360.5 -10.0Q3367.0 -10 3367.0 -10Q3393.0 -10 3411.5 -28.5Q3430.0 -47 3431.0 -73ZM3434.0 -627H3431.0Q3431.0 -653 3412.0 -671.5Q3393.0 -690 3367.0 -690Q3367.0 -690 3361.0 -690.0Q3355.0 -690 3355.0 -690L3354.0 -700H3434.0ZM4950.0 -714Q5057.0 -714 5138.0 -668.5Q5219.0 -623 5264.5 -541.0Q5310.0 -459 5310.0 -350Q5310.0 -241 5264.5 -159.0Q5219.0 -77 5138.0 -31.5Q5057.0 14 4950.0 14Q4844.0 14 4763.0 -31.5Q4682.0 -77 4636.5 -159.0Q4591.0 -241 4591.0 -350Q4591.0 -459 4636.5 -541.0Q4682.0 -623 4763.0 -668.5Q4844.0 -714 4950.0 -714ZM4950.0 -16Q5035.0 -16 5098.5 -58.0Q5162.0 -100 5197.5 -175.0Q5233.0 -250 5233.0 -350Q5233.0 -450 5197.5 -525.0Q5162.0 -600 5098.5 -642.0Q5035.0 -684 4950.0 -684Q4866.0 -684 4802.5 -642.0Q4739.0 -600 4703.5 -525.0Q4668.0 -450 4668.0 -350Q4668.0 -250 4703.5 -175.0Q4739.0 -100 4802.5 -58.0Q4866.0 -16 4950.0 -16ZM5981.0 -700V0H5916.0V-700ZM5919.0 -73V0H5839.0V-10Q5839.0 -10 5845.5 -10.0Q5852.0 -10 5852.0 -10Q5878.0 -10 5896.5 -28.5Q5915.0 -47 5916.0 -73ZM5919.0 -627H5916.0Q5915.0 -653 5896.5 -671.5Q5878.0 -690 5852.0 -690Q5852.0 -690 5845.5 -690.0Q5839.0 -690 5839.0 -690V-700H5919.0ZM5978.0 -73H5981.0Q5982.0 -47 6000.5 -28.5Q6019.0 -10 6045.0 -10Q6045.0 -10 6051.0 -10.0Q6057.0 -10 6058.0 -10V0H5978.0ZM5978.0 -627V-700H6058.0V-690Q6057.0 -690 6051.0 -690.0Q6045.0 -690 6045.0 -690Q6019.0 -690 6000.5 -671.5Q5982.0 -653 5981.0 -627ZM6726.0 -700H6867.0Q6912.0 -700 6948.5 -687.0Q6985.0 -674 7010.0 -649.5Q7035.0 -625 7048.5 -590.5Q7062.0 -556 7062.0 -512Q7062.0 -464 7039.5 -420.0Q7017.0 -376 6978.5 -348.5Q6940.0 -321 6892.0 -321Q6909.0 -314 6929.0 -292.5Q6949.0 -271 6964.0 -251Q6964.0 -251 6977.5 -231.5Q6991.0 -212 7011.5 -184.0Q7032.0 -156 7053.0 -129.0Q7074.0 -102 7089.0 -86Q7109.0 -64 7129.0 -47.0Q7149.0 -30 7172.5 -20.0Q7196.0 -10 7225.0 -10V0H7170.0Q7124.0 0 7090.5 -14.0Q7057.0 -28 7034.0 -48.5Q7011.0 -69 6995.0 -88Q6992.0 -92 6978.5 -111.0Q6965.0 -130 6946.5 -156.5Q6928.0 -183 6910.0 -209.0Q6892.0 -235 6879.0 -253.5Q6866.0 -272 6864.0 -275Q6845.0 -300 6822.0 -321.0Q6799.0 -342 6772.0 -342V-352Q6772.0 -352 6787.5 -351.5Q6803.0 -351 6825.0 -352Q6851.0 -353 6882.0 -360.0Q6913.0 -367 6940.0 -389.0Q6967.0 -411 6981.0 -456Q6984.0 -467 6986.0 -483.5Q6988.0 -500 6987.0 -516Q6986.0 -584 6952.5 -624.5Q6919.0 -665 6863.0 -668Q6835.0 -670 6805.5 -669.5Q6776.0 -669 6756.0 -669.0Q6736.0 -669 6736.0 -669Q6736.0 -670 6733.5 -677.5Q6731.0 -685 6728.5 -692.5Q6726.0 -700 6726.0 -700ZM6739.0 -700V0H6674.0V-700ZM6677.0 -73V0H6597.0V-10Q6597.0 -10 6603.5 -10.0Q6610.0 -10 6610.0 -10Q6636.0 -10 6654.5 -28.5Q6673.0 -47 6674.0 -73ZM6677.0 -627H6674.0Q6673.0 -653 6654.5 -671.5Q6636.0 -690 6610.0 -690Q6610.0 -690 6603.5 -690.0Q6597.0 -690 6597.0 -690V-700H6677.0ZM6736.0 -73H6739.0Q6739.0 -47 6758.0 -28.5Q6777.0 -10 6803.0 -10Q6803.0 -10 6809.0 -10.0Q6815.0 -10 6815.0 -10V0H6736.0Z"/></svg>
   <nav aria-label="Footer">
     <a href="#story">The elixir</a>
-    <a href="#reserve">Reserve</a>
+    <a href="#reserve" data-open-reserve>Reserve</a>
     <a href="#story">Instagram</a>
     <a href="#story">Privacy</a>
   </nav>
   <span>© 2026 [Company name]</span>
 </footer>
+
+<div class="rv" id="rv" role="dialog" aria-modal="true" aria-labelledby="rv-title" hidden>
+  <div class="rv-top">
+    <span class="rv-mark" aria-hidden="true"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="60 -714 7165 728"><path fill="currentColor" d="M710 -292 698 -135Q672 -92 632.5 -58.5Q593 -25 539.5 -5.5Q486 14 417 14Q313 13 232.0 -32.0Q151 -77 105.5 -158.5Q60 -240 60 -351Q60 -460 105.0 -541.5Q150 -623 231.5 -668.5Q313 -714 423 -714Q497 -714 556.5 -694.5Q616 -675 660 -646L680 -505H671Q649 -593 581.0 -638.5Q513 -684 423 -684Q335 -684 270.5 -642.5Q206 -601 170.5 -526.5Q135 -452 135 -352Q135 -252 170.5 -177.0Q206 -102 269.5 -60.0Q333 -18 417 -16Q488 -16 548.5 -42.5Q609 -69 650.0 -129.5Q691 -190 702 -292ZM1539.0 -714 1835.0 -6H1750.0L1519.0 -619ZM1324.0 -73Q1317.0 -53 1322.0 -39.0Q1327.0 -25 1338.5 -17.5Q1350.0 -10 1362.0 -10H1371.0V0H1170.0V-10Q1170.0 -10 1174.5 -10.0Q1179.0 -10 1179.0 -10Q1202.0 -10 1226.5 -24.5Q1251.0 -39 1267.0 -73ZM1539.0 -714 1548.0 -644 1297.0 -3H1237.0L1493.0 -611Q1493.0 -611 1498.5 -623.5Q1504.0 -636 1511.5 -654.0Q1519.0 -672 1524.5 -689.0Q1530.0 -706 1530.0 -714ZM1680.0 -273V-243H1367.0V-273ZM1725.0 -73H1807.0Q1822.0 -39 1847.0 -24.5Q1872.0 -10 1895.0 -10Q1895.0 -10 1899.0 -10.0Q1903.0 -10 1903.0 -10V0H1678.0V-10H1687.0Q1706.0 -10 1721.0 -26.5Q1736.0 -43 1725.0 -73ZM2514.0 -700V0H2449.0V-700ZM2784.0 -31V0H2511.0V-31ZM2845.0 -162 2787.0 0H2621.0L2657.0 -31Q2710.0 -31 2743.5 -47.5Q2777.0 -64 2798.0 -94.0Q2819.0 -124 2835.0 -162ZM2452.0 -73V0H2372.0V-10Q2372.0 -10 2378.5 -10.0Q2385.0 -10 2385.0 -10Q2411.0 -10 2429.5 -28.5Q2448.0 -47 2449.0 -73ZM2452.0 -627H2449.0Q2448.0 -653 2429.5 -671.5Q2411.0 -690 2385.0 -690Q2385.0 -690 2378.5 -690.0Q2372.0 -690 2372.0 -690V-700H2452.0ZM2511.0 -627V-700H2591.0V-690Q2590.0 -690 2584.0 -690.0Q2578.0 -690 2578.0 -690Q2552.0 -690 2533.5 -671.5Q2515.0 -653 2514.0 -627ZM3693.0 -700Q3800.0 -700 3880.5 -656.5Q3961.0 -613 4006.5 -534.0Q4052.0 -455 4052.0 -350Q4052.0 -245 4006.5 -166.5Q3961.0 -88 3880.5 -44.0Q3800.0 0 3693.0 0H3479.0L3478.0 -30Q3478.0 -30 3499.5 -30.0Q3521.0 -30 3553.5 -30.0Q3586.0 -30 3618.0 -30.0Q3650.0 -30 3671.5 -30.0Q3693.0 -30 3693.0 -30Q3779.0 -30 3842.5 -70.0Q3906.0 -110 3941.5 -182.0Q3977.0 -254 3977.0 -350Q3977.0 -446 3941.5 -518.0Q3906.0 -590 3842.0 -630.0Q3778.0 -670 3693.0 -670Q3693.0 -670 3670.5 -670.0Q3648.0 -670 3614.5 -670.0Q3581.0 -670 3547.5 -670.0Q3514.0 -670 3491.0 -670.0Q3468.0 -670 3468.0 -670V-700ZM3496.0 -700V0H3431.0V-700ZM3434.0 -73V0H3354.0V-10Q3354.0 -10 3360.5 -10.0Q3367.0 -10 3367.0 -10Q3393.0 -10 3411.5 -28.5Q3430.0 -47 3431.0 -73ZM3434.0 -627H3431.0Q3431.0 -653 3412.0 -671.5Q3393.0 -690 3367.0 -690Q3367.0 -690 3361.0 -690.0Q3355.0 -690 3355.0 -690L3354.0 -700H3434.0ZM4950.0 -714Q5057.0 -714 5138.0 -668.5Q5219.0 -623 5264.5 -541.0Q5310.0 -459 5310.0 -350Q5310.0 -241 5264.5 -159.0Q5219.0 -77 5138.0 -31.5Q5057.0 14 4950.0 14Q4844.0 14 4763.0 -31.5Q4682.0 -77 4636.5 -159.0Q4591.0 -241 4591.0 -350Q4591.0 -459 4636.5 -541.0Q4682.0 -623 4763.0 -668.5Q4844.0 -714 4950.0 -714ZM4950.0 -16Q5035.0 -16 5098.5 -58.0Q5162.0 -100 5197.5 -175.0Q5233.0 -250 5233.0 -350Q5233.0 -450 5197.5 -525.0Q5162.0 -600 5098.5 -642.0Q5035.0 -684 4950.0 -684Q4866.0 -684 4802.5 -642.0Q4739.0 -600 4703.5 -525.0Q4668.0 -450 4668.0 -350Q4668.0 -250 4703.5 -175.0Q4739.0 -100 4802.5 -58.0Q4866.0 -16 4950.0 -16ZM5981.0 -700V0H5916.0V-700ZM5919.0 -73V0H5839.0V-10Q5839.0 -10 5845.5 -10.0Q5852.0 -10 5852.0 -10Q5878.0 -10 5896.5 -28.5Q5915.0 -47 5916.0 -73ZM5919.0 -627H5916.0Q5915.0 -653 5896.5 -671.5Q5878.0 -690 5852.0 -690Q5852.0 -690 5845.5 -690.0Q5839.0 -690 5839.0 -690V-700H5919.0ZM5978.0 -73H5981.0Q5982.0 -47 6000.5 -28.5Q6019.0 -10 6045.0 -10Q6045.0 -10 6051.0 -10.0Q6057.0 -10 6058.0 -10V0H5978.0ZM5978.0 -627V-700H6058.0V-690Q6057.0 -690 6051.0 -690.0Q6045.0 -690 6045.0 -690Q6019.0 -690 6000.5 -671.5Q5982.0 -653 5981.0 -627ZM6726.0 -700H6867.0Q6912.0 -700 6948.5 -687.0Q6985.0 -674 7010.0 -649.5Q7035.0 -625 7048.5 -590.5Q7062.0 -556 7062.0 -512Q7062.0 -464 7039.5 -420.0Q7017.0 -376 6978.5 -348.5Q6940.0 -321 6892.0 -321Q6909.0 -314 6929.0 -292.5Q6949.0 -271 6964.0 -251Q6964.0 -251 6977.5 -231.5Q6991.0 -212 7011.5 -184.0Q7032.0 -156 7053.0 -129.0Q7074.0 -102 7089.0 -86Q7109.0 -64 7129.0 -47.0Q7149.0 -30 7172.5 -20.0Q7196.0 -10 7225.0 -10V0H7170.0Q7124.0 0 7090.5 -14.0Q7057.0 -28 7034.0 -48.5Q7011.0 -69 6995.0 -88Q6992.0 -92 6978.5 -111.0Q6965.0 -130 6946.5 -156.5Q6928.0 -183 6910.0 -209.0Q6892.0 -235 6879.0 -253.5Q6866.0 -272 6864.0 -275Q6845.0 -300 6822.0 -321.0Q6799.0 -342 6772.0 -342V-352Q6772.0 -352 6787.5 -351.5Q6803.0 -351 6825.0 -352Q6851.0 -353 6882.0 -360.0Q6913.0 -367 6940.0 -389.0Q6967.0 -411 6981.0 -456Q6984.0 -467 6986.0 -483.5Q6988.0 -500 6987.0 -516Q6986.0 -584 6952.5 -624.5Q6919.0 -665 6863.0 -668Q6835.0 -670 6805.5 -669.5Q6776.0 -669 6756.0 -669.0Q6736.0 -669 6736.0 -669Q6736.0 -670 6733.5 -677.5Q6731.0 -685 6728.5 -692.5Q6726.0 -700 6726.0 -700ZM6739.0 -700V0H6674.0V-700ZM6677.0 -73V0H6597.0V-10Q6597.0 -10 6603.5 -10.0Q6610.0 -10 6610.0 -10Q6636.0 -10 6654.5 -28.5Q6673.0 -47 6674.0 -73ZM6677.0 -627H6674.0Q6673.0 -653 6654.5 -671.5Q6636.0 -690 6610.0 -690Q6610.0 -690 6603.5 -690.0Q6597.0 -690 6597.0 -690V-700H6677.0ZM6736.0 -73H6739.0Q6739.0 -47 6758.0 -28.5Q6777.0 -10 6803.0 -10Q6803.0 -10 6809.0 -10.0Q6815.0 -10 6815.0 -10V0H6736.0Z"/></svg></span>
+    <button class="rv-close" id="rv-close" type="button" aria-label="Close reservation">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4.5 4.5l11 11M15.5 4.5l-11 11"/></svg>
+    </button>
+  </div>
+  <div class="rv-body">
+    <section id="rv-form-view">
+      <h2 id="rv-title">Be among the 333.</h2>
+      <p class="rv-lede">Caldoir Elixir opens for reservation soon. Join the allocation list for early access, and to hold one of 333 numbered bottles.</p>
+      <form id="rv-form" novalidate>
+        <div class="f">
+          <label for="rv-name">Name<span class="req" aria-hidden="true">*</span></label>
+          <input id="rv-name" name="name" type="text" autocomplete="name" placeholder="Your name here" required aria-describedby="e-name">
+          <p class="err" id="e-name" aria-live="polite"></p>
+        </div>
+        <div class="f">
+          <label for="rv-email">Email<span class="req" aria-hidden="true">*</span></label>
+          <input id="rv-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Your email here" required aria-describedby="e-email">
+          <p class="err" id="e-email" aria-live="polite"></p>
+        </div>
+        <div class="f">
+          <label for="rv-phone">Phone<span class="req" aria-hidden="true">*</span></label>
+          <div class="phone">
+            <select id="rv-cc" name="country_code" aria-label="Country code">
+              <option value="+91" aria-label="India +91">🇮🇳 +91</option>
+              <option value="+1" aria-label="United States +1">🇺🇸 +1</option>
+              <option value="+44" aria-label="United Kingdom +44">🇬🇧 +44</option>
+              <option value="+971" aria-label="United Arab Emirates +971">🇦🇪 +971</option>
+              <option value="+966" aria-label="Saudi Arabia +966">🇸🇦 +966</option>
+              <option value="+974" aria-label="Qatar +974">🇶🇦 +974</option>
+              <option value="+965" aria-label="Kuwait +965">🇰🇼 +965</option>
+              <option value="+65" aria-label="Singapore +65">🇸🇬 +65</option>
+              <option value="+852" aria-label="Hong Kong +852">🇭🇰 +852</option>
+              <option value="+61" aria-label="Australia +61">🇦🇺 +61</option>
+              <option value="+1" aria-label="Canada +1">🇨🇦 +1</option>
+              <option value="+33" aria-label="France +33">🇫🇷 +33</option>
+              <option value="+49" aria-label="Germany +49">🇩🇪 +49</option>
+              <option value="+41" aria-label="Switzerland +41">🇨🇭 +41</option>
+              <option value="+39" aria-label="Italy +39">🇮🇹 +39</option>
+              <option value="+81" aria-label="Japan +81">🇯🇵 +81</option>
+            </select>
+            <input id="rv-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Phone number" required aria-describedby="e-phone">
+          </div>
+          <p class="err" id="e-phone" aria-live="polite"></p>
+        </div>
+        <p class="hint">We will never spam or share your information with third parties.</p>
+        <label class="consent" for="rv-ok">
+          <input id="rv-ok" type="checkbox" name="consent" required aria-describedby="e-ok">
+          <span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg></span>
+          <span>I agree to Caldoir’s <a href="#contact">Terms of Use</a> and acknowledge the <a href="#contact">Privacy Policy</a>. I’d like to receive updates from Caldoir via WhatsApp and email.<span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <p class="err" id="e-ok" aria-live="polite"></p>
+        <button class="submit" type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section id="rv-done" hidden aria-live="polite">
+      <h2>You’re on the list<span id="rv-first"></span>.</h2>
+      <p class="rv-lede">Your reservation deposit:</p>
+      <div class="big-price" id="big-price"><canvas id="big-px" width="360" height="110" aria-hidden="true"></canvas></div>
+      <p class="rv-lede small">Pay it now to hold your numbered bottle before reservations open to everyone.</p>
+      <a class="submit pay" id="rv-pay" href="#" target="_blank" rel="noopener">Pay deposit</a>
+      <p class="hint" id="pay-note">Payment opens in a secure checkout in a new tab.</p>
+    </section>
+  </div>
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+</div>
 
 <script>
 (() => {
@@ -389,44 +486,120 @@ bodybody
     scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   }));
 
-  /* ================= reserve: the deposit stays pixelated until an email is given ================= */
+  /* ================= reserve: the deposit stays pixelated until someone joins the list ================= */
   const DEPOSIT = '$34.99';
-  const px = $('price-px'), pctx = px.getContext('2d');
-  function pixelate(block) {
-    const w = px.width, h = px.height, sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
-    const off = document.createElement('canvas'); off.width = sw; off.height = sh; const o = off.getContext('2d');
-    o.fillStyle = '#ECEDEF'; o.font = `500 ${sh * 0.82}px Jost, "Helvetica Neue", sans-serif`; o.textBaseline = 'middle'; o.textAlign = 'center';
-    o.fillText(DEPOSIT, sw / 2, sh / 2 + sh * 0.04);
-    pctx.clearRect(0, 0, w, h); pctx.imageSmoothingEnabled = false; pctx.drawImage(off, 0, 0, w, h);
+  // Your checkout link (Stripe, Razorpay, PayPal...). Until it is set, the Pay button explains that payment is not open yet.
+  const PAYMENT_LINK = '';
+  function pixelPrice(canvas, holder, font) {
+    const ctx = canvas.getContext('2d');
+    function draw(block) {
+      const w = canvas.width, h = canvas.height, sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
+      const off = document.createElement('canvas'); off.width = sw; off.height = sh; const o = off.getContext('2d');
+      o.fillStyle = '#ECEDEF'; o.font = `${font} ${sh * 0.8}px "Cormorant Garamond", Jost, Georgia, serif`; o.textBaseline = 'middle'; o.textAlign = 'left';
+      o.fillText(DEPOSIT, sw * 0.02, sh / 2 + sh * 0.04);
+      ctx.clearRect(0, 0, w, h); ctx.imageSmoothingEnabled = false; ctx.drawImage(off, 0, 0, w, h);
+    }
+    let shown = false;
+    draw(7); if (document.fonts) document.fonts.ready.then(() => { if (!shown) draw(7); });
+    function reveal(animate, done) {
+      if (shown) { done && done(); return; } shown = true;
+      const steps = animate && !reduce ? [6, 5, 4, 3, 2] : [];
+      let k = 0;
+      const tick = () => {
+        if (k < steps.length) { draw(steps[k++]); setTimeout(tick, 130); return; }
+        const b = document.createElement('b'); b.textContent = DEPOSIT; holder.replaceChildren(b); done && done();
+      };
+      tick();
+    }
+    return { reveal, redraw: draw };
   }
-  pixelate(7);
-  if (document.fonts) document.fonts.ready.then(() => { if (!revealed) pixelate(7); });
-  let revealed = false;
-  function reveal() {
-    if (revealed) return; revealed = true;
-    const steps = reduce ? [] : [6, 4, 3, 2];
-    let i = 0;
-    const tick = () => {
-      if (i < steps.length) { pixelate(steps[i++]); setTimeout(tick, 110); return; }
-      const b = document.createElement('b'); b.textContent = DEPOSIT; $('price').replaceChildren(b);
-    };
-    tick();
-  }
-  try { if (localStorage.getItem('caldoir-list') === '1') reveal(); } catch (e) {}
+  const smallPrice = pixelPrice($('price-px'), $('price'), '500');
+  const bigPrice = pixelPrice($('big-px'), $('big-price'), '400');
 
-  const pill = $('pill'), wrap = $('form-wrap');
-  function setForm(open, focus) { wrap.classList.toggle('open', open); pill.setAttribute('aria-expanded', String(open)); if (open && focus) setTimeout(() => $('contact').focus({ preventScroll: true }), 320); }
-  pill.onclick = () => setForm(!wrap.classList.contains('open'), true);
-  document.querySelectorAll('a[href="#reserve"]').forEach(a => a.addEventListener('click', () => setForm(true, false)));
-  $('waitlist').addEventListener('submit', e => {
+  // the popper: a burst of brass, oxblood and bone pieces from the price
+  function burst(x, y) {
+    if (reduce) return;
+    const c = $('confetti'), g = c.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2);
+    c.width = innerWidth * dpr; c.height = innerHeight * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const colors = ['#B08D57', '#E7C48B', '#8A3434', '#ECEDEF', '#9CA0A7', '#662424'];
+    const bits = Array.from({ length: 170 }, () => {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.15, v = 7 + Math.random() * 11;
+      return { x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: Math.random() * Math.PI, vr: (Math.random() - .5) * .4,
+               w: 5 + Math.random() * 7, h: 3 + Math.random() * 5, c: colors[(Math.random() * colors.length) | 0], round: Math.random() < .3 };
+    });
+    const t0 = performance.now();
+    (function frame(now) {
+      const t = (now - t0) / 1000;
+      g.clearRect(0, 0, innerWidth, innerHeight);
+      for (const b of bits) {
+        b.vx *= .985; b.vy = b.vy * .985 + .32; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+        g.globalAlpha = Math.max(0, 1 - Math.max(0, t - 1.6) / .8);
+        g.save(); g.translate(b.x, b.y); g.rotate(b.r); g.fillStyle = b.c;
+        if (b.round) { g.beginPath(); g.arc(0, 0, b.h / 2 + 1, 0, Math.PI * 2); g.fill(); } else g.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.abs(Math.cos(b.r * 2)) + 1);
+        g.restore();
+      }
+      if (t < 2.4) requestAnimationFrame(frame); else g.clearRect(0, 0, innerWidth, innerHeight);
+    })(t0);
+  }
+
+  // the reservation page
+  const rv = $('rv'), form = $('rv-form');
+  let opener = null;
+  function setPay() {
+    const pay = $('rv-pay');
+    pay.textContent = `Pay ${DEPOSIT} deposit`;
+    if (PAYMENT_LINK) pay.href = PAYMENT_LINK;
+    else pay.addEventListener('click', e => { e.preventDefault(); $('pay-note').textContent = 'Payment is not open yet. We will email you the moment it is.'; });
+  }
+  setPay();
+  function showDone(name, animate) {
+    $('rv-form-view').hidden = true; $('rv-done').hidden = false;
+    $('rv-first').textContent = name ? ', ' + name.split(/\s+/)[0] : '';
+    if (!animate) { bigPrice.reveal(false); return; }
+    bigPrice.redraw(9);
+    setTimeout(() => {
+      const r = $('big-price').getBoundingClientRect();
+      burst(r.left + Math.min(r.width, 260) / 2, r.top + r.height / 2);
+      bigPrice.reveal(true);
+    }, 450);
+  }
+  function openRv(e) {
+    if (e) e.preventDefault();
+    opener = document.activeElement;
+    rv.hidden = false; document.body.classList.add('rv-open');
+    requestAnimationFrame(() => rv.classList.add('open'));
+    let saved = null; try { saved = JSON.parse(localStorage.getItem('caldoir-list') || 'null'); } catch (err) {}
+    if (saved) showDone(saved.name, false);
+    setTimeout(() => (saved ? $('rv-pay') : $('rv-name')).focus({ preventScroll: true }), 350);
+  }
+  function closeRv() {
+    rv.classList.remove('open'); document.body.classList.remove('rv-open');
+    setTimeout(() => { rv.hidden = true; }, reduce ? 0 : 400);
+    if (opener) opener.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-open-reserve]').forEach(el => el.addEventListener('click', openRv));
+  $('rv-close').onclick = closeRv;
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !rv.hidden) closeRv(); });
+
+  function setErr(input, id, msg) { $(id).textContent = msg; if (input) input.setAttribute('aria-invalid', String(!!msg)); return !msg; }
+  form.addEventListener('submit', e => {
     e.preventDefault();
-    const v = $('contact').value.trim(), status = $('status');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { status.textContent = 'Enter your email address, for example name@domain.com.'; return; }
-    // TODO before launch: send `v` to your waitlist service (form backend, sheet or CRM).
-    status.textContent = 'You are on the list. Your deposit is shown above.';
-    try { localStorage.setItem('caldoir-list', '1'); } catch (err) {}
-    reveal(); e.target.reset();
+    const name = $('rv-name').value.trim(), email = $('rv-email').value.trim(), digits = $('rv-phone').value.replace(/\D/g, '');
+    const ok = [
+      setErr($('rv-name'), 'e-name', name ? '' : 'Enter your name.'),
+      setErr($('rv-email'), 'e-email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter your email address, for example name@domain.com.'),
+      setErr($('rv-phone'), 'e-phone', digits.length >= 6 && digits.length <= 14 ? '' : 'Enter your phone number without the country code.'),
+      setErr(null, 'e-ok', $('rv-ok').checked ? '' : 'Tick the box to agree before you submit.'),
+    ].every(Boolean);
+    if (!ok) { const bad = form.querySelector('[aria-invalid="true"]') || $('rv-ok'); bad.focus(); return; }
+    const entry = { name, email, phone: $('rv-cc').value + ' ' + digits, at: new Date().toISOString() };
+    // TODO before launch: send `entry` to your waitlist service (form backend, Google Sheet or CRM).
+    try { localStorage.setItem('caldoir-list', JSON.stringify({ name })); } catch (err) {}
+    showDone(name, true);
+    smallPrice.reveal(false);
+    rv.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
+  try { if (localStorage.getItem('caldoir-list')) smallPrice.reveal(false); } catch (e) {}
 })();
 </script>
 </body>
