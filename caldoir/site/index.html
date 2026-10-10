@@ -7,7 +7,7 @@
 <link rel="preload" as="image" href="anim/a001.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
 <style>
 /* Layout: one pinned screen. Scrolling plays the frame animation (cap, spray, the notes, the pour, The 22),
    then the bottle film with its copy; then the reserve close.
@@ -203,6 +203,17 @@ footer a { color: var(--steel); text-decoration: none; min-height: 44px; display
 .big-price b { font-family: var(--serif); font-weight: 400; font-size: clamp(72px, 15vw, 112px); line-height: 1; color: var(--bone); }
 .confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
 body.rv-open { overflow: hidden; }
+
+/* the engraving preview: the name sits on the glass under the printed number */
+.engrave { position: relative; margin: 14px 0 0; border-radius: 14px; overflow: hidden; aspect-ratio: 1120 / 630; max-width: 100%; background: #111; }
+.engrave-in { position: absolute; inset: 0; transform: scale(1.6); transform-origin: 47% 60%; }   /* close in on the glass */
+.engrave img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.engrave-name { position: absolute; left: 26.6%; top: 66%; max-width: 18.5%; white-space: nowrap;
+  font-family: "Cinzel", "Cormorant Garamond", Georgia, serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(52,44,40,.88); text-shadow: 0 1px 0 rgba(255,255,255,.18); mix-blend-mode: multiply; transition: opacity .2s var(--ease-out); }
+.engrave-name:empty { opacity: 0; }
+.engrave.done { margin-top: 22px; }
+
 @media (prefers-reduced-motion: reduce) { .rv { transition: opacity .2s ease; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -255,6 +266,7 @@ body.rv-open { overflow: hidden; }
       <p class="terms">Reserved by the collectors. Reserve your bottle with a
         <span class="price" id="price"><canvas id="price-px" width="96" height="28" aria-hidden="true"></canvas><span class="sr-only" id="price-sr">deposit amount, shown once you join the list,</span></span>
         deposit.</p>
+      <p class="terms">Every bottle carries its number and its owner’s name, engraved into the glass.</p>
       <button class="pill" id="pill" type="button" data-open-reserve aria-haspopup="dialog"><small>Reserve for</small><b>Early access</b></button>
     </div>
   </section>
@@ -287,6 +299,15 @@ body.rv-open { overflow: hidden; }
           <label for="rv-name">Name<span class="req" aria-hidden="true">*</span></label>
           <input id="rv-name" name="name" type="text" autocomplete="name" placeholder="Your name here" required aria-describedby="e-name">
           <p class="err" id="e-name" aria-live="polite"></p>
+        </div>
+        <div class="f">
+          <label for="rv-engrave">Name for your bottle<span class="req" aria-hidden="true">*</span></label>
+          <input id="rv-engrave" name="engraving" type="text" maxlength="14" autocomplete="off" autocapitalize="characters" placeholder="As it should read on the glass" required aria-describedby="h-engrave e-engrave">
+          <p class="hint" id="h-engrave">Engraved beneath your number. Up to 14 letters.</p>
+      <figure class="engrave" id="engrave-live" aria-hidden="true">
+        <div class="engrave-in"><img src="img/final-bottle.jpg" alt=""><span class="engrave-name"></span></div>
+      </figure>
+          <p class="err" id="e-engrave" aria-live="polite"></p>
         </div>
         <div class="f">
           <label for="rv-email">Email<span class="req" aria-hidden="true">*</span></label>
@@ -333,7 +354,10 @@ body.rv-open { overflow: hidden; }
       <h2>You’re on the list<span id="rv-first"></span>.</h2>
       <p class="rv-lede">Your reservation deposit:</p>
       <div class="big-price" id="big-price"><canvas id="big-px" width="360" height="110" aria-hidden="true"></canvas></div>
-      <p class="rv-lede small">Pay it now to hold your numbered bottle before reservations open to everyone.</p>
+      <figure class="engrave done" id="engrave-done" aria-hidden="true">
+        <div class="engrave-in"><img src="img/final-bottle.jpg" alt=""><span class="engrave-name"></span></div>
+      </figure>
+      <p class="rv-lede small">Pay it now to hold your bottle. Your number is assigned when your deposit is paid, and your name is engraved before it ships.</p>
       <a class="submit pay" id="rv-pay" href="#" target="_blank" rel="noopener">Pay deposit</a>
       <p class="hint" id="pay-note">Payment opens in a secure checkout in a new tab.</p>
     </section>
@@ -542,6 +566,30 @@ body.rv-open { overflow: hidden; }
     })(t0);
   }
 
+  // the engraving: the name, cleaned and sized to fit the space on the glass
+  const engraveInput = $('rv-engrave');
+  let engraveTouched = false;
+  const cleanEngraving = v => v.replace(/[^\p{L}\s.'&-]/gu, '').replace(/\s+/g, ' ').trimStart().slice(0, 14).toUpperCase();
+  function paintEngraving(fig, text) {
+    const span = fig.querySelector('.engrave-name'), w = fig.clientWidth;
+    span.textContent = text.trim();
+    let size = w * 0.026; span.style.fontSize = size + 'px';
+    const max = w * 0.185;
+    while (span.scrollWidth > max && size > 6) { size -= 0.5; span.style.fontSize = size + 'px'; }
+  }
+  engraveInput.addEventListener('input', () => {
+    engraveTouched = true;
+    const c = cleanEngraving(engraveInput.value); if (c !== engraveInput.value) engraveInput.value = c;
+    paintEngraving($('engrave-live'), c);
+  });
+  $('rv-name').addEventListener('input', () => {        // suggest their first name until they write their own
+    if (engraveTouched) return;
+    const first = cleanEngraving(($('rv-name').value.trim().split(/\s+/)[0] || ''));
+    engraveInput.value = first; paintEngraving($('engrave-live'), first);
+    if (first) { $('e-engrave').textContent = ''; engraveInput.removeAttribute('aria-invalid'); }
+  });
+  addEventListener('resize', () => { paintEngraving($('engrave-live'), engraveInput.value); paintEngraving($('engrave-done'), $('engrave-done').dataset.text || ''); });
+
   // the reservation page
   const rv = $('rv'), form = $('rv-form');
   let opener = null;
@@ -552,8 +600,9 @@ body.rv-open { overflow: hidden; }
     else pay.addEventListener('click', e => { e.preventDefault(); $('pay-note').textContent = 'Payment is not open yet. We will email you the moment it is.'; });
   }
   setPay();
-  function showDone(name, animate) {
+  function showDone(name, animate, engraving) {
     $('rv-form-view').hidden = true; $('rv-done').hidden = false;
+    const fig = $('engrave-done'); fig.dataset.text = engraving || ''; requestAnimationFrame(() => paintEngraving(fig, engraving || ''));
     $('rv-first').textContent = name ? ', ' + name.split(/\s+/)[0] : '';
     if (!animate) { bigPrice.reveal(false); return; }
     bigPrice.redraw(9);
@@ -569,7 +618,8 @@ body.rv-open { overflow: hidden; }
     rv.hidden = false; document.body.classList.add('rv-open');
     requestAnimationFrame(() => rv.classList.add('open'));
     let saved = null; try { saved = JSON.parse(localStorage.getItem('caldoir-list') || 'null'); } catch (err) {}
-    if (saved) showDone(saved.name, false);
+    if (saved) showDone(saved.name, false, saved.engraving);
+    else requestAnimationFrame(() => paintEngraving($('engrave-live'), engraveInput.value));
     setTimeout(() => (saved ? $('rv-pay') : $('rv-name')).focus({ preventScroll: true }), 350);
   }
   function closeRv() {
@@ -581,21 +631,27 @@ body.rv-open { overflow: hidden; }
   $('rv-close').onclick = closeRv;
   addEventListener('keydown', e => { if (e.key === 'Escape' && !rv.hidden) closeRv(); });
 
+  form.addEventListener('input', e => {                 // an error clears as soon as its field is edited
+    const map = { 'rv-name': 'e-name', 'rv-engrave': 'e-engrave', 'rv-email': 'e-email', 'rv-phone': 'e-phone', 'rv-ok': 'e-ok' };
+    const id = map[e.target.id]; if (id) { $(id).textContent = ''; e.target.removeAttribute('aria-invalid'); }
+  });
   function setErr(input, id, msg) { $(id).textContent = msg; if (input) input.setAttribute('aria-invalid', String(!!msg)); return !msg; }
   form.addEventListener('submit', e => {
     e.preventDefault();
     const name = $('rv-name').value.trim(), email = $('rv-email').value.trim(), digits = $('rv-phone').value.replace(/\D/g, '');
     const ok = [
       setErr($('rv-name'), 'e-name', name ? '' : 'Enter your name.'),
+      setErr(engraveInput, 'e-engrave', engraveInput.value.trim() ? '' : 'Enter the name to engrave on your bottle.'),
       setErr($('rv-email'), 'e-email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter your email address, for example name@domain.com.'),
       setErr($('rv-phone'), 'e-phone', digits.length >= 6 && digits.length <= 14 ? '' : 'Enter your phone number without the country code.'),
       setErr(null, 'e-ok', $('rv-ok').checked ? '' : 'Tick the box to agree before you submit.'),
     ].every(Boolean);
     if (!ok) { const bad = form.querySelector('[aria-invalid="true"]') || $('rv-ok'); bad.focus(); return; }
-    const entry = { name, email, phone: $('rv-cc').value + ' ' + digits, at: new Date().toISOString() };
+    const engraving = engraveInput.value.trim();
+    const entry = { name, engraving, email, phone: $('rv-cc').value + ' ' + digits, at: new Date().toISOString() };
     // TODO before launch: send `entry` to your waitlist service (form backend, Google Sheet or CRM).
-    try { localStorage.setItem('caldoir-list', JSON.stringify({ name })); } catch (err) {}
-    showDone(name, true);
+    try { localStorage.setItem('caldoir-list', JSON.stringify({ name, engraving })); } catch (err) {}
+    showDone(name, true, engraving);
     smallPrice.reveal(false);
     rv.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
