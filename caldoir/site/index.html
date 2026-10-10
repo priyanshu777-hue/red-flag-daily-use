@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Caldoir Elixir</title>
-<link rel="preload" as="image" href="anim/a001.webp" fetchpriority="high">
+<link rel="preload" as="image" href="seq/f001.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap">
@@ -53,10 +53,9 @@ img { display: block; }
 .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .layer { position: absolute; inset: 0; }
 .layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.film { opacity: 0; }
-.shade { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+.shade { position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(90deg, rgba(28,12,12,.86) 0%, rgba(28,12,12,.45) 32%, rgba(28,12,12,0) 58%), linear-gradient(0deg, rgba(28,12,12,.7) 0%, rgba(28,12,12,0) 34%); }
-.copy { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px); width: min(440px, calc(100% - 2 * var(--gutter))); opacity: 0; }
+.copy { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(56px, 13vh, 120px); width: min(440px, calc(100% - 2 * var(--gutter))); }
 .chapter { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px; opacity: 0; transform: translateY(14px); transition: opacity .45s var(--ease-out), transform .45s var(--ease-out); pointer-events: none; }
 .chapter.on { opacity: 1; transform: none; transition-delay: .12s; }
 .chapter h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6vw, 84px); line-height: 1; color: var(--bone); text-wrap: balance; }
@@ -65,17 +64,12 @@ img { display: block; }
 .cue i { width: 1px; height: 36px; background: linear-gradient(var(--mist), transparent); transform-origin: top; animation: drip 2.2s var(--ease-out) infinite; }
 @keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 70% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 .cue.gone { opacity: 0; }
-.rail { position: absolute; z-index: 2; right: var(--gutter); top: 50%; width: 1px; height: 26vh; transform: translateY(-50%); background: rgba(236,237,239,.16); opacity: 0; }
+.rail { position: absolute; z-index: 2; right: var(--gutter); top: 50%; width: 1px; height: 26vh; transform: translateY(-50%); background: rgba(236,237,239,.16); }
 .rail i { position: absolute; inset: 0; background: var(--mist); transform-origin: top; transform: scaleY(0); }
 
 @media (max-aspect-ratio: 1/1) {
   .film {
     inset: auto 0 auto 0; top: calc(env(safe-area-inset-top, 0px) + 84px); aspect-ratio: 1 / 1.04; max-height: 60svh; width: 100%;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
-            mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
-  }
-  .anim {
-    inset: auto 0 auto 0; top: 50%; transform: translateY(-46%); aspect-ratio: 1 / 1.1; max-height: 66svh; width: 100%;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
   }
@@ -279,7 +273,6 @@ body.rv-open { overflow: hidden; }
   <section class="show" id="story" aria-label="Caldoir Elixir">
     <h1 class="sr-only">Caldoir Elixir</h1>
     <div class="pin">
-      <div class="layer anim" aria-hidden="true"><canvas id="anim-canvas"></canvas></div>
       <div class="layer film" aria-hidden="true"><canvas id="film-canvas"></canvas></div>
       <div class="shade" id="shade"></div>
       <div class="copy" id="copy" aria-live="polite">
@@ -570,10 +563,8 @@ body.rv-open { overflow: hidden; }
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;     // in-out cubic, for on-screen movement
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  /* The show: 3D bottle first, then the film. Scroll lengths in screen heights. */
-  const SCREENS_ANIM = 9, SCREENS_FILM = 5.5, BLEND = 0.5;
-  const TOTAL = SCREENS_ANIM + BLEND + SCREENS_FILM;
-  const END_ANIM = SCREENS_ANIM / TOTAL, START_FILM = END_ANIM + BLEND / TOTAL;
+  /* The show: the bottle film, scrubbed by scroll. Its length in screen heights. */
+  const TOTAL = 5.5;
   const show = $('story');
   let lastW = 0;
   function sizeShow() { if (innerWidth !== lastW) { lastW = innerWidth; show.style.height = (innerHeight * (1 + TOTAL)) + 'px'; } }
@@ -582,7 +573,7 @@ body.rv-open { overflow: hidden; }
   let target = 0, current = 0;
   function read() { const s = show.offsetHeight - innerHeight; target = clamp((scrollY - show.offsetTop) / s); }
 
-  /* ================= frame players: the frame animation and the film ================= */
+  /* ================= frame player: the film ================= */
   // Loading: a shared queue (6 requests at a time). Frames near what is on screen go first, then a coarse-to-fine
   // pass over the whole sequence (every 16th frame, then every 8th, 4th, 2nd, the rest) so scrubbing works early.
   const queue = { busy: 0, players: [] };
@@ -644,9 +635,6 @@ body.rv-open { overflow: hidden; }
     return { start, paint, resize };
   }
 
-  // the frame animation: 24 fps with a 180° shutter (1/48 s motion blur), built from the stills and generated in-betweens
-  const anim = player({ canvasId: 'anim-canvas', count: 301, focusPortrait: 0.6, path: i => `anim/a${String(i + 1).padStart(3, '0')}.webp` });
-
   // the bottle film, with its three lines of copy
   const film = (() => {
     const CUTS = [0, 0.24, 0.62], chapters = [...document.querySelectorAll('#copy .chapter')];
@@ -658,31 +646,24 @@ body.rv-open { overflow: hidden; }
         $('rail').style.transform = portrait.matches ? `scaleX(${f.toFixed(4)})` : `scaleY(${f.toFixed(4)})`;
       } });
   })();
-  anim.start();                    // the film's frames load once the reader gets near it
+  film.start();
 
-  /* ================= drive both from scroll ================= */
-  const filmLayer = document.querySelector('.film'), animLayer = document.querySelector('.anim'), copy = $('copy'), shade = $('shade'), railWrap = $('rail-wrap'), cue = $('cue');
+  /* ================= drive it from scroll ================= */
+  const cue = $('cue');
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(show);
   function frame() {
     current += (target - current) * (reduce ? 1 : 0.09);   // a soft follow, so the frames glide rather than jump with the wheel
     if (Math.abs(target - current) < 0.00005) current = target;
     if (visible) {
-      const p = current;
-      const toFilm = ease(span(p, END_ANIM, START_FILM));
-      animLayer.style.opacity = (1 - toFilm).toFixed(3);
-      filmLayer.style.opacity = shade.style.opacity = toFilm.toFixed(3);
-      copy.style.opacity = railWrap.style.opacity = span(p, START_FILM - 0.01, START_FILM + 0.02).toFixed(3);
-      cue.classList.toggle('gone', p > 0.01);
-      if (p > END_ANIM * 0.25) film.start();
-      if (toFilm < 1) anim.paint(span(p, 0, END_ANIM));
-      if (toFilm > 0) film.paint(span(p, START_FILM, 1));
+      cue.classList.toggle('gone', current > 0.01);
+      film.paint(current);
     }
     requestAnimationFrame(frame);
   }
   addEventListener('scroll', read, { passive: true });
-  addEventListener('resize', () => { sizeShow(); read(); anim.resize(); film.resize(); });
-  portrait.addEventListener('change', () => { anim.resize(); film.resize(); });
+  addEventListener('resize', () => { sizeShow(); read(); film.resize(); });
+  portrait.addEventListener('change', () => film.resize());
   read(); current = target; frame();
 
 
@@ -692,7 +673,7 @@ body.rv-open { overflow: hidden; }
     const res = $('reserve').getBoundingClientRect(), foot = $('contact').getBoundingClientRect();
     if (foot.top < innerHeight * 0.85) return 'contact';
     if (res.top < innerHeight * 0.5 || $('named').getBoundingClientRect().top < innerHeight * 0.5) return 'reserve';
-    return current >= END_ANIM ? 'film' : 'home';
+    return current > 0.2 ? 'film' : 'home';
   }
   let lastSec = '';
   function markNav() { const s = activeSection(); if (s !== lastSec) { navLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.sec === s))); lastSec = s; } requestAnimationFrame(markNav); }
@@ -700,8 +681,7 @@ body.rv-open { overflow: hidden; }
   document.querySelectorAll('.rail-nav [data-go]').forEach(a => a.addEventListener('click', e => {
     e.preventDefault();
     const span = show.offsetHeight - innerHeight;
-    const y = a.dataset.go === 'film' ? show.offsetTop + span * (START_FILM + 0.005) : show.offsetTop;
-    if (a.dataset.go === 'film') film.start();
+    const y = a.dataset.go === 'film' ? show.offsetTop + span * 0.24 : show.offsetTop;
     scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   }));
 
