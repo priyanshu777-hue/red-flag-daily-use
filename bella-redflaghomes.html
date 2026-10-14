@@ -1482,6 +1482,7 @@
       </div>
 
       <p class="yearly-note">Yearly plans also include <b>bnb claims filed on your behalf</b>.</p>
+      <p class="yearly-note" id="fx-note" hidden>Rupee prices for visitors outside India are converted from US dollars at today’s rate. You pay the USD price securely through Stripe.</p>
 
       <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pc-cabin" viewBox="0 0 80 70"><polygon points="4,70 40,4 76,70" fill="#2E2229"/><polygon points="12,70 40,18 68,70" fill="#21181E"/><polygon points="28,70 40,46 52,70" fill="#FFB347" class="pc-lit"/><rect x="58" y="22" width="6" height="18" fill="#2E2229"/></symbol></svg>
       <div class="plans" id="plans" aria-live="polite">
@@ -1945,10 +1946,38 @@
     currency: saved === 'INR' || saved === 'USD' ? saved : guessCurrency(),
     period: store('bella-period') === 'yearly' ? 'yearly' : 'monthly'
   };
-  // Then check the visitor's country from their IP: India shows INR, every other country shows USD.
-  // Whenever the country changes (new network, travel, VPN), the price switches automatically.
-  // A manual INR/USD choice is kept until the country changes again.
-  (function geoCurrency() {
+  // Fair pricing by location. The Indian prices (INR, paid through Razorpay) are only for visitors whose IP
+  // address is in India AND whose device clock is set to India time. Everyone else pays the USD price (Stripe).
+  // If they choose INR, or their IP is Indian but their device is set to another country (for example a US
+  // visitor on an Indian VPN), they see the USD price converted to rupees at today's rate, and checkout still
+  // charges the USD price through Stripe. The country is checked on every visit, so the price follows the visitor.
+  var INDIA_PRICES = { monthly: PRICES.INR.monthly, yearly: PRICES.INR.yearly };
+  var INDIA_LINKS = LINKS.INR;
+  var converted = false;
+  function indiaClock() {
+    try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; return tz === 'Asia/Kolkata' || tz === 'Asia/Calcutta'; } catch (e) { return false; }
+  }
+  function updateFxNote() { var n = document.getElementById('fx-note'); if (n) n.hidden = !(converted && state.currency === 'INR'); }
+  function setRegion(india, rate) {
+    converted = !india;
+    if (india) {
+      PRICES.INR.monthly = INDIA_PRICES.monthly; PRICES.INR.yearly = INDIA_PRICES.yearly; LINKS.INR = INDIA_LINKS;
+    } else {
+      var r = rate > 50 && rate < 200 ? rate : (setRegion.rate || 95);
+      setRegion.rate = r;
+      ['monthly', 'yearly'].forEach(function (per) {
+        var o = {}; Object.keys(PRICES.USD[per]).forEach(function (k) { o[k] = Math.ceil(PRICES.USD[per][k] * r / 10) * 10; });
+        PRICES.INR[per] = o;
+      });
+      LINKS.INR = LINKS.USD;
+    }
+    updateFxNote();
+  }
+  // The currency actually charged: converted rupee prices are paid in USD.
+  function payCurrency() { return converted && state.currency === 'INR' ? 'USD' : state.currency; }
+  setRegion(indiaClock(), 0);
+  document.querySelectorAll('[data-currency]').forEach(function (b) { b.addEventListener('click', function () { setTimeout(updateFxNote, 0); }); });
+  (function geoPricing() {
     if (!window.fetch) return;
     var ctl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
@@ -1957,15 +1986,17 @@
       .then(function (j) {
         clearTimeout(timer);
         var country = j && /^[A-Z]{2}$/.test(j.country) ? j.country : '';
-        if (!country) return;
+        var rate = Number(j && j.usdInr) || 0;
+        if (!country) { if (converted && rate) { setRegion(false, rate); render(); } return; }
+        setRegion(country === 'IN' && indiaClock(), rate);
+        // Indian IP: show rupees (real Indian prices, or converted if the device is set elsewhere). Any other country: USD.
         var cur = country === 'IN' ? 'INR' : 'USD';
         var last = store('bella-geo-country');
         store('bella-geo-country', country);
-        if (last === country && (saved === 'INR' || saved === 'USD')) return;
-        if (state.currency === cur) return;
+        var keep = last === country && (saved === 'INR' || saved === 'USD');
         // Same as tapping the currency button, so the plans, savings calculator and mini picker all update.
-        var btn = document.querySelector('[data-currency="' + cur + '"]');
-        if (btn) btn.click(); else { state.currency = cur; store('bella-currency', cur); render(); }
+        var btn = document.querySelector('[data-currency="' + (keep ? state.currency : cur) + '"]');
+        if (btn) btn.click(); else { if (!keep) { state.currency = cur; store('bella-currency', cur); } render(); }
       })
       .catch(function () { clearTimeout(timer); });
   })();
@@ -2156,8 +2187,8 @@
     function lead(outcome) {
       return {
         name: (data.name || '').trim(), email: (data.email || '').trim(), city: (data.city || '').trim(), phone: (data.phone || '').trim(),
-        listings: data.listings || '', plan: PLAN_NAMES[plan], period: state.period, currency: state.currency,
-        price: PRICES[state.currency][state.period][plan], outcome: outcome, page: location.href, time: new Date().toISOString()
+        listings: data.listings || '', plan: PLAN_NAMES[plan], period: state.period, currency: payCurrency(),
+        price: PRICES[payCurrency()][state.period][plan], outcome: outcome, page: location.href, time: new Date().toISOString()
       };
     }
     function sendLead(d) {
@@ -2182,7 +2213,7 @@
       redirecting = true;
       sendLead(lead('checkout'));
       // Remember this checkout: the thank-you page uses it for the bill, and the Bella page offers "Try again" if they come back unpaid.
-      try { localStorage.setItem('bella_pending', JSON.stringify({ plan: plan, period: state.period, currency: state.currency, name: (data.name || '').trim(), email: (data.email || '').trim(), phone: (data.phone || '').trim(), listings: data.listings || '', at: Date.now() })); } catch (e) {}
+      try { localStorage.setItem('bella_pending', JSON.stringify({ plan: plan, period: state.period, currency: payCurrency(), name: (data.name || '').trim(), email: (data.email || '').trim(), phone: (data.phone || '').trim(), listings: data.listings || '', at: Date.now() })); } catch (e) {}
       render();
       clearTimeout(redirectTimer);
       redirectTimer = setTimeout(function () {

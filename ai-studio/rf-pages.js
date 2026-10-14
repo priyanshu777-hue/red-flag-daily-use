@@ -145,7 +145,8 @@ async function rfJournal(path, html) {
 }
 
 // ---- Routes ----
-// Visitor's country for local pricing: /bella shows INR in India and USD everywhere else.
+// Visitor's country for fair local pricing: /bella shows Indian prices only to visitors in India; everyone else
+// sees the USD price (or that USD price converted to rupees).
 // Country only. The IP address is not stored (a short in-memory cache avoids repeat lookups).
 const rfGeoCache = new Map();
 async function rfGeoLookup(ip) {
@@ -158,6 +159,18 @@ async function rfGeoLookup(ip) {
     } catch (e) {}
   }
   return '';
+}
+// Today's US dollar to rupee rate, for showing USD prices in rupees to visitors outside India. Cached for 12 hours.
+let rfFx = { rate: 0, at: 0 };
+async function rfUsdInr() {
+  if (rfFx.rate && Date.now() - rfFx.at < 12 * 3600 * 1000) return rfFx.rate;
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', { signal: AbortSignal.timeout(2500) });
+    const j = await r.json();
+    const rate = Number(j && j.rates && j.rates.INR);
+    if (rate > 50 && rate < 200) rfFx = { rate, at: Date.now() };
+  } catch (e) {}
+  return rfFx.rate;
 }
 app.get('/api/geo', async (req, res) => {
   res.set('Cache-Control', 'private, no-store');
@@ -174,7 +187,7 @@ app.get('/api/geo', async (req, res) => {
       rfGeoCache.set(ip, { country, at: Date.now() });
     }
   }
-  res.json({ country });
+  res.json({ country, usdInr: await rfUsdInr() });
 });
 app.get('/sitemap.xml', async (req, res) => {
   const posts = await rfPosts();
