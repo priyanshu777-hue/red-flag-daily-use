@@ -14,7 +14,7 @@ In the Express server file, find the existing Red Flag pages block. It starts wi
 // HTML Google receives, plus /sitemap.xml and /robots.txt, and /api/geo (visitor country for INR/USD pricing).
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit; to update the pages, only change RF_VERSION.
-const RF_VERSION = '1e61fc580c0903ae3a347f4a204eab57cf8a9c7f';
+const RF_VERSION = 'c0f7b87b3f40fdc74d5862eef56ffc64637ae4c9';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_SITE = 'https://redflaghomes.in';
 const RF_PAGES = [
@@ -156,7 +156,8 @@ async function rfJournal(path, html) {
 }
 
 // ---- Routes ----
-// Visitor's country for local pricing: /bella shows INR in India and USD everywhere else.
+// Visitor's country for fair local pricing: /bella shows Indian prices only to visitors in India; everyone else
+// sees the USD price (or that USD price converted to rupees).
 // Country only. The IP address is not stored (a short in-memory cache avoids repeat lookups).
 const rfGeoCache = new Map();
 async function rfGeoLookup(ip) {
@@ -169,6 +170,18 @@ async function rfGeoLookup(ip) {
     } catch (e) {}
   }
   return '';
+}
+// Today's US dollar to rupee rate, for showing USD prices in rupees to visitors outside India. Cached for 12 hours.
+let rfFx = { rate: 0, at: 0 };
+async function rfUsdInr() {
+  if (rfFx.rate && Date.now() - rfFx.at < 12 * 3600 * 1000) return rfFx.rate;
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', { signal: AbortSignal.timeout(2500) });
+    const j = await r.json();
+    const rate = Number(j && j.rates && j.rates.INR);
+    if (rate > 50 && rate < 200) rfFx = { rate, at: Date.now() };
+  } catch (e) {}
+  return rfFx.rate;
 }
 app.get('/api/geo', async (req, res) => {
   res.set('Cache-Control', 'private, no-store');
@@ -185,7 +198,7 @@ app.get('/api/geo', async (req, res) => {
       rfGeoCache.set(ip, { country, at: Date.now() });
     }
   }
-  res.json({ country });
+  res.json({ country, usdInr: await rfUsdInr() });
 });
 app.get('/sitemap.xml', async (req, res) => {
   const posts = await rfPosts();

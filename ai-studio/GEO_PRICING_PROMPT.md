@@ -1,8 +1,14 @@
-Make the Bella page show USD pricing automatically to every visitor outside India, and INR to visitors in India, based on their IP address. STRICT RULES:
+Set up fair location-based pricing on the Bella page. STRICT RULES:
 - Make exactly the change below and NOTHING else.
 - Don't redesign, restyle, reword or "improve" anything, and don't touch any other page, component, style, route, API, webhook or database rule.
-- The Bella page itself is already updated and hosted. The server serves it from the CDN. Don't copy, rewrite or recreate its HTML, and don't add any currency code of your own.
+- The Bella page itself is already updated and hosted. The server serves it from the CDN. Don't copy, rewrite or recreate its HTML, and don't add any currency or pricing code of your own.
 - If the step can't be done exactly as written, stop and tell me why. Don't improvise.
+
+How the pricing works (already built into the page; the server only supplies the country and exchange rate):
+- **Indian prices** (₹999 / ₹1,699 / ₹2,499, paid through Razorpay) show ONLY when the visitor's IP is in India AND their device is set to India time.
+- **IP outside India:** the visitor sees USD prices ($23 / $39 / $57, paid through Stripe).
+- **Indian IP but device set to another country** (for example a US visitor on an Indian VPN): the visitor sees the USD price converted to rupees at today's rate, and checkout charges the USD price through Stripe. The same happens if someone outside India taps "₹ INR".
+- **Every visit:** the page checks the country again, so the price follows the visitor's current IP.
 
 ## 1. Server: replace the Red Flag pages block
 In the Express server file, find the block that starts with the comment `// Red Flag Homes: serve the Bella, Admin` and contains `const RF_VERSION =` and `const RF_PAGES = [`. Replace that whole block, from its first comment line to its last line, with the block below, exactly as written.
@@ -10,7 +16,7 @@ In the Express server file, find the block that starts with the comment `// Red 
 - If the security code's "PART A" is in the file, keep it above this block.
 - Don't change the Bella checkout block, the webhooks or anything else.
 
-The block adds `GET /api/geo`. It returns only the visitor's country code, for example `{"country":"IN"}` or `{"country":"US"}`, and doesn't store IP addresses.
+The block adds `GET /api/geo`. It returns only the visitor's country code and today's US dollar to rupee rate, for example `{"country":"IN","usdInr":95.3}`. It doesn't store IP addresses.
 
 ```js
 // Red Flag Homes: serve the Bella, Admin, Journal, legal (/privacy, /terms, /cancellation) and /signin pages byte for byte from GitHub (via the jsDelivr CDN),
@@ -18,7 +24,7 @@ The block adds `GET /api/geo`. It returns only the visitor's country code, for e
 // HTML Google receives, plus /sitemap.xml and /robots.txt, and /api/geo (visitor country for INR/USD pricing).
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit; to update the pages, only change RF_VERSION.
-const RF_VERSION = '1e61fc580c0903ae3a347f4a204eab57cf8a9c7f';
+const RF_VERSION = 'c0f7b87b3f40fdc74d5862eef56ffc64637ae4c9';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_SITE = 'https://redflaghomes.in';
 const RF_PAGES = [
@@ -160,7 +166,8 @@ async function rfJournal(path, html) {
 }
 
 // ---- Routes ----
-// Visitor's country for local pricing: /bella shows INR in India and USD everywhere else.
+// Visitor's country for fair local pricing: /bella shows Indian prices only to visitors in India; everyone else
+// sees the USD price (or that USD price converted to rupees).
 // Country only. The IP address is not stored (a short in-memory cache avoids repeat lookups).
 const rfGeoCache = new Map();
 async function rfGeoLookup(ip) {
@@ -173,6 +180,18 @@ async function rfGeoLookup(ip) {
     } catch (e) {}
   }
   return '';
+}
+// Today's US dollar to rupee rate, for showing USD prices in rupees to visitors outside India. Cached for 12 hours.
+let rfFx = { rate: 0, at: 0 };
+async function rfUsdInr() {
+  if (rfFx.rate && Date.now() - rfFx.at < 12 * 3600 * 1000) return rfFx.rate;
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', { signal: AbortSignal.timeout(2500) });
+    const j = await r.json();
+    const rate = Number(j && j.rates && j.rates.INR);
+    if (rate > 50 && rate < 200) rfFx = { rate, at: Date.now() };
+  } catch (e) {}
+  return rfFx.rate;
 }
 app.get('/api/geo', async (req, res) => {
   res.set('Cache-Control', 'private, no-store');
@@ -189,7 +208,7 @@ app.get('/api/geo', async (req, res) => {
       rfGeoCache.set(ip, { country, at: Date.now() });
     }
   }
-  res.json({ country });
+  res.json({ country, usdInr: await rfUsdInr() });
 });
 app.get('/sitemap.xml', async (req, res) => {
   const posts = await rfPosts();
@@ -221,10 +240,10 @@ app.use(async (req, res, next) => {
 ```
 
 ## 2. Check before you finish
-- `https://redflaghomes.in/api/geo` returns JSON with a two-letter `country`.
+- `https://redflaghomes.in/api/geo` returns JSON with a two-letter `country` and a `usdInr` number (around 80–100).
 - `https://redflaghomes.in/bella/` loads, and the pricing shows:
-  - ₹ (INR) for a visitor in India.
-  - $ (USD) for a visitor anywhere else, for example with a US or UK VPN.
+  - ₹999 / ₹1,699 / ₹2,499 for a visitor in India with an India time zone.
+  - $23 / $39 / $57 for a visitor outside India (for example with a US or UK VPN).
 - The ₹ INR / $ USD buttons still work.
 - `/bella/thank-you`, `/bella/setup`, `/admin/`, `/journal/`, `/privacy`, `/signin`, `/sitemap.xml` and every other page are unchanged.
 - List every file you changed. It should only be the server file.

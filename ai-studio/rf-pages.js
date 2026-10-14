@@ -3,7 +3,7 @@
 // HTML Google receives, plus /sitemap.xml and /robots.txt, and /api/geo (visitor country for INR/USD pricing).
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit; to update the pages, only change RF_VERSION.
-const RF_VERSION = '1e61fc580c0903ae3a347f4a204eab57cf8a9c7f';
+const RF_VERSION = 'c0f7b87b3f40fdc74d5862eef56ffc64637ae4c9';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_SITE = 'https://redflaghomes.in';
 const RF_PAGES = [
