@@ -1,7 +1,8 @@
 // Red Flag Homes: Bella checkout return. GET /api/bella/receipt confirms a Stripe or Razorpay payment with the
 // gateway's own API (secret keys never reach the browser), returns the bill, and on a successful payment
 // creates (or links) the buyer's Red Flag account, records the payment for the admin panel, and emails the
-// payment confirmation with the Bella setup guide (once per payment).
+// payment confirmation with the Bella setup guide (once per payment). Also POST /api/leads, which saves every
+// website form entry to Firestore `leads` for the admin panel.
 // Paste as-is into the Express server, after firebase-admin is initialized and after the RF pages block.
 const RF_BELLA_PRICES = { INR: { monthly: { solo: 999, growth: 1699, pro: 2499 }, yearly: { solo: 10190, growth: 17330, pro: 25490 } }, USD: { monthly: { solo: 23, growth: 39, pro: 57 }, yearly: { solo: 235, growth: 398, pro: 581 } } };
 function rfBellaPlan(amount, currency) {
@@ -142,6 +143,44 @@ async function rfBellaSendSetupEmail(p) {
     return false;
   }
 }
+// ---- Website leads: every form (Bella sign-ups, contact, newsletter, franchise) is saved to Firestore `leads`,
+// so it shows in the admin panel under Leads. Accepts JSON or text (navigator.sendBeacon).
+const rfLeadHits = new Map();
+const RF_LEAD_FIELDS = { formType: 40, name: 120, email: 254, phone: 25, city: 120, message: 2000, page: 300 };
+app.post('/api/leads', express.text({ type: () => true, limit: '20kb' }), async (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || '';
+  const now = Date.now(), hits = (rfLeadHits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
+  hits.push(now); rfLeadHits.set(ip, hits);
+  if (rfLeadHits.size > 5000) rfLeadHits.clear();
+  if (hits.length > 20) return res.status(429).json({ ok: false, error: 'Too many requests. Please try again in a few minutes.' });
+  let body = req.body;
+  if (typeof body === 'string') { try { body = JSON.parse(body || '{}'); } catch (e) { return res.status(400).json({ ok: false, error: 'Invalid request.' }); } }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return res.status(400).json({ ok: false, error: 'Invalid request.' });
+  if (body.company || body.website_hp) return res.json({ ok: true }); // honeypot: bots fill hidden fields
+  const clean = (v, max) => (v === undefined || v === null || typeof v === 'object') ? '' : String(v).replace(/[\u0000-\u001F\u007F<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+  const lead = {};
+  for (const [k, max] of Object.entries(RF_LEAD_FIELDS)) lead[k] = clean(body[k], max);
+  lead.formType = (lead.formType || body.source || 'form').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 40) || 'form';
+  if (!lead.message) lead.message = clean(body.msg || body.query || body.details, 2000);
+  lead.email = lead.email.toLowerCase();
+  if (lead.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(lead.email)) lead.email = '';
+  if (!lead.email && !lead.phone && !lead.name) return res.status(400).json({ ok: false, error: 'Please add your name, email or phone.' });
+  const details = {};
+  for (const [k, v] of Object.entries(body).slice(0, 40)) {
+    if (k in RF_LEAD_FIELDS || ['source', 'time', 'company', 'website_hp', 'msg', 'query', 'details'].includes(k) || !/^[A-Za-z0-9_]{1,40}$/.test(k)) continue;
+    const c = clean(v, 300); if (c && Object.keys(details).length < 15) details[k] = c;
+  }
+  try {
+    const db = await rfBellaDb();
+    await db.collection('leads').add({ ...lead, details, status: 'New', createdAt: new Date().toISOString(), userAgent: clean(req.headers['user-agent'], 200) });
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('[leads] save failed:', err && err.message);
+    return res.status(500).json({ ok: false, error: 'Could not save right now.' });
+  }
+});
+
 app.get('/api/bella/receipt', async (req, res) => {
   res.set('Cache-Control', 'no-store');
   if (rfBellaLimited(req.ip)) return res.status(429).json({ ok: false, error: 'Too many requests. Please try again in a few minutes.' });

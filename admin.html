@@ -312,7 +312,7 @@
       <a href="#/inquiries" data-view="inquiries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Bookings<span class="count" id="c-inquiries" hidden></span></a>
       <a href="#/bella" data-view="bella"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>Bella payments<span class="count" id="c-bella" hidden></span></a>
       <a href="#/journal" data-view="journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Journal</a>
-      <a href="#/leads" data-view="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h16M4 14h16M10 4v16"/></svg>Form leads</a>
+      <a href="#/leads" data-view="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h16M4 14h16M10 4v16"/></svg>Leads<span class="count" id="c-leads" hidden></span></a>
       <a href="#/users" data-view="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Users</a>
       <a href="#/health" data-view="health"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Site health</a>
       <a href="#/setup" data-view="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>Setup</a>
@@ -384,10 +384,10 @@ function pill(kind, status) { const t = tone(kind, status); return `<span class=
 
 const S = {
   mode: 'none', user: null, fb: null,
-  data: { applications: [], inquiries: [], users: [], posts: [], bellaPayments: [] },
-  loaded: { applications: false, inquiries: false, users: false, posts: false, bellaPayments: false },
+  data: { applications: [], inquiries: [], users: [], posts: [], bellaPayments: [], leads: [] },
+  loaded: { applications: false, inquiries: false, users: false, posts: false, bellaPayments: false, leads: false },
   errors: {}, leads: null, leadsErr: '', health: null,
-  ui: { applications: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, inquiries: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, users: { q: '', sort: 'lastLoginAt', dir: -1 }, leads: { q: '', tab: 0 }, bella: { q: '', status: 'all' }, journal: { status: 'all', q: '' } }
+  ui: { applications: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, inquiries: { q: '', status: 'all', sort: 'createdAt', dir: -1 }, users: { q: '', sort: 'lastLoginAt', dir: -1 }, leads: { q: '', tab: 0, src: 'site', status: 'all', type: 'all' }, bella: { q: '', status: 'all' }, journal: { status: 'all', q: '' } }
 };
 
 /* ---------------- time helpers ---------------- */
@@ -437,15 +437,16 @@ async function startLive() {
 }
 function subscribe() {
   const { fsM, db } = S.fb;
-  ['applications', 'inquiries', 'users', 'posts', 'bellaPayments'].forEach(name => {
+  ['applications', 'inquiries', 'users', 'posts', 'bellaPayments', 'leads'].forEach(name => {
     let first = true;
     fsM.onSnapshot(fsM.collection(db, name), snap => {
       if (!first && name === 'bellaPayments') snap.docChanges().forEach(ch => { const d = ch.doc.data(); if (ch.type === 'added' && d.status === 'failed') toast('Bella payment failed', (d.name || d.email || 'A customer') + ' · ' + money(d.amount, d.currency) + (d.reason ? ' · ' + d.reason : '')); });
+      if (!first && name === 'leads') snap.docChanges().forEach(ch => { if (ch.type === 'added') { const d = ch.doc.data(); toast('New lead · ' + leadType(d), (d.name || d.email || d.phone || 'Someone') + (d.city ? ' · ' + d.city : '')); } });
       if (!first && (name === 'applications' || name === 'inquiries')) snap.docChanges().forEach(ch => { if (ch.type === 'added') { const d = ch.doc.data(); toast(name === 'applications' ? 'New franchise application' : 'New booking inquiry', (d.userName || 'Someone') + (d.city || d.destination ? ' · ' + (d.city || d.destination) : '')); } });
       first = false;
       S.data[name] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       S.loaded[name] = true; delete S.errors[name]; render();
-    }, err => { if (name === 'posts' || name === 'bellaPayments') { S.errors[name] = err.code === 'permission-denied' ? 'Add the Journal and Bella payment rules from the Setup page.' : (err.message || String(err)); S.loaded[name] = true; render(); return; } S.errors[name] = err.code === 'permission-denied' ? 'Firestore rules block admin access. Add the admin rules from the Setup page.' : (err.message || String(err)); S.loaded[name] = true; render(); });
+    }, err => { if (name === 'posts' || name === 'bellaPayments' || name === 'leads') { S.errors[name] = err.code === 'permission-denied' ? 'Add the Journal, Bella payment and leads rules from the Setup page.' : (err.message || String(err)); S.loaded[name] = true; render(); return; } S.errors[name] = err.code === 'permission-denied' ? 'Firestore rules block admin access. Add the admin rules from the Setup page.' : (err.message || String(err)); S.loaded[name] = true; render(); });
   });
 }
 async function saveDoc(kind, id, patch) {
@@ -506,13 +507,17 @@ function demoData() {
   });
   // two customers who failed and then paid: shown as recovered
   pays.push({ ...pays[1], id: 'b90', status: 'paid', reason: '', paymentId: 'pay_rec1', createdAt: new Date(ts(pays[1].createdAt) + 3600000).toISOString() });
-  return { apps, inqs, users, leads, posts, pays };
+  const siteLeads = Array.from({ length: 14 }, (_, i) => { const n = pick(names), t = pick(['bella', 'bella', 'contact', 'newsletter', 'franchise']);
+    return { id: 'l' + i, formType: t, name: t === 'newsletter' ? '' : n, email: n.toLowerCase().replace(/ /g, '.') + '@gmail.com', phone: t === 'newsletter' ? '' : '+91 9' + String(Math.floor(rnd() * 1e9)).padStart(9, '0'), city: pick(cities),
+      message: t === 'contact' ? pick(['Looking for a group stay in Goa', 'Want to list my villa', 'Is the Outpost pet friendly?']) : '', details: t === 'bella' ? { plan: pick(['Solo', 'Growth', 'Pro']), period: pick(['monthly', 'yearly']), currency: pick(['INR', 'USD']), listings: pick(['1', '2–3', '4–5']), outcome: pick(['checkout', 'checkout', 'custom']) } : {},
+      page: t === 'bella' ? '/bella/' : '/', status: i < 5 ? 'New' : pick(['New', 'Contacted', 'Won', 'Lost']), createdAt: at(Math.floor(rnd() * 20 * day)) }; });
+  return { apps, inqs, users, leads, posts, pays, siteLeads };
 }
 function startDemo() {
   const d = demoData();
   S.mode = 'demo'; S.user = { name: 'Demo admin', email: 'admin@redflaghomes.in' };
-  S.data = { applications: d.apps, inquiries: d.inqs, users: d.users, posts: d.posts, bellaPayments: d.pays };
-  S.loaded = { applications: true, inquiries: true, users: true, posts: true, bellaPayments: true }; S.leads = d.leads;
+  S.data = { applications: d.apps, inquiries: d.inqs, users: d.users, posts: d.posts, bellaPayments: d.pays, leads: d.siteLeads };
+  S.loaded = { applications: true, inquiries: true, users: true, posts: true, bellaPayments: true, leads: true }; S.leads = d.leads;
   enterApp();
 }
 
@@ -529,6 +534,7 @@ function seenKey(kind) { return 'rf-admin-seen-' + kind; }
 function newCount(kind) { const seen = +(store(seenKey(kind)) || 0); return S.data[kind].filter(x => ts(x.createdAt) > seen && OPEN[kind].includes(x.status)).length; }
 function counts() {
   { const n = payRows().filter(x => x.view === 'Failed' && !['Contacted', 'Recovered', 'Lost'].includes(x.followUp)).length; const el = $('#c-bella'); el.hidden = !n; el.textContent = n; el.setAttribute('aria-label', n + ' failed payments to follow up'); }
+  { const n = S.data.leads.filter(x => (x.status || 'New') === 'New').length; const el = $('#c-leads'); el.hidden = !n; el.textContent = n; el.setAttribute('aria-label', n + ' new leads'); }
   ['applications', 'inquiries'].forEach(k => { const n = S.data[k].filter(x => OPEN[k].includes(x.status)).length; const el = $('#c-' + k); el.hidden = !n; el.textContent = n; el.setAttribute('aria-label', n + ' waiting'); });
 }
 function view() { return (location.hash.match(/^#\/(\w+)/) || [, 'overview'])[1]; }
@@ -742,6 +748,48 @@ function users() {
   $$('[data-user]').forEach(tr => tr.addEventListener('click', () => { S.ui.applications.q = tr.dataset.user; location.hash = '#/applications'; }));
 }
 
+/* ===================== Leads (website forms, saved in Firestore) ===================== */
+const LEAD_STATUS = ['New', 'Contacted', 'Won', 'Lost'];
+const LEAD_TYPES = { bella: 'Bella', contact: 'Contact', newsletter: 'Newsletter', franchise: 'Franchise', booking: 'Booking' };
+function leadType(x) { return LEAD_TYPES[x.formType] || (x.formType ? String(x.formType).replace(/^\w/, c => c.toUpperCase()) : 'Form'); }
+function leadTabs(active) {
+  return `<div class="chips" role="group" aria-label="Lead source" style="margin-bottom:14px"><button class="chip" type="button" data-lsrc="site" aria-pressed="${active === 'site'}">Website leads<small>${S.data.leads.length}</small></button><button class="chip" type="button" data-lsrc="sheets" aria-pressed="${active === 'sheets'}">Google Sheets</button></div>`;
+}
+function bindLeadTabs() { $$('[data-lsrc]').forEach(b => b.addEventListener('click', () => { S.ui.leads.src = b.dataset.lsrc; render(); })); }
+function leads() {
+  const u = S.ui.leads;
+  if (u.src === 'sheets') { sheetLeads(); const top = $('#view .top'); if (top) top.insertAdjacentHTML('afterend', leadTabs('sheets')); bindLeadTabs(); return; }
+  const all = S.data.leads, q = u.q.trim().toLowerCase();
+  const types = [...new Set(all.map(leadType))].sort();
+  const list = all.filter(x => (u.status === 'all' || (x.status || 'New') === u.status) && (u.type === 'all' || leadType(x) === u.type) && (!q || JSON.stringify(x).toLowerCase().includes(q))).sort((a, b) => ts(b.createdAt) - ts(a.createdAt));
+  const det = x => { const d = x.details || {}; const bits = [d.plan && ('Bella ' + d.plan + (d.period ? ' · ' + d.period : '')), d.currency, d.listings && (d.listings + ' listing' + (d.listings === '1' ? '' : 's')), d.outcome === 'custom' ? 'asked for a custom plan' : d.outcome === 'checkout' ? 'went to checkout' : d.outcome, x.message].filter(Boolean); Object.keys(d).forEach(k => { if (!['plan', 'period', 'currency', 'listings', 'outcome', 'price'].includes(k) && d[k]) bits.push(k + ': ' + d[k]); }); return bits.join(' · '); };
+  const wa = x => { const ph = String(x.phone || '').replace(/\D/g, ''); return ph ? 'https://wa.me/' + (ph.length === 10 ? '91' + ph : ph) + '?text=' + encodeURIComponent('Hi ' + ((x.name || '').split(' ')[0] || 'there') + ', this is Red Flag Homes about your enquiry' + (x.formType === 'bella' ? ' for Bella' : '') + '.') : ''; };
+  $('#view').innerHTML = `
+    <div class="top"><div><h1>Leads</h1><p>Every website form: Bella sign-ups, contact, newsletter and franchise. Newest first, live.</p></div>
+      <div class="top-actions"><button class="btn" id="csv" type="button" ${list.length ? '' : 'disabled'}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>Export CSV</button></div></div>
+    ${leadTabs('site')}
+    ${S.errors.leads ? `<div class="demo-bar" style="border-color:var(--bad);margin-bottom:16px">${CHECK.fail.replace('<svg', '<svg style="width:18px;height:18px;color:var(--bad)"')} ${esc(S.errors.leads)} <a class="btn btn--sm" href="#/setup">Open setup</a></div>` : ''}
+    <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">Search leads</span><input id="q-sitelead" type="search" placeholder="Search name, email, phone, city…" value="${esc(u.q)}" autocomplete="off"></label></div>
+    <div class="chips" role="group" aria-label="Filter by status" style="margin-bottom:8px"><button class="chip" type="button" data-lst="all" aria-pressed="${u.status === 'all'}">All<small>${all.length}</small></button>${LEAD_STATUS.map(st => `<button class="chip" type="button" data-lst="${st}" aria-pressed="${u.status === st}">${st}<small>${all.filter(x => (x.status || 'New') === st).length}</small></button>`).join('')}</div>
+    ${types.length > 1 ? `<div class="chips" role="group" aria-label="Filter by form" style="margin-bottom:14px"><button class="chip" type="button" data-ltype="all" aria-pressed="${u.type === 'all'}">Every form</button>${types.map(t => `<button class="chip" type="button" data-ltype="${esc(t)}" aria-pressed="${u.type === t}">${esc(t)}<small>${all.filter(x => leadType(x) === t).length}</small></button>`).join('')}</div>` : ''}
+    ${!S.loaded.leads ? '<p class="empty">Loading…</p>' : list.length ? `<div class="table-wrap"><table><thead><tr><th scope="col">Lead</th><th scope="col">Form</th><th scope="col">Details</th><th scope="col">Status</th><th scope="col">Received</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody>
+      ${list.map(x => `<tr style="cursor:default"><td class="lead-cell"><b style="font-weight:500">${esc(x.name || x.email || x.phone || 'Unknown')}</b><span class="sub">${esc([x.email, x.phone, x.city].filter(Boolean).join(' · '))}</span></td>
+        <td data-l="Form">${esc(leadType(x))}</td><td data-l="Details" title="${esc(det(x))}">${esc(det(x) || '—')}</td>
+        <td data-l="Status"><select class="select lead-status" style="min-height:36px" data-lead="${esc(x.id)}" aria-label="Status for ${esc(x.name || x.email || 'lead')}">${LEAD_STATUS.map(st => `<option ${st === (x.status || 'New') ? 'selected' : ''}>${st}</option>`).join('')}</select></td>
+        <td data-l="Received" title="${esc(full(x.createdAt))}">${ago(x.createdAt)}</td>
+        <td data-l=""><span style="display:inline-flex;gap:6px">${wa(x) ? `<a class="btn btn--sm" href="${esc(wa(x))}" target="_blank" rel="noopener">WhatsApp</a>` : ''}${x.email ? `<a class="btn btn--sm" href="mailto:${esc(x.email)}">Email</a>` : ''}</span></td></tr>`).join('')}
+      </tbody></table></div><p class="count-line">${list.length} of ${all.length}</p>` : `<div class="card empty">${all.length ? 'No matches. Try another search or filter.' : 'No leads yet. New form entries from the website appear here the moment they are sent.'}</div>`}`;
+  bindLeadTabs();
+  $('#q-sitelead').addEventListener('input', e => { u.q = e.target.value; render(); });
+  $$('[data-lst]').forEach(b => b.addEventListener('click', () => { u.status = b.dataset.lst; render(); }));
+  $$('[data-ltype]').forEach(b => b.addEventListener('click', () => { u.type = b.dataset.ltype; render(); }));
+  $$('.lead-status').forEach(sel => sel.addEventListener('change', async () => {
+    try { await saveDoc('leads', sel.dataset.lead, { status: sel.value, updatedAt: new Date().toISOString(), updatedBy: S.user.email }); toast('Lead updated', sel.value); }
+    catch (e) { toast('Could not save', e.message || String(e)); }
+  }));
+  const c = $('#csv'); if (c) c.addEventListener('click', () => csv('leads-' + new Date().toISOString().slice(0, 10) + '.csv', list.map(x => ({ ...x, form: leadType(x), info: det(x) })), [['createdAt', 'Received'], ['form', 'Form'], ['name', 'Name'], ['email', 'Email'], ['phone', 'Phone'], ['city', 'City'], ['info', 'Details'], ['page', 'Page'], ['status', 'Status']]));
+}
+
 /* ===================== Form leads (Google Sheets) ===================== */
 async function fetchLeads() {
   S.leadsErr = ''; S.leads = null; render();
@@ -752,7 +800,7 @@ async function fetchLeads() {
   } catch (e) { S.leadsErr = e.message || String(e); }
   render();
 }
-function leads() {
+function sheetLeads() {
   if (S.mode === 'live' && !CONFIG.sheetsReaderUrl) {
     $('#view').innerHTML = `<div class="top"><div><h1>Form leads</h1><p>Contact, newsletter and Bella leads from your Google Sheets.</p></div></div>
       <section class="card"><div class="card-head"><h2>Connect your Google Sheets</h2></div>
@@ -901,6 +949,19 @@ function bella() {
     ${!S.loaded.bellaPayments ? '<p class="empty">Loading…</p>' : list.length ? `<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Plan</th><th>Amount</th><th>Status</th><th>Reason</th><th>Follow-up</th><th>When</th></tr></thead><tbody>
       ${list.map(x => `<tr data-pay="${esc(x.id)}" tabindex="0"><td class="lead-cell"><b style="font-weight:500">${esc(x.name || x.email || 'Unknown')}</b><span class="sub">${esc(x.email || x.phone || '')}</span></td><td data-l="Plan">${esc(planLabel(x))}</td><td data-l="Amount">${money(x.amount, x.currency)}<span class="sub">${esc(x.gateway === 'stripe' ? 'Stripe' : 'Razorpay')}</span></td><td data-l="Status">${payPill(x.view)}</td><td data-l="Reason" title="${esc(x.reason || '')}">${esc(x.reason || '—')}</td><td data-l="Follow-up">${esc(x.view === 'Paid' ? '—' : (x.followUp || 'New'))}</td><td data-l="When" title="${esc(full(x.createdAt))}">${ago(x.createdAt)}</td></tr>`).join('')}
     </tbody></table></div><p class="count-line">${list.length} of ${rows.length}</p>` : `<div class="card empty">${rows.length ? 'No matches.' : 'No Bella payments recorded yet. They appear here as soon as the Razorpay and Stripe webhooks are connected (see Setup).'}</div>`}`;
+  $('#view').insertAdjacentHTML('beforeend', `<section class="card" style="margin-top:18px"><div class="card-head"><h2>Record a missing payment</h2></div>
+    <p style="margin:0 0 10px;color:var(--muted)">A customer paid but they're not in the list? Paste the Razorpay payment ID (<code>pay_…</code>) or the Stripe Checkout session ID (<code>cs_…</code>). It opens the customer's confirmation page, which checks the payment with Razorpay or Stripe, records it here, creates their account and emails their setup guide.</p>
+    <form id="rec-pay" style="display:flex;gap:8px;flex-wrap:wrap"><label class="search" style="flex:1 1 260px"><span class="sr-only">Payment ID</span><input id="rec-id" placeholder="pay_… or cs_…" autocomplete="off" spellcheck="false"></label><button class="btn btn--red" type="submit">Record payment</button></form>
+    <p class="history" id="rec-msg" style="margin:8px 0 0"></p></section>`);
+  $('#rec-pay').addEventListener('submit', e => {
+    e.preventDefault(); const id = $('#rec-id').value.trim(), msg = $('#rec-msg');
+    let url = '';
+    if (/^pay_[A-Za-z0-9]+$/.test(id)) url = '/bella/thank-you?gw=razorpay&razorpay_payment_id=' + encodeURIComponent(id);
+    else if (/^cs_[A-Za-z0-9_]+$/.test(id)) url = '/bella/thank-you?gw=stripe&session_id=' + encodeURIComponent(id);
+    if (!url) { msg.textContent = 'That doesn’t look right. Razorpay IDs start with pay_ and Stripe Checkout session IDs start with cs_.'; return; }
+    msg.textContent = 'Opened in a new tab. When it says "Payment successful", the payment appears here within seconds.';
+    window.open((location.hostname.endsWith('redflaghomes.in') ? '' : CONFIG.site) + url, '_blank', 'noopener');
+  });
   $('#q-bella').addEventListener('input', e => { u.q = e.target.value; render(); });
   $$('[data-pst]').forEach(b => b.addEventListener('click', () => { u.status = b.dataset.pst; render(); }));
   $('#csv').addEventListener('click', () => csv('bella-payments-' + new Date().toISOString().slice(0, 10) + '.csv', list.map(x => ({ ...x, planText: planLabel(x) })), [['createdAt', 'When'], ['name', 'Name'], ['email', 'Email'], ['phone', 'Phone'], ['planText', 'Plan'], ['currency', 'Currency'], ['amount', 'Amount'], ['gateway', 'Gateway'], ['view', 'Status'], ['reason', 'Reason'], ['followUp', 'Follow-up'], ['paymentId', 'Payment ID'], ['adminNotes', 'Notes']]));
@@ -1156,7 +1217,8 @@ match /users/{id}        { allow read: if isRfAdmin(); }
 match /posts/{id}        { allow read: if resource.data.status == 'published' || isRfAdmin();
                            allow create, update, delete: if isRfAdmin(); }
 // Bella payments: written only by your server webhooks; admins read and add follow-ups.
-match /bellaPayments/{id} { allow read, update: if isRfAdmin(); }`;
+match /bellaPayments/{id} { allow read, update: if isRfAdmin(); }
+match /leads/{id}         { allow read, update, delete: if isRfAdmin(); }`;
   const item = (ok, t, d) => `<li class="${ok === true ? 'ok' : ok === false ? 'fail' : 'warn'}">${CHECK[ok === true ? 'ok' : ok === false ? 'fail' : 'warn']}<div><b>${esc(t)}</b><small>${d}</small></div><span></span></li>`;
   const live = S.mode === 'live';
   $('#view').innerHTML = `

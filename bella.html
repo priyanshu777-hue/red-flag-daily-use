@@ -1854,7 +1854,7 @@
 
   // Where the pre-checkout answers are sent (name, email, city, phone, listings, plan).
   // Paste your Google Apps Script web app URL here (see bella-leads-google-sheet.gs). Empty = not sent anywhere.
-  var LEAD_ENDPOINT = '';
+  var LEAD_ENDPOINT = '/api/leads'; // saves the lead to the admin panel (Leads)
 
   // Checkout links per plan, currency and billing period.
   // USD = Stripe Payment Links. INR = Razorpay Payment Links. An empty link falls back to WhatsApp.
@@ -2186,7 +2186,7 @@
 
     function lead(outcome) {
       return {
-        name: (data.name || '').trim(), email: (data.email || '').trim(), city: (data.city || '').trim(), phone: (data.phone || '').trim(),
+        formType: 'bella', name: (data.name || '').trim(), email: (data.email || '').trim(), city: (data.city || '').trim(), phone: (data.phone || '').trim(),
         listings: data.listings || '', plan: PLAN_NAMES[plan], period: state.period, currency: payCurrency(),
         price: PRICES[payCurrency()][state.period][plan], outcome: outcome, page: location.href, time: new Date().toISOString()
       };
