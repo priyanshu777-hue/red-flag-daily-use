@@ -20,10 +20,10 @@ In the Express server file, find the existing Red Flag pages block. It starts wi
 ```js
 // Red Flag Homes: serve the Bella, Admin, Journal, legal (/privacy, /terms, /cancellation) and /signin pages byte for byte from GitHub (via the jsDelivr CDN),
 // and give the Journal real SEO: each story's title, description, social preview image and full text are in the
-// HTML Google receives, plus /sitemap.xml and /robots.txt.
+// HTML Google receives, plus /sitemap.xml and /robots.txt, and /api/geo (visitor country for INR/USD pricing).
 // Paste as-is into the Express server, right after `const app = express()` and BEFORE express.static and the
 // single-page-app catch-all. Do not edit; to update the pages, only change RF_VERSION.
-const RF_VERSION = '661ed9e387108a50b936c878ab2f3267ee3de7cf';
+const RF_VERSION = '1e61fc580c0903ae3a347f4a204eab57cf8a9c7f';
 const RF_CDN = 'https://cdn.jsdelivr.net/gh/priyanshu777-hue/red-flag-daily-use@' + RF_VERSION + '/';
 const RF_SITE = 'https://redflaghomes.in';
 const RF_PAGES = [
@@ -165,6 +165,37 @@ async function rfJournal(path, html) {
 }
 
 // ---- Routes ----
+// Visitor's country for local pricing: /bella shows INR in India and USD everywhere else.
+// Country only. The IP address is not stored (a short in-memory cache avoids repeat lookups).
+const rfGeoCache = new Map();
+async function rfGeoLookup(ip) {
+  const urls = ['https://get.geojs.io/v1/ip/country/' + encodeURIComponent(ip) + '.json', 'https://api.country.is/' + encodeURIComponent(ip)];
+  for (const u of urls) {
+    try {
+      const r = await fetch(u, { signal: AbortSignal.timeout(2000) });
+      const j = await r.json();
+      if (j && /^[A-Z]{2}$/.test(j.country)) return j.country;
+    } catch (e) {}
+  }
+  return '';
+}
+app.get('/api/geo', async (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
+  const h = req.headers;
+  let country = String(h['cf-ipcountry'] || h['x-country-code'] || h['x-vercel-ip-country'] || h['cloudfront-viewer-country'] || h['x-appengine-country'] || '').toUpperCase();
+  if (!/^[A-Z]{2}$/.test(country) || country === 'XX') country = '';
+  const ip = String(h['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || '';
+  if (!country && ip && !/^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|::1$|::ffff:127\.|f[cd])/i.test(ip)) {
+    const hit = rfGeoCache.get(ip);
+    if (hit && Date.now() - hit.at < 6 * 3600 * 1000) country = hit.country;
+    else {
+      country = await rfGeoLookup(ip);
+      if (rfGeoCache.size > 5000) rfGeoCache.clear();
+      rfGeoCache.set(ip, { country, at: Date.now() });
+    }
+  }
+  res.json({ country });
+});
 app.get('/sitemap.xml', async (req, res) => {
   const posts = await rfPosts();
   const day = (v) => { const t = Date.parse(v); return t ? new Date(t).toISOString().slice(0, 10) : ''; };
