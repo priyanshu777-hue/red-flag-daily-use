@@ -1736,7 +1736,7 @@
           <li><b>Account data, once you add Bella as a co-host:</b> your listing details, calendar, prices, reservations, and messages with guests and with platform support.</li>
           <li><b>Guest data:</b> names, messages, booking dates and similar details of your guests, which Bella needs in order to reply to them.</li>
           <li><b>Messages with us:</b> what you send us on WhatsApp or by email.</li>
-          <li><b>Basic technical data:</b> your browser type and approximate region from your time zone or language, used to show the right currency and language. This page saves your currency and billing choice on your own device only.</li>
+          <li><b>Basic technical data:</b> your browser type, and your approximate country from your IP address, time zone or language, used to show the right currency and language. We look up the country only and don't store your IP address for this. This page saves your currency and billing choice on your own device only.</li>
         </ul>
         <h4>2. Why we use it</h4>
         <ul>
@@ -1945,6 +1945,30 @@
     currency: saved === 'INR' || saved === 'USD' ? saved : guessCurrency(),
     period: store('bella-period') === 'yearly' ? 'yearly' : 'monthly'
   };
+  // Then check the visitor's country from their IP: India shows INR, every other country shows USD.
+  // Whenever the country changes (new network, travel, VPN), the price switches automatically.
+  // A manual INR/USD choice is kept until the country changes again.
+  (function geoCurrency() {
+    if (!window.fetch) return;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
+    fetch('/api/geo', { cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (j) {
+        clearTimeout(timer);
+        var country = j && /^[A-Z]{2}$/.test(j.country) ? j.country : '';
+        if (!country) return;
+        var cur = country === 'IN' ? 'INR' : 'USD';
+        var last = store('bella-geo-country');
+        store('bella-geo-country', country);
+        if (last === country && (saved === 'INR' || saved === 'USD')) return;
+        if (state.currency === cur) return;
+        // Same as tapping the currency button, so the plans, savings calculator and mini picker all update.
+        var btn = document.querySelector('[data-currency="' + cur + '"]');
+        if (btn) btn.click(); else { state.currency = cur; store('bella-currency', cur); render(); }
+      })
+      .catch(function () { clearTimeout(timer); });
+  })();
 
   function fmt(cur, n) {
     var p = PRICES[cur];
