@@ -1,0 +1,53 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--bg:#E7C9C1;--ink:#141414;--red:#C8102E;--card:#FBF4F1;--muted:#6b5a55}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;color:var(--ink);background:#000}
+.s{width:1080px;height:1920px;background:var(--bg);position:relative;overflow:hidden}
+.s.dark{background:#120f14;color:#fff}
+.logo{position:absolute;top:260px;left:80px;font-weight:800;font-size:52px;letter-spacing:-2px;background:var(--card);color:var(--ink);padding:16px 32px;border-radius:40px}
+.logo i{color:var(--red);font-style:normal}
+.handle{position:absolute;top:278px;right:80px;font-size:32px;font-weight:600;color:var(--muted)}
+.dark .handle{color:#b9aab3}
+.wrap{position:absolute;left:80px;right:80px;top:420px}
+.kicker{font-size:38px;font-weight:700;color:var(--red);margin-bottom:24px;letter-spacing:.5px}
+h1{font-size:96px;line-height:1.03;letter-spacing:-4px;font-weight:800}
+h1 em{font-style:normal;color:var(--red)}
+.dark h1 em{color:#ff4d6a}
+.body{font-size:46px;line-height:1.32;color:#3d302d;margin-top:36px;font-weight:500;white-space:pre-line}
+.dark .body{color:#d8cdd2}
+.cards{margin-top:44px;display:grid;gap:22px}
+.card{background:var(--card);border-radius:36px;padding:30px 36px;font-size:44px;font-weight:700;color:var(--ink)}
+.card small{display:block;font-size:30px;font-weight:500;color:var(--muted);margin-top:6px}
+.chat{margin-top:44px;background:var(--card);border-radius:44px;padding:36px;color:var(--ink)}
+.b{font-size:42px;padding:22px 32px;border-radius:32px;max-width:85%;margin:12px 0;line-height:1.25;font-weight:500;width:fit-content}
+.g{background:#efe3df}
+.me{background:var(--ink);color:#fff;margin-left:auto}
+.cta{position:absolute;left:80px;right:80px;bottom:300px;text-align:center}
+.pill{display:inline-block;background:var(--red);color:#fff;font-weight:800;font-size:46px;padding:28px 52px;border-radius:60px}
+.pill.ink{background:var(--ink)}
+.dark .pill.ink{background:#fff;color:#141414}
+.mascot{position:absolute;left:0;bottom:-90px;width:1080px}
+</style></head><body>
+<div class="s" id="s"></div>
+<script>
+// DATA: {theme:'blush'|'dark', kicker, headline (may contain <em>), body, cards:[{t,sub}], chat:[{who:'g'|'me', text}], cta, ctaStyle:'red'|'ink', mascot:bool}
+window.renderStory = function (d) {
+  const s = document.getElementById('s');
+  s.className = 's' + (d.theme === 'dark' ? ' dark' : '');
+  const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const hl = esc(d.headline || '').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+  let h = `<div class="logo">Bella<i>.</i></div><div class="handle">@redflag.homes</div><div class="wrap">`;
+  if (d.kicker) h += `<div class="kicker">${esc(d.kicker)}</div>`;
+  h += `<h1>${hl}</h1>`;
+  if (d.body) h += `<div class="body">${esc(d.body)}</div>`;
+  if (d.cards && d.cards.length) h += `<div class="cards">` + d.cards.map(c => `<div class="card">${esc(c.t)}${c.sub ? `<small>${esc(c.sub)}</small>` : ''}</div>`).join('') + `</div>`;
+  if (d.chat && d.chat.length) h += `<div class="chat">` + d.chat.map(m => `<div class="b ${m.who === 'me' ? 'me' : 'g'}">${esc(m.text)}</div>`).join('') + `</div>`;
+  h += `</div>`;
+  if (d.mascot) h += `<img class="mascot" src="mascot.png">`;
+  if (d.cta) h += `<div class="cta"><span class="pill ${d.ctaStyle === 'ink' ? 'ink' : ''}">${esc(d.cta)}</span></div>`;
+  s.innerHTML = h;
+};
+</script>
+</body></html>
