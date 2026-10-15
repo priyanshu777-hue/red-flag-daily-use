@@ -38,12 +38,12 @@
  {
   "name": "story-3-yours",
   "theme": "dark",
-  "kicker": "FROM TONIGHT'S REEL",
-  "headline": "Got one worse than\n*\"15 friends, no party\"?*",
+  "kicker": "YOUR TURN",
+  "headline": "Worst guest message\n*you've* ever had?",
   "chat": [
    {
     "who": "g",
-    "text": "15 friends, no party."
+    "text": "Booked for 2. Bringing 15 friends, no party."
    },
    {
     "who": "me",
@@ -52,6 +52,7 @@
   ],
   "body": "Send it over and we'll write back the reply Bella would send.",
   "cta": "Type it out. No names.",
-  "ctaStyle": "ink"
+  "ctaStyle": "ink",
+  "bodyAfter": true
  }
 ]

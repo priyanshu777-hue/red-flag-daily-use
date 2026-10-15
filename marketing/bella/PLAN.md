@@ -39,17 +39,17 @@ Avoid the couple and "red flag" relationship reels from September. They don't re
 
 ## Cadence
 
+**From 15 Oct 2026, the owner asked for stories only.** The automation posts no reels or carousels. Feed posts are made by hand.
+
 | Format | How often | When (IST) |
 |---|---|---|
-| Reel | 1 a day | 7:00–8:00 PM |
 | Stories | 3 a day | about 9 AM, 1:30 PM and 8 PM |
-| Carousel | 2 a week | 12:30 PM |
 
 ## The CTA loop
 
-Every reel and carousel ends with **Comment "BELLA"**. Reply to each comment and send a DM within the day. Stories ask for replies, and replies land in DMs.
+Stories ask for a reply or a DM, and replies land in the inbox. Answer each one within the day; Meta only allows replies within 24 hours. Rotate the three daily stories between relatable, engagement and soft Bella mentions, and keep at least one that asks for a reply.
 
-Check every week: shares and saves per reel, comments that say "BELLA", DM count, and follower growth.
+Check every week: story replies, DMs, "BELLA" comments on the owner's own posts, and follower growth.
 
 ## Production
 
