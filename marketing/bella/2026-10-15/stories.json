@@ -1,0 +1,57 @@
+[
+ {
+  "name": "story-1-decoded",
+  "kicker": "HOST DICTIONARY",
+  "headline": "Guest messages,\n*decoded.*",
+  "cards": [
+   {
+    "t": "\"Bas 5 min mein pahunch rahe hain\"",
+    "sub": "= 45 minutes"
+   },
+   {
+    "t": "\"We're very quiet people\"",
+    "sub": "= there's a speaker in the bag"
+   },
+   {
+    "t": "\"Thoda sa late checkout?\"",
+    "sub": "= 3 PM"
+   }
+  ],
+  "cta": "Send this to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-rate",
+  "kicker": "QUICK ONE",
+  "headline": "Rate this guest message,\n*1 to 10.*",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Check-out 11 baje hai na? Hum 3 baje tak nikal jayenge."
+   }
+  ],
+  "body": "1 is fine. 10 is a hard no.",
+  "cta": "Reply with one number",
+  "ctaStyle": "ink",
+  "bodyAfter": true
+ },
+ {
+  "name": "story-3-yours",
+  "theme": "dark",
+  "kicker": "FROM TONIGHT'S REEL",
+  "headline": "Got one worse than\n*\"15 friends, no party\"?*",
+  "chat": [
+   {
+    "who": "g",
+    "text": "15 friends, no party."
+   },
+   {
+    "who": "me",
+    "text": "Yours?"
+   }
+  ],
+  "body": "Send it over and we'll write back the reply Bella would send.",
+  "cta": "Type it out. No names.",
+  "ctaStyle": "ink"
+ }
+]

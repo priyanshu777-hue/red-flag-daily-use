@@ -18,8 +18,8 @@ h1 em{font-style:normal;color:var(--red)}
 .body{font-size:46px;line-height:1.32;color:#3d302d;margin-top:36px;font-weight:500;white-space:pre-line}
 .dark .body{color:#d8cdd2}
 .cards{margin-top:44px;display:grid;gap:22px}
-.card{background:var(--card);border-radius:36px;padding:30px 36px;font-size:44px;font-weight:700;color:var(--ink)}
-.card small{display:block;font-size:30px;font-weight:500;color:var(--muted);margin-top:6px}
+.card{background:var(--card);border-radius:36px;padding:34px 40px;font-size:46px;font-weight:700;color:var(--ink)}
+.card small{display:block;font-size:40px;font-weight:800;color:var(--red);margin-top:10px}
 .chat{margin-top:44px;background:var(--card);border-radius:44px;padding:36px;color:var(--ink)}
 .b{font-size:42px;padding:22px 32px;border-radius:32px;max-width:85%;margin:12px 0;line-height:1.25;font-weight:500;width:fit-content}
 .g{background:#efe3df}
@@ -32,7 +32,7 @@ h1 em{font-style:normal;color:var(--red)}
 </style></head><body>
 <div class="s" id="s"></div>
 <script>
-// DATA: {theme:'blush'|'dark', kicker, headline (may contain <em>), body, cards:[{t,sub}], chat:[{who:'g'|'me', text}], cta, ctaStyle:'red'|'ink', mascot:bool}
+// DATA: {bodyAfter:bool (body below cards/chat), theme:'blush'|'dark', kicker, headline (may contain <em>), body, cards:[{t,sub}], chat:[{who:'g'|'me', text}], cta, ctaStyle:'red'|'ink', mascot:bool}
 window.renderStory = function (d) {
   const s = document.getElementById('s');
   s.className = 's' + (d.theme === 'dark' ? ' dark' : '');
@@ -41,9 +41,11 @@ window.renderStory = function (d) {
   let h = `<div class="logo">Bella<i>.</i></div><div class="handle">@redflag.homes</div><div class="wrap">`;
   if (d.kicker) h += `<div class="kicker">${esc(d.kicker)}</div>`;
   h += `<h1>${hl}</h1>`;
-  if (d.body) h += `<div class="body">${esc(d.body)}</div>`;
+  const body = d.body ? `<div class="body">${esc(d.body)}</div>` : '';
+  if (!d.bodyAfter) h += body;
   if (d.cards && d.cards.length) h += `<div class="cards">` + d.cards.map(c => `<div class="card">${esc(c.t)}${c.sub ? `<small>${esc(c.sub)}</small>` : ''}</div>`).join('') + `</div>`;
   if (d.chat && d.chat.length) h += `<div class="chat">` + d.chat.map(m => `<div class="b ${m.who === 'me' ? 'me' : 'g'}">${esc(m.text)}</div>`).join('') + `</div>`;
+  if (d.bodyAfter) h += body;
   h += `</div>`;
   if (d.mascot) h += `<img class="mascot" src="mascot.png">`;
   if (d.cta) h += `<div class="cta"><span class="pill ${d.ctaStyle === 'ink' ? 'ink' : ''}">${esc(d.cta)}</span></div>`;
