@@ -1,0 +1,123 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif}
+#stage{position:relative;width:1080px;height:1920px;background:#E7C9C1;overflow:hidden;color:#141414}
+.abs{position:absolute}
+#hook{left:80px;right:80px;top:300px}
+#hook .l1{font-size:124px;font-weight:800;letter-spacing:-5px;line-height:1}
+#hook .l1 em{font-style:normal;color:#C8102E}
+#hook .l2{font-size:96px;font-weight:800;letter-spacing:-4px;line-height:1.05;margin-top:10px}
+#hook .l3{font-size:72px;font-weight:700;letter-spacing:-2px;margin-top:24px;color:#3d302d}
+.card{left:80px;width:920px;background:#FBF4F1;border-radius:44px;padding:34px 36px 30px 36px;box-shadow:0 24px 60px rgba(80,30,20,.16)}
+.badge{position:absolute;top:-26px;left:-18px;width:84px;height:84px;border-radius:50%;background:#C8102E;color:#fff;font-weight:800;font-size:48px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(200,16,46,.35)}
+.meta{font-size:30px;color:#6b5a55;font-weight:600;margin:0 0 14px 70px}
+.bub{font-size:46px;font-weight:500;line-height:1.25;padding:24px 32px;border-radius:34px;width:fit-content;max-width:88%}
+.g{background:#efe3df}
+.chip{display:none;margin-top:18px;font-size:30px;font-weight:700;color:#6b5a55;border:3px solid #d9c3bc;border-radius:30px;padding:10px 22px;width:fit-content}
+.reply{display:none;margin-top:18px;justify-content:flex-end;align-items:flex-end;gap:16px}
+.reply .me{background:#141414;color:#fff;font-size:40px;font-weight:600;line-height:1.25;padding:22px 30px;border-radius:32px;max-width:640px}
+.reply .ava{width:84px;height:84px;border-radius:50%;flex:none}
+.tag{display:none;text-align:right;font-size:26px;font-weight:700;color:#8a6f68;margin-top:8px;margin-right:100px}
+.dots{display:none;margin:18px 100px 0 auto;width:120px;background:#141414;border-radius:30px;padding:18px 0;text-align:center;color:#fff;font-size:40px;letter-spacing:6px;line-height:.6}
+#orthis{left:80px;font-size:110px;font-weight:800;letter-spacing:-4px}
+#band{left:0;right:0;top:860px;height:230px;background:#141414;color:#fff;font-size:104px;font-weight:800;letter-spacing:-4px;display:flex;align-items:center;justify-content:center}
+#notif{left:60px;right:60px;top:270px;background:rgba(251,244,241,.97);border-radius:36px;padding:26px 30px;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;gap:22px;align-items:center}
+#notif img{width:80px;height:80px;border-radius:50%}
+#notif .t{font-size:34px;font-weight:600;line-height:1.3;flex:1}
+#notif .t b{display:block;font-size:26px;color:#6b5a55;font-weight:700;margin-bottom:4px}
+#notif .btns{display:flex;gap:12px}
+#notif .btns span{background:#e3d6d2;border-radius:22px;padding:12px 24px;font-size:30px;font-weight:700}
+#stamp{inset:0;background:#E7C9C1;padding:520px 80px 0}
+#stamp div{font-size:124px;font-weight:800;letter-spacing:-5px;line-height:1.08}
+#stamp div:last-child{color:#C8102E}
+#end{inset:0;background:#E7C9C1}
+#end .logo{position:absolute;top:240px;left:80px;font-weight:800;font-size:52px;background:#FBF4F1;padding:14px 30px;border-radius:40px}
+#end .logo i{color:#C8102E;font-style:normal}
+#end .h{position:absolute;top:400px;left:80px;right:80px;font-size:112px;font-weight:800;letter-spacing:-5px;line-height:1.02}
+#end .h em{font-style:normal;color:#C8102E}
+#end .s{position:absolute;top:780px;left:80px;font-size:44px;font-weight:600;color:#3d302d}
+#end .cta{position:absolute;top:900px;left:80px;background:#C8102E;color:#fff;border-radius:50px;padding:26px 52px;font-weight:800;font-size:56px;line-height:1.1}
+#end .cta small{display:block;font-size:36px;font-weight:700;opacity:.9}
+#end img{position:absolute;left:0;bottom:-40px;width:1080px}
+</style></head><body>
+<div id="stage">
+  <div class="abs" id="hook"><div class="l1">Booked for <em>2</em>,</div><div class="l2">but bringing 15.</div><div class="l3">Your worst guest?</div></div>
+  <div class="abs card" id="cardA"><div class="badge" id="bA">A</div><div class="meta">Guest · booked for 2</div><div class="bub g">15 friends, no party.</div>
+    <div class="chip" id="chipA">Your house rule: 2 guests max</div>
+    <div class="dots" id="dotsA">• • •</div>
+    <div class="reply" id="repA"><div class="me">Ji, booking 2 guests ki hai. Extra guests allowed nahi.</div><img class="ava" src="avatar.png"></div>
+    <div class="tag" id="tagA">Bella · Hinglish</div></div>
+  <div class="abs card" id="cardB"><div class="badge" id="bB">B</div><div class="meta">Guest · 1 night</div><div class="bub g">5-star review pakka. Bas ₹2,000 kam kar do?</div>
+    <div class="dots" id="dotsB">• • •</div>
+    <div class="reply" id="repB"><div class="me">Shukriya ji! Discount host decide karenge.</div><img class="ava" src="avatar.png"></div>
+    <div class="tag" id="tagB">Bella · Hinglish</div></div>
+  <div class="abs" id="orthis">Or this?</div>
+  <div class="abs" id="band">Worse guest: A or B?</div>
+  <div class="abs" id="notif"><img src="avatar.png"><div class="t"><b>BELLA · now</b>Guest wants ₹2,000 off. Approve?</div><div class="btns"><span>Yes</span><span>No</span></div></div>
+  <div class="abs" id="stamp"><div id="s1">Hinglish.</div><div id="s2">Your rules.</div><div id="s3">Your call.</div></div>
+  <div class="abs" id="end">
+    <div class="logo">Bella<i>.</i></div>
+    <div class="h">So, <em>worst guest</em>:<br>A or B?</div>
+    <div class="s">Bella. Your AI co-host on WhatsApp.</div>
+    <div class="cta">Comment "BELLA"<small>+ A or B</small></div>
+    <img id="masc" src="mascot.png">
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=x=>Math.max(0,Math.min(1,x));
+const ease=x=>1-Math.pow(1-cl(x),3);
+const lerp=(a,b,k)=>a+(b-a)*k;
+const vis=(el,on,disp)=>{el.style.display=on?(disp||'block'):'none'};
+function fadeIn(el,t0,t,dur=.3){const k=ease((t-t0)/dur);el.style.opacity=k;return k}
+window.render=function(t){
+  // HOOK 0-2.4, slides out 2.4-2.8
+  const out=ease((t-2.4)/.4);
+  $('hook').style.opacity=t<2.4?1:1-out;
+  $('hook').style.transform=`translateY(${-160*out}px)`;
+  // CARD A: pops at .4 at top 820, moves to 300 from 2.4
+  const a=$('cardA');
+  const pop=ease((t-.4)/.15);
+  a.style.opacity=t<.4?0:1;
+  a.style.transform=`scale(${lerp(.92,1,pop)})`;
+  a.style.top=lerp(820,300,ease((t-2.4)/.4))+'px';
+  // A extras
+  vis($('chipA'),t>=6.3); if(t>=6.3) fadeIn($('chipA'),6.3,t);
+  vis($('dotsA'),t>=6.7&&t<7.1);
+  vis($('repA'),t>=7.1,'flex'); if(t>=7.1){const k=ease((t-7.1)/.3);$('repA').style.opacity=k;$('repA').style.transform=`translateX(${(1-k)*80}px)`}
+  vis($('tagA'),t>=7.1); if(t>=7.1) fadeIn($('tagA'),7.2,t);
+  // CARD B: slides in from left at 2.4, sits under A
+  const b=$('cardB');
+  const sl=ease((t-2.4)/.4);
+  b.style.opacity=t<2.4?0:1;
+  b.style.left=lerp(-1000,80,sl)+'px';
+  b.style.top=(parseFloat(a.style.top)+a.offsetHeight+60)+'px';
+  vis($('dotsB'),t>=8.5&&t<8.8);
+  vis($('repB'),t>=8.8,'flex'); if(t>=8.8){const k=ease((t-8.8)/.3);$('repB').style.opacity=k;$('repB').style.transform=`translateX(${(1-k)*80}px)`}
+  vis($('tagB'),t>=8.8); if(t>=8.8) fadeIn($('tagB'),8.9,t);
+  // "Or this?" 2.6-4.6 below B
+  const ot=$('orthis'); ot.style.top=(parseFloat(b.style.top)+b.offsetHeight+50)+'px';
+  ot.style.opacity=t<2.6?0:(t<4.6?ease((t-2.6)/.3):1-ease((t-4.6)/.2));
+  // BAND 4.6-6.2
+  const bd=$('band');
+  const bin=ease((t-4.6)/.3), bout=ease((t-6.2)/.25);
+  bd.style.opacity=t<4.6?0:(t<6.2?1:1-bout);
+  bd.style.transform=`translateX(${(1-bin)*-1080}px)`;
+  // badge pulse 4.9 (A) and 5.4 (B)
+  const pulse=(t0)=>{const x=(t-t0)/.35; return x>0&&x<1?1+.15*Math.sin(Math.PI*x):1};
+  $('bA').style.transform=`scale(${pulse(4.9)})`; $('bB').style.transform=`scale(${pulse(5.4)})`;
+  // NOTIF 9.4-10.8
+  const n=$('notif'); const nin=ease((t-9.4)/.3);
+  n.style.opacity=t<9.4?0:(t<10.8?nin:0); n.style.transform=`translateY(${(1-nin)*-120}px)`;
+  // STAMP 10.8-12.2
+  const st=$('stamp'); st.style.opacity=t<10.8?0:(t<12.2?ease((t-10.8)/.2):0);
+  ['s1','s2','s3'].forEach((id,i)=>{const t0=10.95+i*.35;const k=ease((t-t0)/.15);$(id).style.opacity=k;$(id).style.transform=`scale(${lerp(1.25,1,k)})`});
+  // END 12.2-15
+  const e=$('end'); e.style.opacity=t<12.2?0:ease((t-12.2)/.3);
+  $('masc').style.transform=`translateY(${(1-ease((t-12.5)/.6))*160}px)`;
+};
+render(0);
+</script>
+</body></html>

@@ -1,0 +1,78 @@
+{
+ "id": "final",
+ "reel_pillar": "engagement",
+ "reel": {
+  "title": "Booked for 2, bringing 15: A or B?",
+  "hook_onscreen": "Booked for 2, but bringing 15. Your worst guest?",
+  "beats": [
+   {
+    "t_start": 0,
+    "t_end": 2.4,
+    "onscreen_text": "Big text: \"Booked for 2,\" / \"but bringing 15.\" / \"Your worst guest?\" + Guest A bubble: \"15 friends, no party.\"",
+    "visual": "Blush #E7C9C1 background, all text readable at frame 0. Line 1 \"Booked for 2,\" in ink #141414 at 120px/800 with \"2\" in red #C8102E (the joke is legible without reading small meta text). \"but bringing 15.\" at 96px, \"Your worst guest?\" at 72px, left-aligned at x 80, y 300-720. At 0.4s a cream #FBF4F1 chat card pops in (scale 0.92 to 1 over 150ms) at y 800-1080 with a grey guest bubble \"15 friends, no party.\" and a red \"A\" badge on its top-left corner. Notification ding at 0.4s. All text inside x 80-850, y 300-1400."
+   },
+   {
+    "t_start": 2.4,
+    "t_end": 4.6,
+    "onscreen_text": "\"Or this?\" / Guest B bubble: \"5-star review pakka. Bas ₹2,000 kam kar do?\"",
+    "visual": "The hook text slides up and out. Card A shrinks to y 300-500. Card B slides in from the left at y 580-880 with meta row \"Guest · 1 night\" and a red \"B\" badge; its grey bubble reads \"5-star review pakka. Bas ₹2,000 kam kar do?\". Big ink text \"Or this?\" at y 980. Second notification ding."
+   },
+   {
+    "t_start": 4.6,
+    "t_end": 6.2,
+    "onscreen_text": "Worse guest: A or B?",
+    "visual": "Both cards stack compactly. A full-width ink #141414 band slides across the middle with white 110px text \"Worse guest: A or B?\". The A and B badges pulse (scale 1 to 1.15 and back) once each. No red-flag imagery. The soft pad swells."
+   },
+   {
+    "t_start": 6.2,
+    "t_end": 8.4,
+    "onscreen_text": "Chip: \"Your house rule: 2 guests max\" / Bella reply under A: \"Ji, booking 2 guests ki hai. Extra guests allowed nahi.\" / tag: Bella · Hinglish",
+    "visual": "The band fades. A small outlined cream chip appears under card A reading \"Your house rule: 2 guests max\" (shows Bella is using the host's rule, not her own). Typing dots for 0.4s, then an ink reply bubble with white text slides in right-aligned in the template's .me style, with a small circular crop of the Bella mascot as avatar and the tag \"Bella · Hinglish\" underneath. Soft whoosh."
+   },
+   {
+    "t_start": 8.4,
+    "t_end": 10.8,
+    "onscreen_text": "Bella reply under B: \"Shukriya ji! Discount host decide karenge.\" / Host notification: \"Bella: Guest wants ₹2,000 off. Approve?\" [Yes] [No]",
+    "visual": "The stack pans (translateY) so card B is centred; card A's reply stays visible above. Typing dots for 0.3s, then the ink reply bubble lands with the Bella avatar and tag \"Bella · Hinglish\". At 9.4s a phone-style notification banner drops from the top (y 300) addressed to the host: \"Bella: Guest wants ₹2,000 off. Approve?\" with two small grey buttons \"Yes\" and \"No\" (nothing tapped; the host decides). Soft ding."
+   },
+   {
+    "t_start": 10.8,
+    "t_end": 12.2,
+    "onscreen_text": "Hinglish. / Your rules. / Your call.",
+    "visual": "Full blush text card. Three lines stamp in about 0.35s apart, 104px/800, left-aligned at x 80: \"Hinglish.\" / \"Your rules.\" / \"Your call.\" with \"Your call.\" in red #C8102E. Three soft ticks."
+   },
+   {
+    "t_start": 12.2,
+    "t_end": 15,
+    "onscreen_text": "So, worst guest: A or B? / Your AI co-host on WhatsApp. / Comment \"BELLA\" + A or B",
+    "visual": "End card from the template's #end layout. Blush background, \"Bella.\" logo pill at the top. Headline \"So, worst guest: A or B?\" at y 240 (\"worst guest\" repeats the hook so the replay loops). Small line \"Bella. Your AI co-host on WhatsApp.\" at y 640. Red #C8102E pill at y 880 reading Comment \"BELLA\" with a smaller second line inside the pill \"+ A or B\" (one comment carries both the keyword and the vote). The Bella mascot (cream blazer, riding the green chameleon) rises from the bottom edge (translateY 120px to 0) below the text safe zone and holds to the end. Final soft chime."
+   }
+  ],
+  "end_card": "Blush #E7C9C1 card held 12.2-15.0s. \"Bella.\" logo pill at top. Headline \"So, worst guest: A or B?\" (echoes \"worst guest\" from the hook for the loop). Sub-line \"Bella. Your AI co-host on WhatsApp.\" Red #C8102E pill: Comment \"BELLA\" + A or B, a single comment that is both the vote and the DM keyword (PostZen keyword match mode \"word\" fires on \"BELLA A\" / \"BELLA B\"). Bella mascot riding the green chameleon rises from the bottom edge, below the text safe zone.",
+  "caption": "Comment \"BELLA\" with A or B: which guest would you rather not host?\n\nA booked for 2, then says 15 friends are coming. No party, promise. B offers you a 5-star review if you knock ₹2,000 off.\n\nIf you're an Airbnb host or run a homestay in India, you've had a version of both. Probably this week. Bella is an AI co-host that answers guests like these on WhatsApp, in Hinglish, while you stay in charge of the rules and the price.\n\nOne comment covers it: the keyword plus your vote. We'll DM you how she'd reply to the worst guest message you've had.\n\n#airbnbhost #homestay #airbnbindia #hostlife"
+ },
+ "stories": [
+  {
+   "slot": "morning",
+   "purpose": "About 9 AM. Relatable and built to be forwarded (DM sends count more than likes per PLAN). Grafted from runner-up A-relatable's 'Guest messages, decoded' story, which all three judges named the most forwardable frame of the day; it replaces the heavier 'finish this guest message' ask. It also warms up the guest-message theme of the 7 PM reel. Layout: story_tpl.html 'cards' block, blush theme, kicker 'HOST HINDI DICTIONARY', three cards where t = the guest quote and sub = the translation, with the awake Bella mascot (mascot.png, not the sleepy face) for the face-in-first-frame rule, and a cta pill. Text stays between y 250 and 1600. Static image, no sticker, API-postable.",
+   "headline": "Guest messages, decoded.",
+   "body": "\"Bas 5 min mein pahunch rahe hain\" = 45 minutes.\n\"We're very quiet people\" = there's a speaker in the bag.\n\"Thoda sa late checkout?\" = 3 PM.",
+   "cta": "Send this to a host friend. They've had all three, probably before lunch and probably from the same guest."
+  },
+  {
+   "slot": "afternoon",
+   "purpose": "About 1:30 PM. The lowest-effort reply of the day: one digit, and the scale is now labelled so there is no ambiguity. Late check-out is a different scenario from the reel. Layout: story_tpl.html 'chat' block (one grey guest bubble on the cream card) plus body and cta pill, blush theme, mascot. The custom 1-to-10 bar and red flag are dropped so it renders with the existing template. Static image, API-postable. Reply to each number in DMs the same day with a Bella-style reply that defers to the host, e.g. 'Ji, check-out 11 baje hai. Late check-out ke liye host se confirm karke batati hoon.'",
+   "headline": "Rate this guest message, 1 to 10.",
+   "body": "\"Check-out 11 baje hai na? Hum 3 baje tak nikal jayenge.\"\n1 is fine. 10 is a hard no.",
+   "cta": "Reply with one number."
+  },
+  {
+   "slot": "evening",
+   "purpose": "About 8 PM, right after the 7-8 PM reel. Points back to the reel and asks for a story reply (replies land in DMs, per PLAN's CTA loop). Asks hosts to type the message instead of screenshotting, so no guest names or phone numbers are shared. Layout: story_tpl.html 'chat' block with the reel's grey bubble \"15 friends, no party.\" and an ink 'me' bubble \"Yours?\", body, cta pill, mascot. The custom dashed bubble is dropped. Static image, API-postable. Answer each reply within Meta's 24-hour window with the reply Bella would send (polite Hinglish, deferring to the host's rules), then mention Comment BELLA.",
+   "headline": "Got one worse than \"15 friends, no party\"?",
+   "body": "Tonight's reel had two guests, and we want yours, so send it over and we'll write back the reply Bella would send.",
+   "cta": "Type it out. Skip names and numbers."
+  }
+ ],
+ "rationale": "Kept the judges' unanimous 'keep': an A-vs-B vote on two verbatim Hinglish guest messages, which is the cheapest comment a host can leave. Fixed every problem they raised.\n\nONE ASK: the vote and Comment BELLA are now one action. Viewers comment \"BELLA A\" or \"BELLA B\", which casts the vote and triggers the keyword DM (PostZen matchMode 'word' fires on BELLA inside it). Caption line 1 is that ask, plainly. The end card reprises the question with the same pill, so the last thing asked is the only thing asked.\n\nHOOK: the old yes/no hook ('Would you still host them?') got an instant 'no' and then switched questions. The new hook, 'Booked for 2, but bringing 15. Your worst guest?', asks the question the reel actually pays off, and it puts 'Booked for 2' big in frame 1 so the joke doesn't depend on small meta text. hookscore.py: 100.0 STRONG (length, specificity, stakes, frontload and address all 100). It is 9 words, over the 6-word guide, so it is set as three stacked lines.\n\nBELLA'S REPLIES: 'Price fixed hai, ji. Review aapki marzi.' is gone. Bella no longer refuses anything on her own authority. Reply A cites the host's own house rule (shown as a chip). Reply B thanks the guest and passes the discount to the host, with an on-screen 'Approve?' notification. That demonstrates PLAN's 'keeps the host in charge' and removes the review-provocation risk. 'Polite. Firm.' became 'Hinglish. Your rules. Your call.'\n\nREPETITION: the '3s' tags and '3 seconds' stamp are dropped ('3 seconds' was in almost every recent post). The end card 'You host. Bella replies.' (echo of 14 Oct) became 'So, worst guest: A or B?'. The waving red flags are removed because they sat too close to the red-flag imagery PLAN says to avoid.\n\nSTORIES: the morning ask was too heavy, so it is swapped for the graft judges rated most forwardable ('Guest messages, decoded', a send-to-a-friend frame). The afternoon scale is labelled (1 fine, 10 hard no). The evening story asks hosts to type the message and skip names and numbers, which removes the guest-PII risk. All three now fit story_tpl.html's existing cards/chat/cta blocks, with no custom bar or dashed bubble and no stickers, so they post as static images via the API.\n\nTIMING: 7 beats tile 0-15.0s with no gaps. Every beat is 2.8s or shorter, and the end card holds 2.8s with Comment \"BELLA\". beats.py detects the loop ('worst guest' repeats from the hook). It reports the reel as over its target, but that estimate assumes a 165 wpm voiceover. This reel has no voiceover, and its bubbles stay on screen as they accumulate. Even so, each reply was cut to 9 words or fewer.\n\nCAPTION: humanize.py found 0 artefacts. detect.py gives 89.3 PASS. caption.py verdict is READY: first line 67 chars and lands whole, one ask, 4 hashtags, 2/2 search terms ('airbnb host', 'homestay'). The overclaim 'so you never have to type...' is removed. Story copy scores 86.2 PASS.\n\nFiles: /tmp/claude-0/-home-user-red-flag-daily-use/fc0c1ca7-6f76-57b8-b656-9a9ef1164b28/scratchpad/final/caption.txt, /tmp/claude-0/-home-user-red-flag-daily-use/fc0c1ca7-6f76-57b8-b656-9a9ef1164b28/scratchpad/final/onscreen.txt, /tmp/claude-0/-home-user-red-flag-daily-use/fc0c1ca7-6f76-57b8-b656-9a9ef1164b28/scratchpad/final/stories.txt, /tmp/claude-0/-home-user-red-flag-daily-use/fc0c1ca7-6f76-57b8-b656-9a9ef1164b28/scratchpad/final/hooks2.txt. Nothing was published or logged."
+}
