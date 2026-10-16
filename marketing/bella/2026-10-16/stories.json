@@ -1,0 +1,75 @@
+[
+ {
+  "name": "story-1-three-checks",
+  "slot": "morning",
+  "pillar": "relatable",
+  "theme": "blush",
+  "kicker": "SCREENSHOT THIS",
+  "headline": "3 checks before\n*every* check-in",
+  "cards": [
+   {
+    "t": "Inverter charged",
+    "sub": "Light kabhi bhi ja sakti hai"
+   },
+   {
+    "t": "Overhead tank full",
+    "sub": "No dry first showers"
+   },
+   {
+    "t": "AC remote works",
+    "sub": "Spare batteries in the drawer"
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-when-details",
+  "slot": "afternoon",
+  "pillar": "reply-bait",
+  "theme": "blush",
+  "kicker": "HOSTS, QUICK ONE",
+  "headline": "When do you send\n*check-in details?*",
+  "cards": [
+   {
+    "t": "A.  The day before"
+   },
+   {
+    "t": "B.  Morning of check-in"
+   },
+   {
+    "t": "C.  When they call from the gate"
+   }
+  ],
+  "body": "No judgement. We've all done C, usually while their auto meter is still running.",
+  "bodyAfter": true,
+  "cta": "Reply A, B or C",
+  "ctaStyle": "ink"
+ },
+ {
+  "name": "story-3-checkin-template",
+  "slot": "evening",
+  "pillar": "soft-bella",
+  "theme": "dark",
+  "kicker": "COPY-PASTE TEMPLATE",
+  "headline": "The 3-line\n*check-in* message",
+  "chat": [
+   {
+    "who": "me",
+    "text": "Hi [Name]! Check-in is at 2 PM."
+   },
+   {
+    "who": "me",
+    "text": "Location: [pin link]"
+   },
+   {
+    "who": "me",
+    "text": "Wi-Fi: [name] / [password]"
+   }
+  ],
+  "body": "You can't copy text from a story, so reply and we'll DM it to you.\nBella can send it on WhatsApp too.",
+  "bodyAfter": true,
+  "cta": "Reply \"CHECK-IN\"",
+  "ctaStyle": "red"
+ }
+]
