@@ -44,6 +44,17 @@ Avoid the couple and "red flag" relationship reels from September. They don't re
 | Format | How often | When (IST) |
 |---|---|---|
 | Stories | 3 a day | about 9 AM, 1:30 PM and 8 PM |
+| Threads text posts | 2 a day | about 11 AM and 6:30 PM |
+
+## Threads
+
+The owner asked for Threads posting on 16 Oct 2026. Composio has no Threads connector, so Threads posts go out through Orshot. Orshot holds the scheduled post and sends it even if this session is offline. Nothing posts until a Threads account is connected in Orshot.
+
+- Posts are text, under 500 characters. Threads rewards conversation, so most posts end on a question.
+- Each day: one relatable or engagement post, plus one soft or marketing post. Never post two marketing posts on the same day.
+- Draw from `threads/bank.json` and set `used` to the date each post went out. Once fewer than 4 unused posts remain, write new ones under the same claim rules and check them with ig-human's `detect.py`.
+- Don't post the same hook on Threads and in a story on the same day.
+- Marketing CTAs point to Instagram DMs (@redflag.homes), since that inbox is the one we check.
 
 ## The CTA loop
 
