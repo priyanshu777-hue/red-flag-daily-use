@@ -26,6 +26,29 @@
   "ctaStyle": "red"
  },
  {
+  "name": "story-2-guest-habit",
+  "slot": "afternoon",
+  "pillar": "reply-bait",
+  "theme": "blush",
+  "kicker": "HOSTS, BE HONEST",
+  "headline": "The guest habit\nyou *hate* most?",
+  "cards": [
+   {
+    "t": "A.  AC on, balcony door open"
+   },
+   {
+    "t": "B.  Geela towel on the bed"
+   },
+   {
+    "t": "C.  Kajal on white towels"
+   }
+  ],
+  "body": "Sirf ek chuno.\nMushkil hai, pata hai.",
+  "bodyAfter": true,
+  "cta": "Reply A, B or C",
+  "ctaStyle": "red"
+ },
+ {
   "name": "story-3-dussehra-monday",
   "slot": "evening",
   "pillar": "soft-bella",
