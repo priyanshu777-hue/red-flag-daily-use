@@ -1,0 +1,50 @@
+[
+ {
+  "name": "story-1-diwali-mausi",
+  "slot": "morning",
+  "pillar": "relatable",
+  "theme": "blush",
+  "kicker": "DIWALI IS COMING",
+  "headline": "Every host has\nthis *mausi*",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Beta, Diwali pe Goa wala ghar free hai na?"
+   },
+   {
+    "who": "g",
+    "text": "Paise vaise ki baat mat karna, apna hi ghar hai."
+   },
+   {
+    "who": "me",
+    "text": "Bilkul, mausi. Rate bhej doon?"
+   }
+  ],
+  "body": "Pyaar apni jagah. Rate card apni jagah.",
+  "bodyAfter": true,
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-dussehra-monday",
+  "slot": "evening",
+  "pillar": "soft-bella",
+  "theme": "dark",
+  "kicker": "DUSSEHRA: TUE, 20 OCT",
+  "headline": "*Monday* night ka\nrate badhaya?",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Sun to Wed, 3 nights. Monday sasta hoga na?"
+   },
+   {
+    "who": "me",
+    "text": "Ji, Monday bhi peak hai."
+   }
+  ],
+  "body": "Bella sets nightly prices for weekends,\nfestivals and demand.",
+  "bodyAfter": true,
+  "cta": "Reply YES or NOT YET",
+  "ctaStyle": "red"
+ }
+]
