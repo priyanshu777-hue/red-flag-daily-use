@@ -1,0 +1,80 @@
+[
+ {
+  "name": "story-1-caretaker-garba",
+  "slot": "morning",
+  "pillar": "relatable",
+  "theme": "dark",
+  "kicker": "NAVRATRI REALITY",
+  "headline": "Guest at the gate\nBhaiya at *garba*",
+  "chat": [
+   {
+    "who": "me",
+    "text": "Bhaiya, guest gate pe hai"
+   },
+   {
+    "who": "me",
+    "text": "Bhaiya?? Phone toh uthao"
+   },
+   {
+    "who": "g",
+    "text": "Ek round aur, phir aata hoon"
+   }
+  ],
+  "body": "Navratri: nau raatein,\nnau bahaane.",
+  "bodyAfter": true,
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-minutes-on-hold",
+  "slot": "afternoon",
+  "pillar": "reply-bait",
+  "theme": "blush",
+  "kicker": "BE HONEST, HOSTS",
+  "headline": "Minutes on *hold*\nwith bnb support?",
+  "cards": [
+   {
+    "t": "Press 1 for English",
+    "sub": "Press 2 to keep waiting"
+   },
+   {
+    "t": "Your call is important",
+    "sub": "Hold music, round four"
+   },
+   {
+    "t": "Let me transfer you",
+    "sub": "Ab poori kahani phir se"
+   }
+  ],
+  "body": "Bella talks to bnb support for you.",
+  "bodyAfter": true,
+  "cta": "Your record? Reply in mins",
+  "ctaStyle": "ink"
+ },
+ {
+  "name": "story-3-double-booked-villa",
+  "slot": "evening",
+  "pillar": "soft-bella",
+  "theme": "dark",
+  "kicker": "DIWALI RUSH NIGHTMARE",
+  "headline": "Ever been\n*double-booked*?",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Booking cancel kyun ki??"
+   },
+   {
+    "who": "me",
+    "text": "Sorry, dates clash ho gayi"
+   },
+   {
+    "who": "g",
+    "text": "Diwali pe ab kahan jaayein?"
+   }
+  ],
+  "body": "Bella blocks the calendar\nso nothing double-books.",
+  "bodyAfter": true,
+  "cta": "Reply YES or NEVER",
+  "ctaStyle": "red"
+ }
+]
