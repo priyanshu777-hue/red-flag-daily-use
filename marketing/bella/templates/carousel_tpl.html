@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--bg:#E7C9C1;--ink:#141414;--red:#C8102E;--card:#FBF4F1;--muted:#6b5a55}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;color:var(--ink);background:#000}
+.s{width:1080px;height:1350px;background:var(--bg);position:relative;overflow:hidden}
+.s.dark{background:#120f14;color:#fff}
+.logo{position:absolute;top:64px;left:72px;font-weight:800;font-size:44px;letter-spacing:-2px;background:var(--card);color:var(--ink);padding:12px 28px;border-radius:36px}
+.logo i{color:var(--red);font-style:normal}
+.num{position:absolute;top:80px;right:72px;font-size:32px;font-weight:700;color:var(--muted)}
+.dark .num{color:#b9aab3}
+.wrap{position:absolute;left:72px;right:72px;top:210px}
+.kicker{font-size:34px;font-weight:700;color:var(--red);margin-bottom:20px;letter-spacing:.5px}
+h1{font-size:92px;line-height:1.04;letter-spacing:-4px;font-weight:800}
+h1 em{font-style:normal;color:var(--red)}
+.dark h1 em{color:#ff4d6a}
+.body{font-size:44px;line-height:1.3;color:#3d302d;margin-top:30px;font-weight:500;white-space:pre-line}
+.dark .body{color:#d8cdd2}
+.chat{margin-top:40px;background:var(--card);border-radius:44px;padding:32px;color:var(--ink)}
+.b{font-size:42px;padding:22px 30px;border-radius:30px;max-width:88%;margin:10px 0;line-height:1.25;font-weight:500;width:fit-content}
+.g{background:#efe3df}
+.me{background:var(--ink);color:#fff;margin-left:auto}
+.reveal{margin-top:40px;font-size:64px;font-weight:800;letter-spacing:-2px;line-height:1.08}
+.reveal small{display:block;font-size:30px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
+.dark .reveal small{color:#b9aab3}
+.reveal span{color:var(--red)}
+.dark .reveal span{color:#ff4d6a}
+.foot{position:absolute;left:72px;right:72px;bottom:72px;display:flex;justify-content:space-between;align-items:center}
+.handle{font-size:30px;font-weight:600;color:var(--muted)}
+.dark .handle{color:#b9aab3}
+.pill{display:inline-block;background:var(--red);color:#fff;font-weight:800;font-size:40px;padding:24px 44px;border-radius:60px}
+.pill.ink{background:var(--ink)}
+.dark .pill.ink{background:#fff;color:#141414}
+.swipe{font-size:40px;font-weight:800}
+</style></head><body>
+<div class="s" id="s"></div>
+<script>
+// DATA: {theme, n, total, kicker, headline (*em*, \n), body, chat:[{who,text}], reveal:{label,text (*em*)}, cta, ctaStyle, swipe:bool}
+window.renderSlide = function (d) {
+  const s = document.getElementById('s');
+  s.className = 's' + (d.theme === 'dark' ? ' dark' : '');
+  const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const em = t => esc(t).replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
+  let h = `<div class="logo">Bella<i>.</i></div>`;
+  if (d.total) h += `<div class="num">${d.n}/${d.total}</div>`;
+  h += `<div class="wrap">`;
+  if (d.kicker) h += `<div class="kicker">${esc(d.kicker)}</div>`;
+  if (d.headline) h += `<h1>${em(d.headline)}</h1>`;
+  if (d.chat) h += `<div class="chat">` + d.chat.map(m => `<div class="b ${m.who==='me'?'me':'g'}">${esc(m.text)}</div>`).join('') + `</div>`;
+  if (d.reveal) h += `<div class="reveal"><small>${esc(d.reveal.label||'')}</small>${esc(d.reveal.text).replace(/\*(.+?)\*/g,'<span>$1</span>')}</div>`;
+  if (d.body) h += `<div class="body">${esc(d.body)}</div>`;
+  h += `</div><div class="foot"><span class="handle">@redflag.homes</span>`;
+  if (d.cta) h += `<span class="pill ${d.ctaStyle==='ink'?'ink':''}">${esc(d.cta)}</span>`;
+  else if (d.swipe) h += `<span class="swipe">Swipe &rarr;</span>`;
+  h += `</div>`;
+  s.innerHTML = h;
+};
+</script>
+</body></html>
