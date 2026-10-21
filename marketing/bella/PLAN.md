@@ -76,3 +76,9 @@ Started 21 Oct 2026 with "Every guest's favourite word: chhota sa" (`carousels/2
 - One theme per carousel, a series of mini-scenes. Don't reuse a story hook from the same week.
 - Caption: a hook line, an ask for a comment (a number or a word), one line about Bella using allowed claims only, Comment "BELLA", and 5 hashtags. Check it with ig-human `detect.py`.
 - Post with INSTAGRAM_CREATE_CAROUSEL_CONTAINER (`child_image_urls`, pinned raw.githubusercontent URLs, no `share_to_feed`), then INSTAGRAM_POST_IG_USER_MEDIA_PUBLISH.
+
+## Languages (owner's request, 21 Oct 2026)
+
+Content goes out in both English and Hinglish.
+- Carousels: the Tuesday one is in English (chats, headlines and reveals). The Friday one is in Hinglish (chats in Roman Hinglish, with short English labels such as "ACTUAL SIZE"). Every carousel caption has an English part and a Hinglish line.
+- Stories: each day, at least one story is fully in English and at least one is in Hinglish.
