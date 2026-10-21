@@ -1,0 +1,54 @@
+[
+ {
+  "name": "story-2-neighbour-aunty",
+  "slot": "afternoon",
+  "pillar": "reply-bait",
+  "theme": "blush",
+  "kicker": "EVERY HOST HAS ONE",
+  "headline": "Aunty ne *kitni*\nbaar poocha?",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Beta, yeh log kaun hain?"
+   },
+   {
+    "who": "me",
+    "text": "Guests, aunty. Paying ones."
+   },
+   {
+    "who": "g",
+    "text": "Phir se naye log??"
+   }
+  ],
+  "body": "Pichle hafte ka count.\nSach sach batana.",
+  "bodyAfter": true,
+  "cta": "Reply with a number",
+  "ctaStyle": "ink"
+ },
+ {
+  "name": "story-3-bangla-geyser",
+  "slot": "evening",
+  "pillar": "soft-bella",
+  "theme": "dark",
+  "kicker": "LOST IN TRANSLATION",
+  "headline": "Guest texts in\n*Bangla*. Ab kya?",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Dada, geyser-ta cholche na"
+   },
+   {
+    "who": "me",
+    "text": "Ek sec, Google Translate..."
+   },
+   {
+    "who": "g",
+    "text": "Dada?? Jol ekdom thanda!"
+   }
+  ],
+  "body": "Bella replies in 50+ languages,\nHinglish included.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA to meet her",
+  "ctaStyle": "red"
+ }
+]
