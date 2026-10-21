@@ -1,5 +1,31 @@
 [
  {
+  "name": "story-1-chhota-sa-dog",
+  "slot": "morning",
+  "pillar": "relatable",
+  "theme": "dark",
+  "kicker": "HOUSE RULES VS GUESTS",
+  "headline": "Pet friendly?\nDefine *chhota*.",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Chhota sa dog hai, chalega?"
+   },
+   {
+    "who": "me",
+    "text": "Kitna chhota?"
+   },
+   {
+    "who": "g",
+    "text": "Labrador hai. Ekdum shaant."
+   }
+  ],
+  "body": "Shaant toh hai. Bas sofa\nab officially uska hai.",
+  "bodyAfter": true,
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
   "name": "story-2-neighbour-aunty",
   "slot": "afternoon",
   "pillar": "reply-bait",
