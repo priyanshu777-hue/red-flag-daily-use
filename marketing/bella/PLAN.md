@@ -39,11 +39,12 @@ Avoid the couple and "red flag" relationship reels from September. They don't re
 
 ## Cadence
 
-**From 15 Oct 2026, the owner asked for stories only.** The automation posts no reels or carousels. Feed posts are made by hand.
+**From 15 Oct 2026, the owner asked for stories only.** On 21 Oct they added feed carousels twice a week, in the same chat-screenshot style as the stories. The automation still posts no reels. Other feed posts are made by hand.
 
 | Format | How often | When (IST) |
 |---|---|---|
 | Stories | 3 a day | about 9 AM, 1:30 PM and 8 PM |
+| Feed carousels (8 to 10 slides, 1080x1350) | 2 a week, Tuesday and Friday | with the morning run, about 9 AM |
 | Threads text posts | 2 a day | about 11 AM and 6:30 PM |
 
 ## Threads
@@ -65,3 +66,13 @@ Check every week: story replies, DMs, "BELLA" comments on the owner's own posts,
 ## Production
 
 The templates are in `templates/`. Stories are rendered from HTML at 1080x1920. Reels are frames rendered from HTML, joined with ffmpeg and given a synthesized notification sound. Everything posted lives in a dated folder, such as `2026-10-11/`. Canva and Adobe Express are connected and can be used for photo-led posts.
+
+## Feed carousels
+
+Started 21 Oct 2026 with "Every guest's favourite word: chhota sa" (`carousels/2026-10-21-chhota-sa/`).
+
+- 8 to 10 slides: a cover slide with a hook and "Swipe", 6 to 8 chat-screenshot slides (a guest bubble, the host's reply, and a punchline reveal), and a last slide with a soft Bella CTA ("Comment BELLA").
+- Build them with `templates/carousel_tpl.html` and `render_carousel.js`. Alternate dark and blush slides. Fix any LAYOUT WARN before posting.
+- One theme per carousel, a series of mini-scenes. Don't reuse a story hook from the same week.
+- Caption: a hook line, an ask for a comment (a number or a word), one line about Bella using allowed claims only, Comment "BELLA", and 5 hashtags. Check it with ig-human `detect.py`.
+- Post with INSTAGRAM_CREATE_CAROUSEL_CONTAINER (`child_image_urls`, pinned raw.githubusercontent URLs, no `share_to_feed`), then INSTAGRAM_POST_IG_USER_MEDIA_PUBLISH.
