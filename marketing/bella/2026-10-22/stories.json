@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-checkout-wish-list","theme":"blush","kicker":"CHECKOUT DAY","headline":"The checkout\n*wish list*","cards":[{"t":"Keys left on the table","sub":"Not at the airport with you"},{"t":"AC switched off","sub":"The bill isn't included"},{"t":"Towels used as towels","sub":"Not as shoe wipes"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-lost-and-found","theme":"blush","kicker":"LOST & FOUND","headline":"Guest kya *chhod*\ngaya tha?","cards":[{"t":"A.  Ek joota. Sirf ek."},{"t":"B.  Poora birthday cake"},{"t":"C.  Dadaji ka chashma"}],"body":"Ya kuch aur? Reply mein likho.","bodyAfter":true,"cta":"Reply A, B or C","ctaStyle":"ink"},
+ {"name":"story-3-11pm-landed","theme":"dark","kicker":"WHILE YOU SLEEP","headline":"11 PM. Guest\njust *landed*.","chat":[{"who":"g","text":"Just landed! Address?"},{"who":"me","text":"Welcome! Details sent."},{"who":"g","text":"That was fast. Thanks!"}],"body":"Bella sends check-in details\non WhatsApp, 24/7.","bodyAfter":true,"cta":"Reply BELLA to try her","ctaStyle":"red"}
+]
