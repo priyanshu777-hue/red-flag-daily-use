@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-hosting-too-long","theme":"blush","kicker":"SIGNS","headline":"You've been hosting\n*too long*","cards":[{"t":"A car slows down outside","sub":"You check the gate. Every time."},{"t":"You say 'checkout is 11'","sub":"In your sleep"},{"t":"'Hi' with no name","sub":"And you know it's a guest"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-pareshaan-kaun","theme":"dark","kicker":"SACH BATAO","headline":"Sabse zyada\n*pareshaan* kaun?","cards":[{"t":"A.  Guest"},{"t":"B.  OTA support"},{"t":"C.  Padosi"}],"body":"Ek letter. Bas.","bodyAfter":true,"cta":"Reply A, B or C","ctaStyle":"red"},
+ {"name":"story-3-6am-questions","theme":"blush","kicker":"BEFORE YOUR CHAI","headline":"6 AM questions,\n*answered*.","chat":[{"who":"g","text":"Is parking available?"},{"who":"me","text":"Yes, 1 car inside the gate."},{"who":"g","text":"Perfect, thanks!"}],"body":"Bella replies to guests on WhatsApp\nin about 3 seconds, 24/7.","bodyAfter":true,"cta":"Reply BELLA to try her","ctaStyle":"ink"}
+]

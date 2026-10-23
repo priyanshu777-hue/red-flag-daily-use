@@ -1,0 +1,11 @@
+{"slides":[
+ {"name":"01-cover","theme":"dark","kicker":"GUEST KE FAMOUS","headline":"Famous\n*last words*","body":"Har host ne suna hai.\nKisi ne maana nahi.","swipe":true},
+ {"name":"02-checkout","kicker":"#1","headline":"Bas *10 minute*","chat":[{"who":"me","text":"Checkout 11 baje hai ji"},{"who":"g","text":"Haan haan, bas 10 minute"}],"reveal":{"label":"ASLI MEIN","text":"Nikle *1 baje*. Chai pi ke."},"swipe":true},
+ {"name":"03-kitchen","theme":"dark","kicker":"#2","headline":"Kitchen *nahi*\nchahiye","chat":[{"who":"g","text":"Hum bahar hi khayenge"},{"who":"me","text":"Theek hai ji"}],"reveal":{"label":"ASLI MEIN","text":"12 logon ki *biryani*. Haldi har jagah."},"swipe":true},
+ {"name":"04-broke","kicker":"#3","headline":"Kuch *nahi*\ntoota","chat":[{"who":"me","text":"Sab theek tha na?"},{"who":"g","text":"Haan ji, kuch nahi toota"}],"reveal":{"label":"ASLI MEIN","text":"Mug ka *handle* dustbin mein mila."},"swipe":true},
+ {"name":"05-ac","theme":"dark","kicker":"#4","headline":"AC *thoda* sa","chat":[{"who":"g","text":"AC thoda chala lenge?"},{"who":"me","text":"Bilkul ji"}],"reveal":{"label":"ASLI MEIN","text":"*24 ghante*. 16 degree pe."},"swipe":true},
+ {"name":"06-photo","kicker":"#5","headline":"Bas *ek photo*","chat":[{"who":"g","text":"Terrace pe ek photo le lein?"},{"who":"me","text":"Haan, le lijiye"}],"reveal":{"label":"ASLI MEIN","text":"Poora *pre-wedding* shoot. Drone ke saath."},"swipe":true},
+ {"name":"07-review","theme":"dark","kicker":"#6","headline":"Review *pakka*","chat":[{"who":"g","text":"5 star review pakka denge"},{"who":"me","text":"Thank you ji!"}],"reveal":{"label":"ASLI MEIN","text":"3 star. *\"Location okay.\"*"},"swipe":true},
+ {"name":"08-ghar","kicker":"#7","headline":"Ghar *jaisa*\nrakhenge","chat":[{"who":"g","text":"Apna ghar samjhenge"},{"who":"me","text":"Bahut accha ji"}],"reveal":{"label":"ASLI MEIN","text":"Sofa *doosre kamre* mein mila."},"swipe":true},
+ {"name":"09-bella","theme":"dark","kicker":"MEET BELLA","headline":"Guest ki baatein\n*Bella* sambhalegi.","body":"WhatsApp pe aapki AI co-host.\nAbout 3 seconds mein reply, 24/7.\nHinglish aur 50+ languages mein.\n0% commission.","cta":"Comment BELLA","ctaStyle":"red"}
+]}
