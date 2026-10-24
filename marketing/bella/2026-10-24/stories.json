@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-guests-think-free","theme":"blush","kicker":"HOSTS KNOW","headline":"Guests think\nit's *free*","cards":[{"t":"The toiletries","sub":"All six bottles. Gone."},{"t":"The extra blanket","sub":"Now in their car"},{"t":"The host's time","sub":"Calls at 11 PM, 'quick one'"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-saturday-dar","theme":"dark","kicker":"WEEKEND MOOD","headline":"Saturday ka\nsabse bada *dar*?","cards":[{"t":"A.  Guest late aaye"},{"t":"B.  Safai wali didi late"},{"t":"C.  Light chali gayi"}],"body":"Ek letter bhejo.","bodyAfter":true,"cta":"Reply A, B or C","ctaStyle":"red"},
+ {"name":"story-3-hinglish-too","theme":"blush","kicker":"BELLA","headline":"She speaks\n*Hinglish* too.","chat":[{"who":"g","text":"Inverter ka switch kahan hai?"},{"who":"me","text":"Store room, left side."},{"who":"g","text":"Mil gaya, thanks!"}],"body":"Bella replies to guests on WhatsApp\nin Hinglish and 50+ languages.","bodyAfter":true,"cta":"Reply BELLA to try her","ctaStyle":"ink"}
+]
