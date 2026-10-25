@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-checkout-leftovers","theme":"blush","kicker":"SUNDAY CHECKOUTS","headline":"Sunday checkout\n*leftovers*","cards":[{"t":"Wet towels","sub":"On the balcony railing"},{"t":"One Maggi pan","sub":"Soaking since Friday"},{"t":"AC on full","sub":"Balcony door wide open"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-wifi-kitni-baar","theme":"dark","kicker":"IS HAFTE","headline":"Kitni baar suna\n*\"Wi-Fi password?\"*","body":"Sirf ek number bhejo.\nSach sach.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-sunday-off","theme":"blush","kicker":"BELLA","headline":"Take Sunday\n*off*.","chat":[{"who":"g","text":"Hi! Reaching at 9 tonight. How do we get in?"},{"who":"me","text":"Welcome! Check-in details sent."},{"who":"g","text":"Got it, thank you!"}],"body":"Bella replies to guests on WhatsApp\nin about 3 seconds, 24/7.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
