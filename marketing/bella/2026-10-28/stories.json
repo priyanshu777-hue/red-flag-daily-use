@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-type-every-day",
+  "theme": "blush",
+  "kicker": "HOSTS KNOW",
+  "headline": "Things hosts type\n*every single day*",
+  "cards": [
+   {
+    "t": "\"Check-in is from 2 PM.\"",
+    "sub": "Sent 4 times before lunch"
+   },
+   {
+    "t": "\"Yes, there's parking.\"",
+    "sub": "It's in the listing. Twice."
+   },
+   {
+    "t": "\"Towels are in the cupboard.\"",
+    "sub": "Left side. Always left side."
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-diwali-kitni-raatein",
+  "theme": "dark",
+  "kicker": "DIWALI COUNTDOWN",
+  "headline": "Diwali ki kitni\nraatein *book* hui?",
+  "body": "Sirf ek number bhejo.\n0 bhi chalega.",
+  "cta": "Reply with a number",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-festival-pricing",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Festival pricing,\n*sorted*.",
+  "cards": [
+   {
+    "t": "Weekends",
+    "sub": "Priced for the rush"
+   },
+   {
+    "t": "Diwali week",
+    "sub": "Priced for the festival"
+   }
+  ],
+  "body": "Bella sets your nightly price for\nweekends, festivals and demand.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA to meet her",
+  "ctaStyle": "ink"
+ }
+]
