@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-host-at-heart","theme":"blush","kicker":"TAG A HOST","headline":"You're a host\n*at heart* if…","cards":[{"t":"You know every guest's chai order","sub":"Even the one from March"},{"t":"Your spare keys have spare keys","sub":"Labelled. Colour-coded."},{"t":"You've explained the inverter 50x","sub":"And you'll do it again"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ek-shabd","theme":"dark","kicker":"QUICK QUESTION","headline":"Hosting, ek shabd\nmein: *_____*","body":"Ek word reply karo.\nJo pehle dimaag mein aaye.","cta":"Reply with one word","ctaStyle":"red"},
+ {"name":"story-3-keep-100","theme":"blush","kicker":"BELLA","headline":"Keep *100%*\nof your booking.","cards":[{"t":"Property manager","sub":"Takes a cut of every booking"},{"t":"Bella","sub":"Takes 0%"}],"body":"She replies to guests, sets prices\nand sends check-in details.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
