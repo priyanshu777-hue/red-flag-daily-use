@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-friday-checkin","theme":"blush","kicker":"FRIDAY CHECK-INS","headline":"Friday check-in,\n*as planned*","cards":[{"t":"3 PM","sub":"\"Leaving now!\""},{"t":"7 PM","sub":"\"Stuck in traffic, 20 mins\""},{"t":"11:40 PM","sub":"\"Who's opening the gate?\""}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-full-ya-khaali","theme":"dark","kicker":"IS WEEKEND","headline":"Ghar *full* hai\nya khaali?","body":"Ek word bhejo:\nFULL ya KHAALI.","cta":"Reply FULL or KHAALI","ctaStyle":"red"},
+ {"name":"story-3-calendar","theme":"blush","kicker":"BELLA","headline":"Dates blocked.\n*Automatically*.","cards":[{"t":"New booking comes in","sub":"Calendar blocked"},{"t":"Second guest asks","sub":"\"Sorry, those dates are taken\""}],"body":"Bella blocks your calendar so\nnothing gets double-booked.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]

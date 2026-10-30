@@ -1,0 +1,164 @@
+{
+ "slides": [
+  {
+   "name": "01-cover",
+   "theme": "dark",
+   "kicker": "HAR GUEST KA FAVOURITE",
+   "headline": "Bhaiya, thoda\n*adjust* kar lo",
+   "body": "Har host ne suna hai.\nHar booking mein.",
+   "swipe": true
+  },
+  {
+   "name": "02-rate",
+   "kicker": "#1",
+   "headline": "Rate *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Rate thoda adjust kar lo?"
+    },
+    {
+     "who": "me",
+     "text": "Already discount diya hai ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Aur kam kiya. Review: *\"thoda costly.\"*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "03-log",
+   "theme": "dark",
+   "kicker": "#2",
+   "headline": "Log *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "2 log hi aayenge ji"
+    },
+    {
+     "who": "me",
+     "text": "Theek hai ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Aaye *6*. Ek \"bas sone aaya\"."
+   },
+   "swipe": true
+  },
+  {
+   "name": "04-time",
+   "kicker": "#3",
+   "headline": "Time *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Early check-in adjust ho jayega?"
+    },
+    {
+     "who": "me",
+     "text": "2 baje se hai ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "*7 baje subah*. Bags ke saath."
+   },
+   "swipe": true
+  },
+  {
+   "name": "05-gadda",
+   "theme": "dark",
+   "kicker": "#4",
+   "headline": "Gadda *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Ek extra gadda mil jayega?"
+    },
+    {
+     "who": "me",
+     "text": "Haan, mil jayega"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "*Teen* gadde. Do takiye extra."
+   },
+   "swipe": true
+  },
+  {
+   "name": "06-gaadi",
+   "kicker": "#5",
+   "headline": "Gaadi *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Gaadi kahin bhi laga denge"
+    },
+    {
+     "who": "me",
+     "text": "Parking B2 mein hai ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Padosi ke *gate* ke aage."
+   },
+   "swipe": true
+  },
+  {
+   "name": "07-payment",
+   "theme": "dark",
+   "kicker": "#6",
+   "headline": "Payment *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Baaki payment aake kar denge"
+    },
+    {
+     "who": "me",
+     "text": "Theek hai ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Aaye. Gaye. Payment *pending*."
+   },
+   "swipe": true
+  },
+  {
+   "name": "08-music",
+   "kicker": "#7",
+   "headline": "Music *adjust*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Halka sa music, bas"
+    },
+    {
+     "who": "me",
+     "text": "10 baje tak ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "*DJ* aaya. Society group mein naam aaya."
+   },
+   "swipe": true
+  },
+  {
+   "name": "09-bella",
+   "theme": "dark",
+   "kicker": "MEET BELLA",
+   "headline": "Adjust aap karo,\n*replies* Bella karegi.",
+   "body": "WhatsApp pe aapki AI co-host.\nAbout 3 seconds mein reply, 24/7.\nHinglish aur 50+ languages mein.\n0% commission.",
+   "cta": "Comment BELLA",
+   "ctaStyle": "red"
+  }
+ ]
+}
