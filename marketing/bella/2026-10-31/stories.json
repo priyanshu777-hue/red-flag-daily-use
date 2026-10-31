@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-scariest-words","theme":"dark","kicker":"HALLOWEEN, HOST EDITION","headline":"Scariest words\na host can *hear*","cards":[{"t":"\"Is the geyser meant to smoke?\"","sub":"Sent at 6 AM"},{"t":"\"Which key was the main door?\"","sub":"From outside. In the rain."},{"t":"\"Your neighbour came over.\"","sub":"No further details"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ek-baat","theme":"blush","kicker":"DARR KA SCALE","headline":"Guest likhe:\n*\"Ek baat bolni thi…\"*","body":"Kitna darr lagta hai, 1 se 10?\nSirf number bhejo.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-support","theme":"blush","kicker":"BELLA","headline":"Skip the support\n*hold music*.","cards":[{"t":"Payout question","sub":"Bella talks to support"},{"t":"Listing issue","sub":"Bella talks to support"}],"body":"Bella talks to bnb support for you,\nso you don't have to.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
