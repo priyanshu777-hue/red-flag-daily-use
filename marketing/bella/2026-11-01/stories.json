@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-unicorn-guest","theme":"blush","kicker":"RARE SIGHTING","headline":"The *unicorn* guest","cards":[{"t":"Messages once","sub":"Just once. With all the details."},{"t":"Keys back where they found them","sub":"Not in the plant pot"},{"t":"Says thank you at checkout","sub":"And means it"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-november-wish","theme":"dark","kicker":"NAYA MAHINA","headline":"November mein\nkya *chahiye*?","cards":[{"t":"A.  Bookings"},{"t":"B.  Neend"},{"t":"C.  Ek din ki chhutti"}],"body":"Ek letter bhejo.","bodyAfter":true,"cta":"Reply A, B or C","ctaStyle":"red"},
+ {"name":"story-3-spanish","theme":"blush","kicker":"BELLA","headline":"A guest texts\nin *Spanish*.","chat":[{"who":"g","text":"¿A qué hora es el check-in?"},{"who":"me","text":"¡Hola! El check-in es a las 2 PM."},{"who":"g","text":"¡Perfecto, gracias!"}],"body":"Bella replies to guests on WhatsApp\nin 50+ languages, 24/7.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
