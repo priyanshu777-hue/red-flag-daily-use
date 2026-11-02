@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-monday-after","theme":"blush","kicker":"MONDAY, HOST EDITION","headline":"Monday after a\n*full* weekend","cards":[{"t":"Laundry","sub":"14 bedsheets and counting"},{"t":"Reviews","sub":"0 so far. Refreshing anyway."},{"t":"Inbox","sub":"23 unread. All \"quick questions\"."}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-kitni-neend","theme":"dark","kicker":"SACH BATAO","headline":"Weekend pe kitne\nghante *soye*?","body":"Sirf number bhejo.\nHum judge nahi karenge.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-checkin-hinglish","theme":"blush","kicker":"BELLA","headline":"Check-in details,\n*bina yaad dilaye*.","cards":[{"t":"Booking confirm hui","sub":"Bella ne details bhej di"},{"t":"Guest ka sawaal aaya","sub":"About 3 second mein reply"}],"body":"Bella WhatsApp pe guests ko\ncheck-in details bhejti hai, 24/7.","bodyAfter":true,"cta":"Reply BELLA","ctaStyle":"ink"}
+]
