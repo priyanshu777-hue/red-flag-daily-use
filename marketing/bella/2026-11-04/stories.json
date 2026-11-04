@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-listing-translated","theme":"blush","kicker":"HOST DICTIONARY","headline":"Listing words,\n*translated*","cards":[{"t":"\"Cozy\"","sub":"Small"},{"t":"\"Vibrant neighbourhood\"","sub":"Loud on Saturdays"},{"t":"\"Rustic charm\"","sub":"The door sticks a bit"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-unread","theme":"dark","kicker":"ABHI CHECK KARO","headline":"Inbox mein kitne\n*unread* hain?","body":"Sirf number bhejo.\nScreenshot bhi chalega.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-weekday-rate","theme":"blush","kicker":"BELLA","headline":"Every night,\n*priced right*.","cards":[{"t":"Friday","sub":"Priced for the weekend rush"},{"t":"Tuesday","sub":"Priced to fill the gap"}],"body":"Bella sets nightly prices for\nweekends, festivals and demand.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
