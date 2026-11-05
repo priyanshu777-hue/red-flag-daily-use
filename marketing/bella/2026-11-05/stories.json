@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-diwali-week","theme":"blush","kicker":"DIWALI WEEK","headline":"Diwali week,\n*host edition*","cards":[{"t":"Monday","sub":"\"Any rooms left for Diwali?\""},{"t":"Wednesday","sub":"\"Can we bring our own diyas?\""},{"t":"Friday","sub":"\"Crackers on the terrace is fine, na?\""}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ghar-ya-guests","theme":"dark","kicker":"DIWALI PLAN","headline":"Diwali pe ghar\n*khud* rakhoge?","body":"Ya guests ko doge?\nEk word bhejo: GHAR ya GUESTS.","cta":"Reply GHAR or GUESTS","ctaStyle":"red"},
+ {"name":"story-3-diwali-off","theme":"blush","kicker":"BELLA","headline":"You're off for Diwali.\n*She isn't.*","chat":[{"who":"g","text":"Happy Diwali! Is parking free this weekend?"},{"who":"me","text":"Happy Diwali! Yes, parking is free for guests."},{"who":"g","text":"Great, thank you!"}],"body":"Bella replies to guests on WhatsApp\nin about 3 seconds, 24/7.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
