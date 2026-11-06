@@ -1,0 +1,164 @@
+{
+ "slides": [
+  {
+   "name": "01-cover",
+   "theme": "dark",
+   "kicker": "HAR HOST KA DARD",
+   "headline": "*Listing* mein\nlikha hai ji",
+   "body": "Phir bhi har guest poochta hai.\nAur phir...",
+   "swipe": true
+  },
+  {
+   "name": "02-parking",
+   "kicker": "#1",
+   "headline": "Parking *hai*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Parking hai na?"
+    },
+    {
+     "who": "me",
+     "text": "Haan ji, ek gaadi ki"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Gaadi *do* laaye."
+   },
+   "swipe": true
+  },
+  {
+   "name": "03-lift",
+   "theme": "dark",
+   "kicker": "#2",
+   "headline": "Lift *hai*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Lift toh hogi na?"
+    },
+    {
+     "who": "me",
+     "text": "Nahi ji, 4th floor hai"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Review: *\"Lift nahi thi.\"*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "04-ac",
+   "kicker": "#3",
+   "headline": "AC *hai*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "AC hai kamre mein?"
+    },
+    {
+     "who": "me",
+     "text": "Haan ji, bedroom mein"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Hall mein bhi *chahiye* tha."
+   },
+   "swipe": true
+  },
+  {
+   "name": "05-kitchen",
+   "theme": "dark",
+   "kicker": "#4",
+   "headline": "Kitchen *hai*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Khana bana sakte hain?"
+    },
+    {
+     "who": "me",
+     "text": "Haan ji, sab kuch hai"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "*Pressure cooker* nahi tha."
+   },
+   "swipe": true
+  },
+  {
+   "name": "06-checkout",
+   "kicker": "#5",
+   "headline": "Checkout *kab*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Checkout kab tak hai?"
+    },
+    {
+     "who": "me",
+     "text": "11 baje tak ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "*12:40* pe phir poocha."
+   },
+   "swipe": true
+  },
+  {
+   "name": "07-smoking",
+   "theme": "dark",
+   "kicker": "#6",
+   "headline": "Smoking *allowed*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Smoking allowed hai?"
+    },
+    {
+     "who": "me",
+     "text": "Nahi ji, bilkul nahi"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "Mug ban gaya *ashtray*."
+   },
+   "swipe": true
+  },
+  {
+   "name": "08-log",
+   "kicker": "#7",
+   "headline": "Kitne *log*?",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Kitne log reh sakte hain?"
+    },
+    {
+     "who": "me",
+     "text": "4 log ji"
+    }
+   ],
+   "reveal": {
+    "label": "ASLI MEIN",
+    "text": "4 adults. *\"Bachche count nahi hote na.\"*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "09-bella",
+   "theme": "dark",
+   "kicker": "MEET BELLA",
+   "headline": "Har sawaal ka jawab,\n*Bella* degi.",
+   "body": "WhatsApp pe aapki AI co-host.\nAbout 3 seconds mein reply, 24/7.\nHinglish aur 50+ languages mein.\n0% commission.",
+   "cta": "Comment BELLA",
+   "ctaStyle": "red"
+  }
+ ]
+}

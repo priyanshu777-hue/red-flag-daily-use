@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-diwali-cleaning",
+  "theme": "blush",
+  "kicker": "DIWALI CLEANING",
+  "headline": "Diwali cleaning,\n*host edition*",
+  "cards": [
+   {
+    "t": "Your own home",
+    "sub": "Two days, top to bottom"
+   },
+   {
+    "t": "The listing",
+    "sub": "Two hours. After every checkout."
+   },
+   {
+    "t": "Your phone",
+    "sub": "Zero minutes. 46 unread."
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-mithai",
+  "theme": "dark",
+  "kicker": "SACH BATAO",
+  "headline": "Kisi guest ne kabhi\n*mithai* di hai?",
+  "body": "Ek word bhejo:\nHAAN ya NAHI.",
+  "cta": "Reply HAAN or NAHI",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-diwali-dates",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Diwali weekend.\n*No* clashes.",
+  "cards": [
+   {
+    "t": "Fri to Sun booked",
+    "sub": "Calendar blocked"
+   },
+   {
+    "t": "Late enquiry for Saturday",
+    "sub": "Told politely: we're full"
+   }
+  ],
+  "body": "Bella blocks your calendar so\nnothing gets double-booked.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA to meet her",
+  "ctaStyle": "ink"
+ }
+]
