@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-diwali-eve",
+  "theme": "blush",
+  "kicker": "DIWALI EVE",
+  "headline": "Diwali eve,\n*host mode*",
+  "cards": [
+   {
+    "t": "Diyas",
+    "sub": "Lit"
+   },
+   {
+    "t": "Rangoli",
+    "sub": "Done. Slightly crooked."
+   },
+   {
+    "t": "Phone",
+    "sub": "On loud. Just in case."
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-kitne-baje",
+  "theme": "dark",
+  "kicker": "SACH BATAO",
+  "headline": "Diwali raat kitne baje\ntak *phone* dekhoge?",
+  "body": "Sirf time bhejo.\n\"Poori raat\" bhi chalega.",
+  "cta": "Reply with a time",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-happy-diwali",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Happy Diwali,\n*Bella* ki taraf se.",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Happy Diwali! Check-in details bhej doge?"
+   },
+   {
+    "who": "me",
+    "text": "Happy Diwali! Details bhej di hain, enjoy!"
+   }
+  ],
+  "body": "Bella guests ko WhatsApp pe reply\nkarti hai, Hinglish mein bhi. 24/7.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA",
+  "ctaStyle": "ink"
+ }
+]
