@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-on-duty","theme":"dark","kicker":"HAPPY DIWALI","headline":"To every host\n*on duty* tonight","cards":[{"t":"Diyas lit","sub":"Rangoli done"},{"t":"Guest messages","sub":"\"Where's the extra blanket?\""},{"t":"You, still smiling","sub":"Happy Diwali. You earned it."}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-five-star","theme":"blush","kicker":"DIWALI BONUS","headline":"Is hafte kitne\n*5-star* reviews aaye?","body":"Sirf number bhejo.\n0 bhi chalega, next week pakka.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-shubh-labh","theme":"blush","kicker":"BELLA","headline":"Shubh Labh.\n*100%* yours.","cards":[{"t":"Your booking","sub":"100% yours"},{"t":"Bella's cut","sub":"0%"}],"body":"Bella replies to guests, sets prices\nand sends check-in details.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
