@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-day-after",
+  "theme": "blush",
+  "kicker": "POST-DIWALI",
+  "headline": "The day after Diwali,\n*host edition*",
+  "cards": [
+   {
+    "t": "The floor",
+    "sub": "Wax from 40 diyas"
+   },
+   {
+    "t": "The balcony",
+    "sub": "Rangoli colours. Everywhere."
+   },
+   {
+    "t": "The review",
+    "sub": "\"Loved the festive vibe!\""
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-kitni-chhutti",
+  "theme": "dark",
+  "kicker": "SACH BATAO",
+  "headline": "Diwali ke baad kitne\ndin ki *chhutti*?",
+  "body": "Sirf number bhejo.\nHum bhi thake hue hain.",
+  "cta": "Reply with a number",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-bhai-dooj",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Bhai Dooj guests,\n*sorted*.",
+  "chat": [
+   {
+    "who": "g",
+    "text": "Reaching tomorrow for Bhai Dooj! What time is check-in?"
+   },
+   {
+    "who": "me",
+    "text": "Check-in is from 2 PM. Details are on your WhatsApp now."
+   }
+  ],
+  "body": "Bella replies to guests in about 3 seconds\nand sends check-in details, 24/7.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA to meet her",
+  "ctaStyle": "ink"
+ }
+]
