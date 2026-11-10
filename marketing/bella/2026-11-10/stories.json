@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-never-say","theme":"blush","kicker":"RARE WORDS","headline":"Things hosts\n*never* get to say","cards":[{"t":"\"The guest left early.\"","sub":"Early. Not 'by 2 PM'."},{"t":"\"They did the dishes.\"","sub":"All of them"},{"t":"\"Review came the same day.\"","sub":"Five stars, too"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ek-rule","theme":"dark","kicker":"EK HI RULE","headline":"Guests ke liye\nsirf *ek* rule?","body":"Ek word mein bolo.\nJo sabse zaroori hai.","cta":"Reply with one word","ctaStyle":"red"},
+ {"name":"story-3-rates-normal","theme":"blush","kicker":"BELLA","headline":"Diwali's over.\nRates, *reset*.","cards":[{"t":"Diwali week","sub":"Priced for the festival"},{"t":"This week","sub":"Priced for demand"}],"body":"Bella sets nightly prices for\nweekends, festivals and demand.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]

@@ -1,0 +1,164 @@
+{
+ "slides": [
+  {
+   "name": "01-cover",
+   "theme": "dark",
+   "kicker": "EVERY HOST KNOWS",
+   "headline": "Gone with\n*the guest*",
+   "body": "Things that checked out\nright along with them.",
+   "swipe": true
+  },
+  {
+   "name": "02-towels",
+   "kicker": "#1",
+   "headline": "The *towels*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Can we get extra towels?"
+    },
+    {
+     "who": "me",
+     "text": "Sure, they're in the cupboard!"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "Two came back. *Four* went out."
+   },
+   "swipe": true
+  },
+  {
+   "name": "03-charger",
+   "theme": "dark",
+   "kicker": "#2",
+   "headline": "The *charger*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Any Type-C charger?"
+    },
+    {
+     "who": "me",
+     "text": "Yes, next to the bed"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "It now lives in *Pune*."
+   },
+   "swipe": true
+  },
+  {
+   "name": "04-umbrella",
+   "kicker": "#3",
+   "headline": "The *umbrella*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Is there an umbrella?"
+    },
+    {
+     "who": "me",
+     "text": "Yes, by the door"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "Left in a *taxi*. Probably."
+   },
+   "swipe": true
+  },
+  {
+   "name": "05-remote",
+   "theme": "dark",
+   "kicker": "#4",
+   "headline": "The *remote*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "The TV remote isn't working"
+    },
+    {
+     "who": "me",
+     "text": "New batteries are in the drawer"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "Batteries gone. *Remote too.*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "06-slippers",
+   "kicker": "#5",
+   "headline": "The *slippers*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Do you give slippers?"
+    },
+    {
+     "who": "me",
+     "text": "Yes, two pairs"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "One pair came back. *Not ours.*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "07-hangers",
+   "theme": "dark",
+   "kicker": "#6",
+   "headline": "The *hangers*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Need a few more hangers"
+    },
+    {
+     "who": "me",
+     "text": "Extras in the cupboard"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "Cupboard now has *zero*."
+   },
+   "swipe": true
+  },
+  {
+   "name": "08-shampoo",
+   "kicker": "#7",
+   "headline": "The *shampoo*",
+   "chat": [
+    {
+     "who": "g",
+     "text": "Is shampoo provided?"
+    },
+    {
+     "who": "me",
+     "text": "Yes, a full bottle"
+    }
+   ],
+   "reveal": {
+    "label": "WHAT HAPPENED",
+    "text": "Bottle stayed. *Shampoo didn't.*"
+   },
+   "swipe": true
+  },
+  {
+   "name": "09-bella",
+   "theme": "dark",
+   "kicker": "MEET BELLA",
+   "headline": "Towels: lost.\n*Messages: handled.*",
+   "body": "Your AI co-host on WhatsApp.\nReplies in about 3 seconds, 24/7.\n50+ languages, Hinglish too.\n0% commission.",
+   "cta": "Comment BELLA",
+   "ctaStyle": "red"
+  }
+ ]
+}
