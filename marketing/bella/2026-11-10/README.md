@@ -7,3 +7,5 @@
 | 3 | 8 PM | story-3-rates-normal.jpg | English | Soft Bella (pricing claim), reply BELLA |
 
 Carousel: `carousels/2026-11-10-gone-with-the-guest/` (English, 9 slides).
+
+Story 2 was not posted: its scheduled task arrived at 1:30 PM IST but the session didn't act on it within the 3-hour window.
