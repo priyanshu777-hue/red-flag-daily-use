@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-eta-reality","theme":"blush","kicker":"GUEST ETAs","headline":"ETA vs\n*reality*","cards":[{"t":"\"5 mins away\"","sub":"40 minutes"},{"t":"\"Just parking\"","sub":"Another 20"},{"t":"\"Here!\"","sub":"At the building next door"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-last-minute","theme":"dark","kicker":"IS MAHINE","headline":"Kitni *last-minute*\nbookings aayi?","body":"Sirf number bhejo.\nSame-day wali bhi count karo.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-tamil","theme":"blush","kicker":"BELLA","headline":"A guest texts\nin *Tamil*.","chat":[{"who":"g","text":"Vanakkam! Check-in eppo?"},{"who":"me","text":"Vanakkam! From 2 PM. Details sent!"},{"who":"g","text":"Nandri!"}],"body":"Bella replies to guests on WhatsApp\nin 50+ languages, 24/7.","bodyAfter":true,"cta":"Reply BELLA to meet her","ctaStyle":"ink"}
+]
