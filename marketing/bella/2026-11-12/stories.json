@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-review-length","theme":"blush","kicker":"GUEST REVIEWS","headline":"Reviews, by\n*word count*","cards":[{"t":"5 stars","sub":"One word. \"Nice.\""},{"t":"4 stars","sub":"One careful paragraph"},{"t":"1 star","sub":"A novel. With chapters."}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-longest-stay","theme":"dark","kicker":"RECORD BATAO","headline":"Sabse lambi guest\n*stay* kitne din ki?","body":"Sirf number bhejo.\nDin ya mahine, dono chalega.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-support-hinglish","theme":"blush","kicker":"BELLA","headline":"Support call?\n*Bella* karegi.","cards":[{"t":"Payout ka issue","sub":"Bella support se baat karti hai"},{"t":"Listing ki problem","sub":"Bella support se baat karti hai"}],"body":"Bella aapke liye bnb support se\nbaat karti hai. Aap aaram karo.","bodyAfter":true,"cta":"Reply BELLA","ctaStyle":"ink"}
+]
