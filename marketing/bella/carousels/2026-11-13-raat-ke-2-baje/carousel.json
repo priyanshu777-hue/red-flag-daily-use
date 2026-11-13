@@ -1,0 +1,11 @@
+{"slides":[
+ {"name":"01-cover","theme":"dark","kicker":"HAR HOST KA PHONE","headline":"Raat ke\n*2 baje* ka\nmessage","body":"Guest so nahi raha.\nToh host bhi nahi soyega.","swipe":true},
+ {"name":"02-geyser","kicker":"1:12 AM","headline":"Geyser *kaise*?","chat":[{"who":"g","text":"Bhaiya geyser kaise on hota hai?"},{"who":"me","text":"Bathroom ke bahar switch hai"}],"reveal":{"label":"SUBAH PATA CHALA","text":"Nahaye *11 baje*."},"swipe":true},
+ {"name":"03-wifi","theme":"dark","kicker":"1:47 AM","headline":"Wifi *slow* hai","chat":[{"who":"g","text":"Wifi bahut slow hai"},{"who":"me","text":"Router ek baar restart kijiye"}],"reveal":{"label":"SUBAH PATA CHALA","text":"*4 episode* aur dekhe."},"swipe":true},
+ {"name":"04-bhook","kicker":"2:05 AM","headline":"Bhook *lagi* hai","chat":[{"who":"g","text":"Paas mein kuch khula hai?"},{"who":"me","text":"Is time? Kuch nahi ji"}],"reveal":{"label":"SUBAH PATA CHALA","text":"Kitchen ki *Maggi* khatam."},"swipe":true},
+ {"name":"05-gate","theme":"dark","kicker":"2:30 AM","headline":"Gate *band* hai","chat":[{"who":"g","text":"Main gate lock hai, kya karein?"},{"who":"me","text":"Chabi drawer mein hai ji"}],"reveal":{"label":"SUBAH PATA CHALA","text":"Drawer *khola hi nahi* tha."},"swipe":true},
+ {"name":"06-awaaz","kicker":"3:10 AM","headline":"Awaaz *aa rahi* hai","chat":[{"who":"g","text":"Upar se awaaz aa rahi hai"},{"who":"me","text":"Upar toh chhat hai ji"}],"reveal":{"label":"SUBAH PATA CHALA","text":"*Billi* thi. Poori raat."},"swipe":true},
+ {"name":"07-remote","theme":"dark","kicker":"3:45 AM","headline":"Remote *kahan* hai?","chat":[{"who":"g","text":"AC ka remote nahi mil raha"},{"who":"me","text":"Bed ke side table pe hai"}],"reveal":{"label":"SUBAH PATA CHALA","text":"Unke hi *bag* mein tha."},"swipe":true},
+ {"name":"08-checkout","kicker":"4:20 AM","headline":"Jaldi *niklenge*","chat":[{"who":"g","text":"Hum 5 baje nikal jayenge"},{"who":"me","text":"Theek hai ji, safe journey"}],"reveal":{"label":"SUBAH PATA CHALA","text":"Nikle *11 baje*. Sote rahe."},"swipe":true},
+ {"name":"09-bella","theme":"dark","kicker":"MEET BELLA","headline":"2 baje ka message?\n*Bella* jaagti hai.","body":"WhatsApp pe aapki AI co-host.\nAbout 3 seconds mein reply, 24/7.\nHinglish aur 50+ languages mein.\n0% commission.","cta":"Comment BELLA","ctaStyle":"red"}
+]}

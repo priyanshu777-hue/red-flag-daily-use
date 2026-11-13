@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-friday-vs-yours","theme":"dark","kicker":"FRIDAY EVENING","headline":"Everyone's Friday\nvs *yours*","cards":[{"t":"Them: weekend plans","sub":"You: 3 weekend check-ins"},{"t":"Them: dinner out","sub":"You: \"Which switch is the geyser?\""},{"t":"Them: phone on silent","sub":"You: phone at full volume"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-location-bhejo","theme":"blush","kicker":"GINTI KARO","headline":"Is hafte kitni baar\n*\"location bhejo\"*?","body":"Bas number reply karo.\nHum judge nahi karenge.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-no-double-booking","theme":"dark","kicker":"BELLA","headline":"Same nights,\n*two* guests? Never.","cards":[{"t":"A booking comes in","sub":"Bella blocks those dates"},{"t":"Someone asks for the same nights","sub":"Already blocked. No clash."}],"body":"Your calendar stays clean,\nso you're not the one\nsaying sorry.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"red"}
+]
