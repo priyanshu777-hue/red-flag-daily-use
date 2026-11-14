@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-checkin-bingo","theme":"blush","kicker":"SATURDAY CHECK-IN","headline":"Check-in day\n*bingo*","cards":[{"t":"Arrives 3 hours early","sub":"\"We're just outside!\""},{"t":"Asks for wifi before hello","sub":"Bags still in the car"},{"t":"Brings a pet","sub":"Not in the booking"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-early-checkin","theme":"dark","kicker":"RECORD BATAO","headline":"Sabse early check-in\nrequest *kitne baje*?","body":"Bas time reply karo.\nSubah 5 baje wale bhi chalenge.","cta":"Reply with the time","ctaStyle":"red"},
+ {"name":"story-3-checkin-details","theme":"blush","kicker":"BELLA","headline":"Check-in details?\n*Bella* bhej degi.","cards":[{"t":"Booking confirm hui","sub":"Bella check-in details bhejti hai"},{"t":"Guest raat ko poochta hai","sub":"Bella about 3 seconds mein reply karti hai"}],"body":"Aapko har guest ko\nyaad nahi dilana padega.","bodyAfter":true,"cta":"Reply BELLA","ctaStyle":"ink"}
+]
