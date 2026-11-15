@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-checkout-inspection",
+  "theme": "dark",
+  "kicker": "SUNDAY CHECKOUT",
+  "headline": "Checkout day\n*inspection*",
+  "cards": [
+   {
+    "t": "Fridge",
+    "sub": "One lemon. Three ketchup packets."
+   },
+   {
+    "t": "Bathroom",
+    "sub": "14 towels used. Stay: 2 nights."
+   },
+   {
+    "t": "Bed",
+    "sub": "One sock. Never claimed."
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-pehle-kya-check",
+  "theme": "blush",
+  "kicker": "EK SHABD",
+  "headline": "Checkout ke baad\npehla *check*?",
+  "body": "AC? Towels? Fridge?\nEk shabd mein reply karo.",
+  "cta": "Reply in one word",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-next-week-rates",
+  "theme": "dark",
+  "kicker": "BELLA",
+  "headline": "Sunday night.\n*Next week*, priced.",
+  "cards": [
+   {
+    "t": "Busy weekend coming",
+    "sub": "Bella sets the nightly price"
+   },
+   {
+    "t": "Festival dates ahead",
+    "sub": "Priced for the demand"
+   }
+  ],
+  "body": "You set the rules.\nBella sets the price, night by night.",
+  "bodyAfter": true,
+  "cta": "DM us BELLA",
+  "ctaStyle": "red"
+ }
+]
