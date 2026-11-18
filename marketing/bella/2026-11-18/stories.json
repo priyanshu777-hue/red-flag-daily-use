@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-screen-time",
+  "theme": "blush",
+  "kicker": "WEEKLY REPORT",
+  "headline": "Your screen time,\n*host* edition",
+  "cards": [
+   {
+    "t": "WhatsApp: 6h 12m",
+    "sub": "Mostly \"Where is the key?\""
+   },
+   {
+    "t": "Booking apps: 2h 40m",
+    "sub": "Refreshing the calendar"
+   },
+   {
+    "t": "Calculator: 58m",
+    "sub": "Is this weekend price right?"
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-discount-count",
+  "theme": "dark",
+  "kicker": "IS HAFTE GINTI KARO",
+  "headline": "Kitne guests ne\n*discount* maanga?",
+  "body": "Bas number reply karo.\n\"Repeat guest hain\" wale bhi gino.",
+  "cta": "Reply with a number",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-zero-commission",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Booking aapki,\n*paisa* bhi aapka.",
+  "cards": [
+   {
+    "t": "Commission",
+    "sub": "0%"
+   },
+   {
+    "t": "Guest ka reply",
+    "sub": "Bella about 3 seconds mein deti hai"
+   }
+  ],
+  "body": "WhatsApp pe aapki AI co-host.\n24/7, Hinglish mein bhi.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA",
+  "ctaStyle": "ink"
+ }
+]
