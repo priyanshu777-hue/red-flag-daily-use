@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-panic-level","theme":"dark","kicker":"GUEST MESSAGES","headline":"Ranked by\n*panic level*","cards":[{"t":"\"Is check-in at 2?\"","sub":"Calm. Coffee in hand."},{"t":"\"Where do we park?\"","sub":"Mild. Typing fast."},{"t":"\"The door code isn't working\"","sub":"Maximum. Already driving over."}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ajeeb-request","theme":"blush","kicker":"EK SHABD","headline":"Guest ki sabse\najeeb *request*?","body":"Ek shabd mein batao.\nBaaki hum samajh jayenge.","cta":"Reply in one word","ctaStyle":"red"},
+ {"name":"story-3-phone-silent","theme":"dark","kicker":"BELLA","headline":"Phone on silent?\n*Guests* still covered.","cards":[{"t":"Late arrival needs directions","sub":"Bella sends the check-in details"},{"t":"Wifi question at 1 AM","sub":"Bella replies in about 3 seconds"}],"body":"Your AI co-host on WhatsApp.\nAwake 24/7, so you don't have to be.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"red"}
+]
