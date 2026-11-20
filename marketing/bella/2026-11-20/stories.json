@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-precheckin-ritual","theme":"blush","kicker":"BEFORE EVERY GUEST","headline":"The pre-check-in\n*ritual*","cards":[{"t":"AC remote","sub":"Are the batteries still alive?"},{"t":"Wifi","sub":"Is the password still the same?"},{"t":"Geyser","sub":"Switched on 30 minutes early"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-weekend-checkins","theme":"dark","kicker":"GINTI KARO","headline":"Is weekend kitne\n*check-in* hain?","body":"Bas number reply karo.\nZero bhi chalega, hum samjhenge.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-languages","theme":"blush","kicker":"BELLA","headline":"Guest kisi bhi bhasha mein,\n*Bella* samjhegi.","cards":[{"t":"Guest Bengali mein poochhe","sub":"Bella Bengali mein reply karti hai"},{"t":"Foreign guest French mein","sub":"Bella French mein reply karti hai"}],"body":"50+ languages, Hinglish bhi.\n24/7, about 3 seconds mein.","bodyAfter":true,"cta":"Reply BELLA","ctaStyle":"ink"}
+]
