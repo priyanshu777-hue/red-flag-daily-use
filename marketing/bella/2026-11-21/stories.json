@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-saturday-by-hour","theme":"dark","kicker":"SATURDAY","headline":"Hosting,\n*by the hour*","cards":[{"t":"11:00 AM","sub":"Deep clean. Fresh sheets."},{"t":"2:00 PM","sub":"Guests check in. All smiles."},{"t":"2:05 PM","sub":"\"Where is the TV remote?\""}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-kitne-saal","theme":"blush","kicker":"RECORD BATAO","headline":"Kitne saal se\n*host* kar rahe ho?","body":"Bas number reply karo.\nPehla saal? \"1\" likho, welcome!","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-send-bella","theme":"dark","kicker":"BELLA","headline":"Need to talk to\n*support*? Send Bella.","cards":[{"t":"A payout question","sub":"Bella talks to bnb support"},{"t":"A listing issue","sub":"Bella follows up for you"}],"body":"You get on with your Saturday.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"red"}
+]
