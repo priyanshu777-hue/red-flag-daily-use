@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-host-superpowers",
+  "theme": "blush",
+  "kicker": "HOST SUPERPOWERS",
+  "headline": "Skills nobody\n*taught* you",
+  "cards": [
+   {
+    "t": "Sensing a dead door code",
+    "sub": "From 20 km away"
+   },
+   {
+    "t": "Folding a fitted sheet",
+    "sub": "Almost. Nearly. Close enough."
+   },
+   {
+    "t": "Typing \"Sure, no problem!\"",
+    "sub": "While screaming inside"
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-sabse-bada-dushman",
+  "theme": "dark",
+  "kicker": "EK SHABD",
+  "headline": "Hosting ka sabse\nbada *dushman*?",
+  "body": "Geyser? Wifi? Padosi?\nEk shabd mein reply karo.",
+  "cta": "Reply in one word",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-rate-kab-badhana",
+  "theme": "blush",
+  "kicker": "BELLA",
+  "headline": "Rate kab badhayein?\n*Bella* dekh legi.",
+  "cards": [
+   {
+    "t": "Weekend aa raha hai",
+    "sub": "Bella har raat ka price set karti hai"
+   },
+   {
+    "t": "Festival dates aage",
+    "sub": "Demand ke hisaab se price"
+   }
+  ],
+  "body": "Aap rules set karo.\nBella har raat ka hisaab.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA",
+  "ctaStyle": "ink"
+ }
+]
