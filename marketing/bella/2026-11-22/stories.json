@@ -31,21 +31,21 @@
   "ctaStyle": "red"
  },
  {
-  "name": "story-3-rate-kab-badhana",
+  "name": "story-3-ek-raat-do-booking",
   "theme": "blush",
   "kicker": "BELLA",
-  "headline": "Rate kab badhayein?\n*Bella* dekh legi.",
+  "headline": "Ek raat, do booking?\n*Kabhi nahi.*",
   "cards": [
    {
-    "t": "Weekend aa raha hai",
-    "sub": "Bella har raat ka price set karti hai"
+    "t": "Booking aayi",
+    "sub": "Bella woh dates block kar deti hai"
    },
    {
-    "t": "Festival dates aage",
-    "sub": "Demand ke hisaab se price"
+    "t": "Wahi raat koi aur maange",
+    "sub": "Pehle se blocked hai"
    }
   ],
-  "body": "Aap rules set karo.\nBella har raat ka hisaab.",
+  "body": "Double-booking ka sorry\nkabhi nahi bolna padega.",
   "bodyAfter": true,
   "cta": "Reply BELLA",
   "ctaStyle": "ink"
