@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-checkout-notes","theme":"dark","kicker":"GUEST NOTES","headline":"Checkout notes,\n*decoded*","cards":[{"t":"\"Left the keys inside\"","sub":"Under a pillow. Good luck."},{"t":"\"Sorry for the mess\"","sub":"It's fine. It is not fine."},{"t":"\"Will definitely come back!\"","sub":"Never heard from again."}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-repeat-guests","theme":"blush","kicker":"GINTI KARO","headline":"Is mahine kitne\n*repeat* guests?","body":"Bas number reply karo.\nWoh guests jo wapas aaye.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-all-of-it","theme":"dark","kicker":"BELLA","headline":"Your booking.\n*All* of it.","cards":[{"t":"Commission","sub":"0%"},{"t":"Guest replies","sub":"About 3 seconds, 24/7, on WhatsApp"}],"body":"Bella is your AI co-host.\nShe doesn't take a cut.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"red"}
+]
