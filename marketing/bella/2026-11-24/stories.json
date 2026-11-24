@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-hosted-too-long",
+  "theme": "dark",
+  "kicker": "SIGNS",
+  "headline": "You've been hosting\n*too long* if…",
+  "cards": [
+   {
+    "t": "You own 40 identical towels",
+    "sub": "All white. All counted."
+   },
+   {
+    "t": "You can smell a smoker",
+    "sub": "From the gate."
+   },
+   {
+    "t": "\"Checkout is at 11\"",
+    "sub": "Is basically your ringtone"
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-sabse-zyada-calls",
+  "theme": "blush",
+  "kicker": "RECORD BATAO",
+  "headline": "Ek din mein kitni\nbaar *call* kiya?",
+  "body": "Ek hi guest ka record.\nBas number reply karo.",
+  "cta": "Reply with a number",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-details-pehle-se",
+  "theme": "dark",
+  "kicker": "BELLA",
+  "headline": "Guest raaste mein,\n*details* paas mein.",
+  "cards": [
+   {
+    "t": "Booking confirm hui",
+    "sub": "Bella check-in details bhej deti hai"
+   },
+   {
+    "t": "Guest nikal pada",
+    "sub": "Address aur timing already mil gaye"
+   }
+  ],
+  "body": "Aapko kisi ko yaad\nnahi dilana padta.",
+  "bodyAfter": true,
+  "cta": "Reply BELLA",
+  "ctaStyle": "red"
+ }
+]

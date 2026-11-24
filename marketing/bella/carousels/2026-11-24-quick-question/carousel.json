@@ -1,0 +1,10 @@
+{"slides":[
+ {"name":"01-cover","theme":"dark","kicker":"EVERY HOST KNOWS","headline":"\"Quick\n*question*…\"","body":"It is never quick.\nIt is never one question.","swipe":true},
+ {"name":"02-wifi","kicker":"#1","headline":"The *wifi*","chat":[{"who":"g","text":"Quick question"},{"who":"g","text":"What's the wifi password?"},{"who":"me","text":"On the card by the fridge :)"}],"reveal":{"label":"WHAT FOLLOWED","text":"*11 more* questions. In order."},"swipe":true},
+ {"name":"03-parking","theme":"dark","kicker":"#2","headline":"The *parking*","chat":[{"who":"g","text":"Quick q, can we park inside?"},{"who":"me","text":"Yes, space for one car"}],"reveal":{"label":"WHAT FOLLOWED","text":"They came in a *tempo traveller*."},"swipe":true},
+ {"name":"04-towels","kicker":"#3","headline":"The *towels*","chat":[{"who":"g","text":"Quick one, extra towels?"},{"who":"me","text":"In the top cupboard"}],"reveal":{"label":"WHAT FOLLOWED","text":"Then they asked for *bathrobes*."},"swipe":true},
+ {"name":"05-checkout","theme":"dark","kicker":"#4","headline":"The *checkout*","chat":[{"who":"g","text":"Quick question about checkout"},{"who":"me","text":"It's at 11 AM"}],"reveal":{"label":"WHAT FOLLOWED","text":"Can we do *4 PM*? Okay, 6?"},"swipe":true},
+ {"name":"06-kitchen","kicker":"#5","headline":"The *kitchen*","chat":[{"who":"g","text":"Quick question, can we cook?"},{"who":"me","text":"Sure, the kitchen is yours"}],"reveal":{"label":"WHAT FOLLOWED","text":"\"Do you have a *tandoor*?\""},"swipe":true},
+ {"name":"07-friend","theme":"dark","kicker":"#6","headline":"The *friend*","chat":[{"who":"g","text":"Quick q, can a friend drop by?"},{"who":"me","text":"Sure, for a bit"}],"reveal":{"label":"WHAT FOLLOWED","text":"The friend *stayed the night*. Plus three."},"swipe":true},
+ {"name":"08-bella","theme":"dark","kicker":"MEET BELLA","headline":"Quick questions,\n*answered* in seconds.","body":"Bella is your AI co-host on WhatsApp.\nShe replies in about 3 seconds, 24/7,\nin Hinglish and 50+ languages.\n0% commission.","cta":"Comment BELLA","ctaStyle":"red"}
+]}
