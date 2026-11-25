@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-think-vs-reality","theme":"blush","kicker":"GUESTS THINK","headline":"What guests think\nhosts *do*","cards":[{"t":"Relax all day","sub":"Reality: 14 WhatsApp chats open"},{"t":"Count the money","sub":"Reality: count the towels"},{"t":"Sleep in","sub":"Reality: 6 AM \"we're here!\" call"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-common-bahaana","theme":"dark","kicker":"EK SHABD","headline":"Late guest ka sabse\ncommon *bahaana*?","body":"Traffic? Flight? GPS?\nEk shabd mein reply karo.","cta":"Reply in one word","ctaStyle":"red"},
+ {"name":"story-3-one-inbox","theme":"blush","kicker":"BELLA","headline":"One inbox.\n*50+* languages.","cards":[{"t":"Hindi, Tamil, Bengali","sub":"Bella replies in each one"},{"t":"French, German, Arabic","sub":"Same speed, about 3 seconds"}],"body":"Your guests text in their language.\nBella answers in it.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"ink"}
+]

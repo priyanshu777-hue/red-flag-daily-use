@@ -5,3 +5,5 @@
 3. story-3-details-pehle-se.jpg (Hinglish, soft Bella: sends check-in details) ~8:00 PM IST
 
 Carousel (English): carousels/2026-11-24-quick-question
+
+Story 3 NOT POSTED: its scheduled post fired ~12h late (session restart), past the 3-hour cutoff. Story 2 went out at 4:28 PM IST (just inside the cutoff).
