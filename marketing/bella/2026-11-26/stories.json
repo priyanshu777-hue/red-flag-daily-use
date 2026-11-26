@@ -1,0 +1,53 @@
+[
+ {
+  "name": "story-1-late-checkout-stages",
+  "theme": "dark",
+  "kicker": "THE 3 STAGES",
+  "headline": "Of a late checkout\n*request*",
+  "cards": [
+   {
+    "t": "Denial",
+    "sub": "\"Maybe they'll leave on time.\""
+   },
+   {
+    "t": "Bargaining",
+    "sub": "\"Okay, 12. Not a minute later.\""
+   },
+   {
+    "t": "Acceptance",
+    "sub": "\"Fine. 1 PM. Safe journey.\""
+   }
+  ],
+  "cta": "Send to a host friend",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-2-kitni-chabiyan",
+  "theme": "blush",
+  "kicker": "GINTI KARO",
+  "headline": "Ab tak kitni\n*chabiyan* khoyi?",
+  "body": "Guests ne kitni keys khoyi?\nBas number reply karo.",
+  "cta": "Reply with a number",
+  "ctaStyle": "red"
+ },
+ {
+  "name": "story-3-long-weekend-priced",
+  "theme": "dark",
+  "kicker": "BELLA",
+  "headline": "Long weekend coming?\n*Priced* already.",
+  "cards": [
+   {
+    "t": "Weekend demand",
+    "sub": "Bella sets each night's price"
+   },
+   {
+    "t": "Festival dates",
+    "sub": "Priced for the rush"
+   }
+  ],
+  "body": "You set the limits.\nBella does the nightly maths.",
+  "bodyAfter": true,
+  "cta": "DM us BELLA",
+  "ctaStyle": "red"
+ }
+]
