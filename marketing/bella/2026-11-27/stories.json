@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-google-1am","theme":"blush","kicker":"SEARCH HISTORY","headline":"Things hosts Google\nat *1 AM*","cards":[{"t":"\"Unclog a drain fast\"","sub":"Guests arrive at 11"},{"t":"\"Is a 4.6 rating bad?\"","sub":"Asking for myself"},{"t":"\"Can I charge for a broken lamp?\"","sub":"Third one this month"}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-subah-se-messages","theme":"dark","kicker":"GINTI KARO","headline":"Aaj subah se kitne\n*guest messages*?","body":"Bas number reply karo.\n\"Hi\" wale bhi gino.","cta":"Reply with a number","ctaStyle":"red"},
+ {"name":"story-3-asleep-2am","theme":"blush","kicker":"BELLA","headline":"Asleep at 2 AM?\n*Bella* isn't.","cards":[{"t":"Guest asks about checkout","sub":"Bella replies in about 3 seconds"},{"t":"Guest needs check-in details","sub":"Bella sends them"}],"body":"Your AI co-host on WhatsApp,\nawake 24/7.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"ink"}
+]

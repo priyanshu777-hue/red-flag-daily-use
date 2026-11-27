@@ -1,0 +1,10 @@
+{"slides":[
+ {"name":"01-cover","theme":"dark","kicker":"HAR GUEST KI LINE","headline":"\"Bhaiya, ek\n*kaam* karoge?\"","body":"Ek kaam.\nKabhi ek nahi hota.","swipe":true},
+ {"name":"02-pickup","kicker":"#1","headline":"Station *pickup*","chat":[{"who":"g","text":"Station se pick kar loge?"},{"who":"me","text":"Main cab ka number bhejta hoon"}],"reveal":{"label":"ASLI KAAM","text":"Train *raat 3 baje* ki thi."},"swipe":true},
+ {"name":"03-doodh","theme":"dark","kicker":"#2","headline":"Thoda *doodh*","chat":[{"who":"g","text":"Thoda doodh mangwa doge?"},{"who":"me","text":"Paas mein dairy hai ji"}],"reveal":{"label":"ASLI KAAM","text":"Saath mein *ande aur bread*."},"swipe":true},
+ {"name":"04-iron","kicker":"#3","headline":"Ek *iron*","chat":[{"who":"g","text":"Ek iron mil jayega?"},{"who":"me","text":"Cupboard mein hai ji"}],"reveal":{"label":"ASLI KAAM","text":"Shirt bhi *aap* press kar do?"},"swipe":true},
+ {"name":"05-cake","theme":"dark","kicker":"#4","headline":"Bas *cake*","chat":[{"who":"g","text":"Birthday cake fridge mein rakh doge?"},{"who":"me","text":"Haan ji, rakh dunga"}],"reveal":{"label":"ASLI KAAM","text":"Phir *balloons* bhi laga do."},"swipe":true},
+ {"name":"06-bag","kicker":"#5","headline":"Bag *rakh* lo","chat":[{"who":"g","text":"Checkout ke baad bag rakh loge?"},{"who":"me","text":"Haan ji, 2 ghante tak"}],"reveal":{"label":"ASLI KAAM","text":"Bag le gaye *agle din*."},"swipe":true},
+ {"name":"07-chai","theme":"dark","kicker":"#6","headline":"Subah ki *chai*","chat":[{"who":"g","text":"Subah chai mil sakti hai?"},{"who":"me","text":"Kitchen mein sab hai ji"}],"reveal":{"label":"ASLI KAAM","text":"\"Aap bana do na, *please*.\""},"swipe":true},
+ {"name":"08-bella","theme":"dark","kicker":"MEET BELLA","headline":"Har \"ek kaam\" ka\n*jawab*, Bella degi.","body":"WhatsApp pe aapki AI co-host.\nAbout 3 seconds mein reply, 24/7.\nHinglish aur 50+ languages mein.\n0% commission.","cta":"Comment BELLA","ctaStyle":"red"}
+]}
