@@ -1,0 +1,5 @@
+[
+ {"name":"story-1-saturday-host","theme":"blush","kicker":"WEEKEND MODE","headline":"Saturday,\nas a *host*","cards":[{"t":"10 AM: checkout","sub":"\"Can we stay till 3?\""},{"t":"12 PM: cleaning","sub":"Someone took the remote"},{"t":"1 PM: new guests","sub":"\"We're early, is that ok?\""}],"cta":"Send to a host friend","ctaStyle":"red"},
+ {"name":"story-2-ek-word","theme":"dark","kicker":"EK WORD MEIN","headline":"Guest sabse pehle\n*kya* poochte hain?","body":"Wifi? Parking? Geyser?\nEk word mein reply karo.","cta":"Reply with one word","ctaStyle":"red"},
+ {"name":"story-3-weekend-price","theme":"blush","kicker":"BELLA","headline":"Busy weekend?\n*Bella* sets the price.","cards":[{"t":"Nightly prices, set for you","sub":"Weekends, festivals and demand"},{"t":"Calendar stays blocked","sub":"No double-bookings"}],"body":"Your AI co-host on WhatsApp.\n0% commission.","bodyAfter":true,"cta":"DM us BELLA","ctaStyle":"ink"}
+]
